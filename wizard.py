@@ -69,8 +69,14 @@ def project_creation():
         project_info_file = ""
         project_info_list = [ ["Project name", ""], ["Template", ""] ]
 
+        uuid_entry_list = []
         for entry in project_info_list:
-            dpg.add_input_text(label= entry[0])
+            uuid_entry_list.append(dpg.add_input_text(label= entry[0]))
+        
+        create_btn = dpg.add_button(label= "Create New Project")
+
+        #HEELP HOW TO MAKE A "CONFIRM" BUTTON ??!?!?!
+            
         
         # Create folder for project
         #project_path = PROJECTS_BASE_FOLDER + "/" + project_info_list[0][1]
@@ -78,6 +84,7 @@ def project_creation():
         #    os.mkdir(project_path)
         #else:
         #    print("Project already exists! Try another name.")
+
 
 files_starter()
 
