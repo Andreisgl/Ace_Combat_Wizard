@@ -28,33 +28,56 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnOpenProject = new System.Windows.Forms.Button();
+            this.btnOpenFile = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
-            // btnOpenProject
+            // btnOpenFile
             // 
-            this.btnOpenProject.Location = new System.Drawing.Point(37, 21);
-            this.btnOpenProject.Name = "btnOpenProject";
-            this.btnOpenProject.Size = new System.Drawing.Size(122, 29);
-            this.btnOpenProject.TabIndex = 0;
-            this.btnOpenProject.Text = "Open Project";
-            this.btnOpenProject.UseVisualStyleBackColor = true;
+            this.btnOpenFile.Location = new System.Drawing.Point(12, 12);
+            this.btnOpenFile.Name = "btnOpenFile";
+            this.btnOpenFile.Size = new System.Drawing.Size(122, 29);
+            this.btnOpenFile.TabIndex = 0;
+            this.btnOpenFile.Text = "Open File";
+            this.btnOpenFile.UseVisualStyleBackColor = true;
+            this.btnOpenFile.Click += new System.EventHandler(this.btnOpenFile_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(367, 128);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(125, 27);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = ".PAC files (*.PAC)|*.PAC|All files (*.*)|*.*";
+            this.openFileDialog1.FilterIndex = 2;
+            this.openFileDialog1.Title = "Open DATA.PAC";
+            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.btnOpenProject);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.btnOpenFile);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private Button btnOpenProject;
+        private Button btnOpenFile;
+        private TextBox textBox1;
+        private OpenFileDialog openFileDialog1;
     }
 }

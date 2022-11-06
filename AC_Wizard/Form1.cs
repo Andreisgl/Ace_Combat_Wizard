@@ -11,5 +11,21 @@ namespace AC_Wizard
         {
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            btnOpenFile.Text = textBox1.Text;
+        }
+
+        private void btnOpenFile_Click(object sender, EventArgs e)
+        {
+            //openFileDialog1 = new OpenFileDialog();
+            openFileDialog1.ShowDialog();
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+
+        }
     }
 }
