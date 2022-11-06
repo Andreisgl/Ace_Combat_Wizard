@@ -25,7 +25,7 @@ namespace AC_Wizard
 
         private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            label1.Text = openFileDialog1.FileName;
         }
     }
 }
