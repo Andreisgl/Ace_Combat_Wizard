@@ -4,7 +4,7 @@
 
 import os
 import dearpygui.dearpygui as dpg
-
+import time
 
 # Project opening
 BASE_FOLDER = os.getcwd()
@@ -55,35 +55,41 @@ def project_checking():
         PROJECT_LIST = os.listdir(PROJECTS_BASE_FOLDER)
         print(PROJECT_LIST)
         dpg.add_listbox(items= PROJECT_LIST, parent= current_window_tag)
-        dpg.add_button(label="Create New Project", callback=project_creation)
+        dpg.add_button(label="Create New Project", callback=project_creation_gui)
 
 
-def project_creation():
+def project_creation_gui():
     # Project Creation
     current_window_tag = "create_project"
     if dpg.does_alias_exist(current_window_tag):
         dpg.remove_alias(current_window_tag)
-
-    with dpg.window(tag=current_window_tag, width=400, height=400):
+    
+    
+    with dpg.popup(dpg.last_item(), mousebutton=dpg.mvMouseButton_Left, modal=True, tag=current_window_tag):
     
         project_info_file = ""
-        project_info_list = [ ["Project name", ""], ["Template", ""] ]
+        project_info_list = [ ["Project name", ""] ]
 
         uuid_entry_list = []
         for entry in project_info_list:
             uuid_entry_list.append(dpg.add_input_text(label= entry[0]))
         
-        create_btn = dpg.add_button(label= "Create New Project")
+        dpg.add_button(label="Create New Project", callback=lambda: dpg.configure_item(current_window_tag, show=False))
 
-        #HEELP HOW TO MAKE A "CONFIRM" BUTTON ??!?!?!
-            
-        
-        # Create folder for project
-        #project_path = PROJECTS_BASE_FOLDER + "/" + project_info_list[0][1]
-        #if not os.path.exists(project_path):
-        #    os.mkdir(project_path)
-        #else:
-        #    print("Project already exists! Try another name.")
+        print("sup")
+
+        project_name = project_info_list[0][1]
+        if project_name != "":
+            print("wooo")
+            # Create folder for project
+            project_path = PROJECTS_BASE_FOLDER + "/" + project_name
+            if not os.path.exists(project_path):
+                os.mkdir(project_path)
+            else:
+                print("Project already exists! Try another name.")
+        else:
+            print("nooo")
+
 
 
 files_starter()
