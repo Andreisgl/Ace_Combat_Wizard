@@ -28,8 +28,6 @@ namespace AC_Wizard
 				string[] file_name = new string[(openFileDialog1.FileNames.Length)];
 				file_name = openFileDialog1.FileNames;
 				Proj_Mng.Import_File_toRoot(file_name);
-				
-				listView1.Items.Add("");
 			}
 			
 		}
@@ -63,12 +61,16 @@ namespace AC_Wizard
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-			string[] item_list = Proj_Mng.Get_Items_inRoot(true);
-			foreach(string item in item_list)
+			string[] root_item_list = Proj_Mng.Get_Items_inRoot(true);
+			treeView1.BeginUpdate();
+			foreach (string item in root_item_list)
 			{
-				listView1.Items.Add(item);
+				
+				treeView1.Nodes.Add(item);
+
 			}
-			
+			treeView1.EndUpdate();
+
 		}
 	}
 }

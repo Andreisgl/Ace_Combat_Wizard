@@ -34,8 +34,8 @@
             this.btnOpenProject = new System.Windows.Forms.Button();
             this.projectBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.label2 = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.SuspendLayout();
             // 
             // btnOpenFile
@@ -85,15 +85,6 @@
             this.label2.TabIndex = 4;
             this.label2.Text = "label2";
             // 
-            // listView1
-            // 
-            this.listView1.Location = new System.Drawing.Point(33, 80);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(263, 344);
-            this.listView1.TabIndex = 5;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.List;
-            // 
             // btnRefresh
             // 
             this.btnRefresh.Location = new System.Drawing.Point(289, 12);
@@ -104,13 +95,20 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
+            // treeView1
+            // 
+            this.treeView1.Location = new System.Drawing.Point(33, 77);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(250, 333);
+            this.treeView1.TabIndex = 7;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.btnRefresh);
-            this.Controls.Add(this.listView1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnOpenProject);
             this.Controls.Add(this.label1);
@@ -131,7 +129,7 @@
         private Button btnOpenProject;
         private FolderBrowserDialog projectBrowserDialog1;
         private Label label2;
-        private ListView listView1;
         private Button btnRefresh;
+        private TreeView treeView1;
     }
 }
