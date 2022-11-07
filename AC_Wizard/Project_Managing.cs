@@ -73,14 +73,24 @@ namespace AC_Wizard
 			}
 			return true;
 		}
+		public void Import_File_toRoot(string file_path)
+		{
+			//Copies chosen file to root folder.
+			try
+            {
+				File.Copy(file_path, PROJECT_ROOT_FOLDER, false);
+            }
+			catch (IOException)
+            {
 
-		
+            }
+		}
 
-		
 
-		public void Return_Project_Data(string project_path)
-        {
 
-        }
+
+
+
+
 	}
 }

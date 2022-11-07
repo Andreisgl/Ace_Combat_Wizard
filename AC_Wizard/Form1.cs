@@ -33,6 +33,7 @@ namespace AC_Wizard
             {
                 file_name = openFileDialog1.FileName;
                 label1.Text = file_name;
+                Proj_Mng.Import_File_toRoot(file_name);
             }
             
             //Process.Start(openFileDialog1.FileName);
