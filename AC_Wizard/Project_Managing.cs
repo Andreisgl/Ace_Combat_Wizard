@@ -20,6 +20,20 @@ namespace AC_Wizard
 		{
 			project_info_filename += project_info_file_extension;
 		}
+		public bool Is_Project(string path)
+		{
+			project_info_file = path + "\\" + project_info_filename;
+			if (File.Exists(project_info_file))
+			{
+				//Console.WriteLine("Project file exists!");
+				return true;
+			}
+			else
+			{
+				//Console.WriteLine("Project file does not exist!");
+				return false;
+			}
+		}
 
 		public void Check_folders()
 		{
@@ -62,20 +76,7 @@ namespace AC_Wizard
 
 		
 
-		public bool Is_Project(string path)
-		{
-			project_info_file = path + "\\" + project_info_filename;
-			if (File.Exists(project_info_file))
-			{
-				//Console.WriteLine("Project file exists!");
-				return true;
-			}
-			else
-			{
-				//Console.WriteLine("Project file does not exist!");
-				return false;
-			}
-		}
+		
 
 		public void Return_Project_Data(string project_path)
         {
