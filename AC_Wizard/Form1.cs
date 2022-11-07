@@ -47,7 +47,6 @@ namespace AC_Wizard
             if (projectBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 project_path = projectBrowserDialog1.SelectedPath;
-                label2.Text = PROJECT_FOLDER;
                 btnOpenFile.Enabled = true;
                 if (Proj_Check.Is_Project(project_path))
                 {
