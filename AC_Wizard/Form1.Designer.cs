@@ -50,7 +50,9 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = ".PAC files (*.PAC)|*.PAC|All files (*.*)|*.*";
+            this.openFileDialog1.Filter = "DATA files duo (*.PAC;*.TBL)|*.PAC;*.TBL|All files (*.*)|*.*";
+            this.openFileDialog1.Multiselect = true;
+            this.openFileDialog1.ReadOnlyChecked = true;
             this.openFileDialog1.Title = "Open DATA.PAC";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 

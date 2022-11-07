@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace AC_Wizard
 {
@@ -74,11 +75,26 @@ namespace AC_Wizard
 			}
 			return true;
 		}
-		public void Import_File_toRoot(string file_path)
+		public void Import_File_toRoot(string[] file_path)
 		{
+			string file_name = "";
+			
 			//Copies chosen file to root folder.
-			string filename = Path.GetFileName(file_path);
-			File.Copy(file_path, PROJECT_ROOT_FOLDER + "\\" + filename, false);
+			for (int i = 0; i < file_path.Length; i++)
+            {
+				try
+				{
+					file_name = Path.GetFileName(file_path[i]);
+					File.Copy(file_path[0], PROJECT_ROOT_FOLDER + "\\" + file_name, false);
+				}
+				catch (IOException)
+				{
+					Debug.WriteLine(file_name + " already Exists!");
+				}
+			}
+
+			
+			
   
 
 		}

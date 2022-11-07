@@ -22,13 +22,10 @@ namespace AC_Wizard
 
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
-            //openFileDialog1 = new OpenFileDialog();
-            //openFileDialog1.ShowDialog();
-            string file_name = "";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                file_name = openFileDialog1.FileName;
-                label1.Text = file_name;
+                string[] file_name = new string[(openFileDialog1.FileNames.Length)];
+                file_name = openFileDialog1.FileNames;
                 Proj_Mng.Import_File_toRoot(file_name);
             }
         }
