@@ -28,7 +28,13 @@ namespace AC_Wizard
 
         private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            label1.Text = openFileDialog1.FileName;
+            string file_name = "";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                file_name = openFileDialog1.FileName;
+                label1.Text = file_name;
+            }
+            
             //Process.Start(openFileDialog1.FileName);
         }
 
@@ -39,7 +45,9 @@ namespace AC_Wizard
             if (projectBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 project_path = projectBrowserDialog1.SelectedPath;
-                if(Proj_Mng.Is_Project(project_path))
+                
+                
+                if(Proj_Mng.Open_Project(project_path))
                 {
                     btnOpenFile.Enabled = true;
                 }
