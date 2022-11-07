@@ -17,11 +17,6 @@ namespace AC_Wizard
             btnOpenFile.Enabled = false;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            btnOpenFile.Text = textBox1.Text;
-        }
-
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             //openFileDialog1 = new OpenFileDialog();
