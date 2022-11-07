@@ -12,7 +12,8 @@ namespace AC_Wizard
 
 		string project_info_file = "";
 
-		string PROJECT_ROOT_FOLDER = "proot";
+		string PROJECT_ROOT_FOLDER_NAME = "proot";
+		string PROJECT_ROOT_FOLDER = "";
 
 		string curr_project_path = "";
 
@@ -46,10 +47,10 @@ namespace AC_Wizard
 		}
 		public void Check_Project_Folders(string project_path)
         {
-			string p_root_fldr = project_path + "\\" + PROJECT_ROOT_FOLDER;
-			if (!Directory.Exists(p_root_fldr))
+			PROJECT_ROOT_FOLDER = project_path + "\\" + PROJECT_ROOT_FOLDER_NAME;
+			if (!Directory.Exists(PROJECT_ROOT_FOLDER))
 			{
-				Directory.CreateDirectory(p_root_fldr);
+				Directory.CreateDirectory(PROJECT_ROOT_FOLDER);
 			}
 		}
 		public string Get_Project_Folder()
@@ -76,14 +77,10 @@ namespace AC_Wizard
 		public void Import_File_toRoot(string file_path)
 		{
 			//Copies chosen file to root folder.
-			try
-            {
-				File.Copy(file_path, PROJECT_ROOT_FOLDER, false);
-            }
-			catch (IOException)
-            {
+			string filename = Path.GetFileName(file_path);
+			File.Copy(file_path, PROJECT_ROOT_FOLDER + "\\" + filename, false);
+  
 
-            }
 		}
 
 
