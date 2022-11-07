@@ -92,10 +92,30 @@ namespace AC_Wizard
 					Debug.WriteLine(file_name + " already Exists!");
 				}
 			}
+		}
+		
+		public string[] Get_Items_inDir(string directory)
+		{
+			return System.IO.Directory.GetFiles(directory);
 
-			
-			
-  
+		}
+		public string[] Get_Items_inRoot(bool only_file_name)
+		{
+			//bool only_file_name:
+			//	- true = return only file names
+			//	- false = return whole path
+			string[] root_list = Get_Items_inDir(PROJECT_ROOT_FOLDER);
+
+			if (only_file_name)
+			{
+				for(int i=0; i< root_list.Length; i++)
+				{
+					root_list[i] = Path.GetFileName( root_list[i] );
+                }
+			}
+			return root_list;
+
+
 
 		}
 

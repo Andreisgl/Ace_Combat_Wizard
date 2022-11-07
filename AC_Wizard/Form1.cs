@@ -18,6 +18,7 @@ namespace AC_Wizard
 			projectBrowserDialog1.InitialDirectory = Proj_Mng.Get_Project_Folder();
 
 			btnOpenFile.Enabled = false;
+			btnRefresh.Enabled = false;
 		}
 
 		private void btnOpenFile_Click(object sender, EventArgs e)
@@ -50,14 +51,24 @@ namespace AC_Wizard
 				if(Proj_Mng.Open_Project(project_path))
 				{
 					btnOpenFile.Enabled = true;
+					btnRefresh.Enabled = true;
 				}
 				else
 				{
 					btnOpenFile.Enabled = false;
+					btnRefresh.Enabled = false;
 				}
 			}
 		}
 
-
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+			string[] item_list = Proj_Mng.Get_Items_inRoot(true);
+			foreach(string item in item_list)
+			{
+				listView1.Items.Add(item);
+			}
+			
+		}
 	}
 }
