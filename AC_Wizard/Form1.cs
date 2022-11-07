@@ -43,19 +43,21 @@ namespace AC_Wizard
         }
         private void btnOpenProject_Click(object sender, EventArgs e)
         {
-            var Proj_Check = new Project_Checking();
+            var Proj_Mng = new Project_Managing();
             if (projectBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 project_path = projectBrowserDialog1.SelectedPath;
-                btnOpenFile.Enabled = true;
-                if (Proj_Check.Is_Project(project_path))
+                if(Proj_Mng.Is_Project(project_path))
                 {
-                    label2.Text = "YAY!";
+                    btnOpenFile.Enabled = true;
                 }
                 else
                 {
-                    label2.Text = "NOO!";
+                    btnOpenFile.Enabled = false;
                 }
+
+
+
             }
         }
         
