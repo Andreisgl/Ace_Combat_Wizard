@@ -105,7 +105,6 @@ namespace AC_Wizard
 			//	- true = return only file names
 			//	- false = return whole path
 			string[] root_list = Get_Items_inDir(PROJECT_ROOT_FOLDER);
-
 			if (only_file_name)
 			{
 				for(int i=0; i< root_list.Length; i++)
@@ -114,12 +113,12 @@ namespace AC_Wizard
                 }
 			}
 			return root_list;
-
-
-
 		}
 
-
+		void Open_File_inProject(string file_path)
+		{
+			
+        }
 
 
 
