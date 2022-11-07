@@ -23,11 +23,7 @@ namespace AC_Wizard
         private void btnOpenFile_Click(object sender, EventArgs e)
         {
             //openFileDialog1 = new OpenFileDialog();
-            openFileDialog1.ShowDialog();
-        }
-
-        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
-        {
+            //openFileDialog1.ShowDialog();
             string file_name = "";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -35,7 +31,10 @@ namespace AC_Wizard
                 label1.Text = file_name;
                 Proj_Mng.Import_File_toRoot(file_name);
             }
-            
+        }
+
+        private void openFileDialog1_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+        {          
             //Process.Start(openFileDialog1.FileName);
         }
 
