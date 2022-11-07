@@ -6,6 +6,7 @@ namespace AC_Wizard
     using System.Text;
     public partial class Form1 : Form
     {
+        Project_Managing Proj_Mng = new();
         public Form1()
         {
             InitializeComponent();
@@ -13,7 +14,9 @@ namespace AC_Wizard
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Check_folders();
+            Proj_Mng.Check_folders();
+            projectBrowserDialog1.InitialDirectory = Proj_Mng.Get_Project_Folder();
+
             btnOpenFile.Enabled = false;
         }
 
@@ -29,21 +32,10 @@ namespace AC_Wizard
             //Process.Start(openFileDialog1.FileName);
         }
 
+
         private string project_path = "";
-        private string PROJECT_FOLDER = "Projects";
-        private void Check_folders()
-        {
-            string cwd = Directory.GetCurrentDirectory();
-            PROJECT_FOLDER = cwd + "\\" + PROJECT_FOLDER;
-            if(!Directory.Exists(PROJECT_FOLDER))
-            {
-                Directory.CreateDirectory(PROJECT_FOLDER);
-            }
-            projectBrowserDialog1.InitialDirectory = PROJECT_FOLDER;
-        }
         private void btnOpenProject_Click(object sender, EventArgs e)
         {
-            var Proj_Mng = new Project_Managing();
             if (projectBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 project_path = projectBrowserDialog1.SelectedPath;
@@ -55,9 +47,6 @@ namespace AC_Wizard
                 {
                     btnOpenFile.Enabled = false;
                 }
-
-
-
             }
         }
         
