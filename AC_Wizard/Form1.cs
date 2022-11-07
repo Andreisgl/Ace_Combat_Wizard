@@ -62,10 +62,11 @@ namespace AC_Wizard
         private void btnRefresh_Click(object sender, EventArgs e)
         {
 			string[] root_item_list = Proj_Mng.Get_Items_inRoot(true);
+			string[] root_item_path_list = Proj_Mng.Get_Items_inRoot(false);
 			treeView1.BeginUpdate();
-			foreach (string item in root_item_list)
+			for(int i=0; i < root_item_list.Length; i++)
 			{
-				
+				string item = root_item_list[i];
 				treeView1.Nodes.Add(item);
 
 			}
