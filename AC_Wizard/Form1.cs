@@ -59,14 +59,26 @@ namespace AC_Wizard
 			}
 		}
 
-        private void btnRefresh_Click(object sender, EventArgs e)
-        {
+		private void btnRefresh_Click(object sender, EventArgs e)
+		{
+			string curr_dir = "F:\\Users\\andre\\Documentos\\GITS\\Ace_Combat_Wizard\\AC_Wizard\bin\\Debug\net6.0-windows\\Projects\\purject\\proot";
+			Recursive_Tree_Stuff(curr_dir);
+		}
+
+			
+
+		
+		private void Recursive_Tree_Stuff(string curr_dir)
+		{
+			
+			// Provisory hard-code because I'm lazy!
+
 			// Get files list:
-			string[] root_item_list = Proj_Mng.Get_Items_inRoot(true, 0);
-			string[] root_item_path_list = Proj_Mng.Get_Items_inRoot(false, 0);
+			string[] item_list = Proj_Mng.Get_Items_inPath(curr_dir, true, 0);
+			string[] item_path_list = Proj_Mng.Get_Items_inPath(curr_dir, false, 0);
 			// Get folders list:
-			string[] root_folder_list = Proj_Mng.Get_Items_inRoot(true, 1);
-			string[] root_folder_path_list = Proj_Mng.Get_Items_inRoot(false, 1);
+			string[] folder_list = Proj_Mng.Get_Items_inPath(curr_dir, true, 1);
+			string[] folder_path_list = Proj_Mng.Get_Items_inPath(curr_dir, false, 1);
 
 			//Check if there is any folder corresponding to a file
 			/*CORE CONCEPT: ||| CORRESPONDENCE |||
@@ -89,31 +101,35 @@ namespace AC_Wizard
 			bool can_next_level = true;
 			for (int l = 0; can_next_level; l++) // Iterate level based on a flag
 			{
-				for (int i = 0; i < root_item_list.Length; i++) // Iterate items in root folder
+				Debug.WriteLine("l = " + l);
+				can_next_level = false;
+				for (int i = 0; i < item_list.Length; i++) // Iterate items in root folder
 				{
 					Debug.WriteLine("i = " + i);
 					//See if current file has a correspondent folder.
-					for (int j = 0; j < root_folder_list.Length; j++) // Iterate folders in root folder
+					for (int j = 0; j < folder_list.Length; j++) // Iterate folders in root folder
 					{
-						if (Proj_Mng.Is_Correspondent(root_item_list[i], root_folder_list[j]))
+						Debug.WriteLine("j = " + j);
+						if (Proj_Mng.Is_Correspondent(item_list[i], folder_list[j]))
 						{
 							//If it does, add the folder as a tree node instead of it.
-							treeView1.Nodes.Add(root_item_list[j]);
+							treeView1.Nodes.Add(item_list[i]);
 							Debug.WriteLine("Corresponds!");
 							//Add new node stuff here
 							can_next_level = true;
+							Debug.WriteLine("recur = " + folder_path_list[j]);
+							Recursive_Tree_Stuff(folder_path_list[j]);
 						}
 						else
 						{
 							//If it doesn't, just put it as the node.
-							treeView1.Nodes.Add(root_item_list[i]);
+							treeView1.Nodes.Add(item_list[i]);
 							Debug.WriteLine("Does not correspond...");
 						}
 					}
 				}
 			}
 			treeView1.EndUpdate();
-
 		}
 		
 	}

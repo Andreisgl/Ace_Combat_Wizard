@@ -104,7 +104,7 @@ namespace AC_Wizard
 		{
 			return System.IO.Directory.GetDirectories(directory);
 		}
-		public string[] Get_Items_inRoot(bool only_file_name, int type_mode)
+		public string[] Get_Items_inPath(string path, bool only_file_name, int type_mode)
 		{
 			//bool only_item_name:
 			//	- true = return only item names
@@ -152,7 +152,7 @@ namespace AC_Wizard
 			*/
 
 			folder = folder.Replace(original_char, new_char);
-			Debug.WriteLine("folderafter = " + folder);
+			//Debug.WriteLine("folderafter = " + folder);
 			/*
 			if (replace_index != -1) //If replacement index is valid...
 			{
