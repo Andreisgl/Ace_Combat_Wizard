@@ -62,14 +62,15 @@ namespace AC_Wizard
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
 			string curr_dir = "F:\\Users\\andre\\Documentos\\GITS\\Ace_Combat_Wizard\\AC_Wizard\bin\\Debug\net6.0-windows\\Projects\\purject\\proot";
-			Recursive_Tree_Stuff(curr_dir);
+			Recursive_Tree_Stuff(curr_dir, 0);
 		}
 
 			
 
 		
-		private void Recursive_Tree_Stuff(string curr_dir)
+		private void Recursive_Tree_Stuff(string curr_dir, int level)
 		{
+			Debug.WriteLine("curr_dir = " + curr_dir);
 			
 			// Provisory hard-code because I'm lazy!
 
@@ -99,36 +100,35 @@ namespace AC_Wizard
 
 			treeView1.BeginUpdate();
 			bool can_next_level = true;
-			for (int l = 0; can_next_level; l++) // Iterate level based on a flag
+			//int level = 0; // Level of the folder since the root
+			Debug.WriteLine("l = " + level);
+			can_next_level = false;
+			for (int i = 0; i < item_list.Length; i++) // Iterate items in root folder
 			{
-				Debug.WriteLine("l = " + l);
-				can_next_level = false;
-				for (int i = 0; i < item_list.Length; i++) // Iterate items in root folder
+				Debug.WriteLine("i = " + i);
+				//See if current file has a correspondent folder.
+				for (int j = 0; j < folder_list.Length; j++) // Iterate folders in root folder
 				{
-					Debug.WriteLine("i = " + i);
-					//See if current file has a correspondent folder.
-					for (int j = 0; j < folder_list.Length; j++) // Iterate folders in root folder
+					Debug.WriteLine("j = " + j);
+					if (Proj_Mng.Is_Correspondent(item_list[i], folder_list[j]))
 					{
-						Debug.WriteLine("j = " + j);
-						if (Proj_Mng.Is_Correspondent(item_list[i], folder_list[j]))
-						{
-							//If it does, add the folder as a tree node instead of it.
-							treeView1.Nodes.Add(item_list[i]);
-							Debug.WriteLine("Corresponds!");
-							//Add new node stuff here
-							can_next_level = true;
-							Debug.WriteLine("recur = " + folder_path_list[j]);
-							Recursive_Tree_Stuff(folder_path_list[j]);
-						}
-						else
-						{
-							//If it doesn't, just put it as the node.
-							treeView1.Nodes.Add(item_list[i]);
-							Debug.WriteLine("Does not correspond...");
-						}
+						//If it does, add the folder as a tree node instead of it.
+						treeView1.Nodes.Add(item_list[i]);
+						Debug.WriteLine("Corresponds!");
+						//Add new node stuff here
+						can_next_level = true;
+						Debug.WriteLine("recur = " + folder_path_list[j]);
+						Recursive_Tree_Stuff(folder_path_list[j], level + 1);
+					}
+					else
+					{
+						//If it doesn't, just put it as the node.
+						treeView1.Nodes.Add(item_list[i]);
+						Debug.WriteLine("Does not correspond...");
 					}
 				}
 			}
+			
 			treeView1.EndUpdate();
 		}
 		

@@ -97,6 +97,7 @@ namespace AC_Wizard
 		
 		public string[] Get_Items_inDir(string directory)
 		{
+			//Some weird exception happens here...
 			return System.IO.Directory.GetFiles(directory);
 
 		}
@@ -119,13 +120,13 @@ namespace AC_Wizard
 			switch (type_mode)
 			{
 				case 0: // Files only
-					root_list = Get_Items_inDir(PROJECT_ROOT_FOLDER);
+					root_list = Get_Items_inDir(path);
 					break;
 				case 1: // Folders only
-					root_list = Get_Folders_inDir(PROJECT_ROOT_FOLDER);
+					root_list = Get_Folders_inDir(path);
 					break;
 				default:
-					root_list = Get_Items_inDir(PROJECT_ROOT_FOLDER);
+					root_list = Get_Items_inDir(path);
 					break;
 			}
 			if (only_file_name)
@@ -144,8 +145,8 @@ namespace AC_Wizard
 			string new_char = ".";
 			int replace_index = folder.LastIndexOf(original_char);
 
-			Debug.WriteLine(folder);
-			Debug.WriteLine(file);
+			//Debug.WriteLine(folder);
+			//Debug.WriteLine(file);
 			/*
 			Debug.WriteLine("index!");
 			Debug.WriteLine(replace_index);
