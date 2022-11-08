@@ -86,39 +86,31 @@ namespace AC_Wizard
 			// char[,] SWAPPING_DICTIONARY = { {'.', '—' } };
 
 			treeView1.BeginUpdate();
-			for(int i=0; i < root_item_list.Length; i++)
+			bool can_next_level = true;
+			for (int l = 0; can_next_level; l++) // Iterate level based on a flag
 			{
-				Debug.WriteLine("i = " + i);
-				//string item = root_item_list[i];
-
-				//See if current file has a correspondent folder.
-				
-				for (int j = 0; j < root_folder_list.Length; j++)
+				for (int i = 0; i < root_item_list.Length; i++) // Iterate items in root folder
 				{
-					Debug.WriteLine("j = " + j);
-					/*
-					Debug.WriteLine("\n root_item_list = ");
-					Debug.WriteLine(root_item_list[i]);
-
-					Debug.WriteLine("\n root_folder_list = ");
-					Debug.WriteLine(root_folder_list[j]);
-					*/
-
-					if (Proj_Mng.Is_Correspondent(root_item_list[i], root_folder_list[j]))
+					Debug.WriteLine("i = " + i);
+					//See if current file has a correspondent folder.
+					for (int j = 0; j < root_folder_list.Length; j++) // Iterate folders in root folder
 					{
-						//If it does, add the folder as a tree node instead of it.
-						treeView1.Nodes.Add(root_folder_list[j]);
-						Debug.WriteLine("Corresponds!");
-					}
-					else
-					{
-						//If it doesn't, just put it as the node.
-						treeView1.Nodes.Add(root_item_list[i]);
-						Debug.WriteLine("Does not correspond...");
+						if (Proj_Mng.Is_Correspondent(root_item_list[i], root_folder_list[j]))
+						{
+							//If it does, add the folder as a tree node instead of it.
+							treeView1.Nodes.Add(root_item_list[j]);
+							Debug.WriteLine("Corresponds!");
+							//Add new node stuff here
+							can_next_level = true;
+						}
+						else
+						{
+							//If it doesn't, just put it as the node.
+							treeView1.Nodes.Add(root_item_list[i]);
+							Debug.WriteLine("Does not correspond...");
+						}
 					}
 				}
-
-
 			}
 			treeView1.EndUpdate();
 
