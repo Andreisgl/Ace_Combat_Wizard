@@ -61,17 +61,68 @@ namespace AC_Wizard
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-			string[] root_item_list = Proj_Mng.Get_Items_inRoot(true);
-			string[] root_item_path_list = Proj_Mng.Get_Items_inRoot(false);
+			// Get files list:
+			string[] root_item_list = Proj_Mng.Get_Items_inRoot(true, 0);
+			string[] root_item_path_list = Proj_Mng.Get_Items_inRoot(false, 0);
+			// Get folders list:
+			string[] root_folder_list = Proj_Mng.Get_Items_inRoot(true, 1);
+			string[] root_folder_path_list = Proj_Mng.Get_Items_inRoot(false, 1);
+
+			//Check if there is any folder corresponding to a file
+			/*CORE CONCEPT: ||| CORRESPONDENCE |||
+				In order to make the file tree, we need to delve deeper
+				and extract the components of each file.
+				The contents of such extractions are kept in a correspondent folder.
+
+				The correspondent folder for a file has the exact same name, except that
+				the "." of the file extension is swapped out for "—" ("Em Dash", ALT+0151).
+				This swapping is necessary, since a folder and a file with the same name
+				cannot coexist.
+
+				This correspondence will be kept in a bi-dimensional array,
+				must any more of those correspondences be made
+			*/
+			// I'm commenting this until I find it's right place in the code!
+			// char[,] SWAPPING_DICTIONARY = { {'.', '—' } };
+
 			treeView1.BeginUpdate();
 			for(int i=0; i < root_item_list.Length; i++)
 			{
-				string item = root_item_list[i];
-				treeView1.Nodes.Add(item);
+				Debug.WriteLine("i = " + i);
+				//string item = root_item_list[i];
+
+				//See if current file has a correspondent folder.
+				
+				for (int j = 0; j < root_folder_list.Length; j++)
+				{
+					Debug.WriteLine("j = " + j);
+					/*
+					Debug.WriteLine("\n root_item_list = ");
+					Debug.WriteLine(root_item_list[i]);
+
+					Debug.WriteLine("\n root_folder_list = ");
+					Debug.WriteLine(root_folder_list[j]);
+					*/
+
+					if (Proj_Mng.Is_Correspondent(root_item_list[i], root_folder_list[j]))
+					{
+						//If it does, add the folder as a tree node instead of it.
+						treeView1.Nodes.Add(root_folder_list[j]);
+						Debug.WriteLine("Corresponds!");
+					}
+					else
+					{
+						//If it doesn't, just put it as the node.
+						treeView1.Nodes.Add(root_item_list[i]);
+						Debug.WriteLine("Does not correspond...");
+					}
+				}
+
 
 			}
 			treeView1.EndUpdate();
 
 		}
+		
 	}
 }
