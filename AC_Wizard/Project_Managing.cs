@@ -114,8 +114,8 @@ namespace AC_Wizard
 			//	- 0 = return files only
 			//	- 1 = return folders only
 
-			//string[] root_list = Get_Items_inDir(PROJECT_ROOT_FOLDER);
-			string[] root_list;
+			string[] root_list = Get_Items_inDir(path);
+			//string[] root_list;
 			
 			switch (type_mode)
 			{
