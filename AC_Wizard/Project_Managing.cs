@@ -140,13 +140,20 @@ namespace AC_Wizard
 		public bool Is_Correspondent(string file, string folder)
 		{
 			// For the correspondent file and folder thingie
-			string original_char = ".";
-			char new_char = '—';
+			string original_char = "—";
+			string new_char = ".";
 			int replace_index = folder.LastIndexOf(original_char);
 
+			Debug.WriteLine(folder);
+			Debug.WriteLine(file);
+			/*
 			Debug.WriteLine("index!");
 			Debug.WriteLine(replace_index);
+			*/
 
+			folder = folder.Replace(original_char, new_char);
+			Debug.WriteLine("folderafter = " + folder);
+			/*
 			if (replace_index != -1) //If replacement index is valid...
 			{
 				// Continue.
@@ -162,7 +169,7 @@ namespace AC_Wizard
 				// Or else, it has no point!
 				return false;
             }
-			
+			*/
 
 
 			if (file == folder)
