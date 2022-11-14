@@ -74,11 +74,20 @@ namespace AC_Wizard
 				curr_project_path = project_path;
 				Check_Project_Folders(project_path);
 			}
-			else
-            {
-				// If not:
+			else // If not:
+			{
+				if (Create_Project(project_path))
+					return true;
 				return false;
 			}
+			return true;
+		}
+
+		public bool Create_Project(string path)
+		{
+			//Directory.CreateDirectory(Path.Join(path, project_name));
+			//File.Create(Path.Combine(path, project_name, project_info_filename)).Close();
+			File.Create(Path.Combine(path, project_info_filename)).Close();
 			return true;
 		}
 		public void Import_File_toRoot(string[] file_path)
@@ -103,7 +112,16 @@ namespace AC_Wizard
 		public string[] Get_Items_inDir(string directory)
 		{
 			//Some weird exception happens here...
-			return System.IO.Directory.GetFiles(directory);
+			try
+			{
+				return System.IO.Directory.GetFiles(directory);
+			}
+			catch (System.ArgumentException)
+			{
+				string[] aux = {};
+				return aux;
+            }
+
 
 		}
 		public string[] Get_Folders_inDir(string directory)
