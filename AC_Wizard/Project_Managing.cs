@@ -25,7 +25,8 @@ namespace AC_Wizard
 		}
 		public bool Is_Project(string path)
 		{
-			project_info_file = path + "\\" + project_info_filename;
+			//project_info_file = path + "\\" + project_info_filename;
+			project_info_file = Path.Join(path, project_info_filename);
 			if (File.Exists(project_info_file))
 			{
 				//Console.WriteLine("Project file exists!");
@@ -40,8 +41,10 @@ namespace AC_Wizard
 
 		public void Check_folders()
 		{
-			PROJECT_FOLDER = cwd + "\\" + PROJECT_FOLDER;
-			
+			//PROJECT_FOLDER = cwd + "\\" + PROJECT_FOLDER;
+			PROJECT_FOLDER = Path.Join(cwd, PROJECT_FOLDER);
+
+
 			if (!Directory.Exists(PROJECT_FOLDER))
 			{
 				Directory.CreateDirectory(PROJECT_FOLDER);
@@ -49,7 +52,8 @@ namespace AC_Wizard
 		}
 		public void Check_Project_Folders(string project_path)
         {
-			PROJECT_ROOT_FOLDER = project_path + "\\" + PROJECT_ROOT_FOLDER_NAME;
+			//PROJECT_ROOT_FOLDER = project_path + "\\" + PROJECT_ROOT_FOLDER_NAME;
+			PROJECT_ROOT_FOLDER = Path.Join(project_path, PROJECT_ROOT_FOLDER_NAME);
 			if (!Directory.Exists(PROJECT_ROOT_FOLDER))
 			{
 				Directory.CreateDirectory(PROJECT_ROOT_FOLDER);
@@ -58,6 +62,10 @@ namespace AC_Wizard
 		public string Get_Project_Folder()
         {
 			return PROJECT_FOLDER;
+		}
+		public string Get_Project_Root_Folder()
+		{
+			return PROJECT_ROOT_FOLDER;
 		}
 
 		public bool Open_Project(string project_path)
@@ -86,7 +94,8 @@ namespace AC_Wizard
 				try
 				{
 					file_name = Path.GetFileName(file_path[i]);
-					File.Copy(file_path[0], PROJECT_ROOT_FOLDER + "\\" + file_name, false);
+					//File.Copy(file_path[0], PROJECT_ROOT_FOLDER + "\\" + file_name, false);
+					File.Copy(file_path[0], Path.Join(PROJECT_ROOT_FOLDER, file_name), false);
 				}
 				catch (IOException)
 				{

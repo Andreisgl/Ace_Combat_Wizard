@@ -61,8 +61,8 @@ namespace AC_Wizard
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
-			string curr_dir = "F:\\Users\\andre\\Documentos\\GITS\\Ace_Combat_Wizard\\AC_Wizard\bin\\Debug\net6.0-windows\\Projects\\purject\\proot";
-			Recursive_Tree_Stuff(curr_dir, 0);
+			//string curr_dir = "F:\\Users\\andre\\Documentos\\GITS\\Ace_Combat_Wizard\\AC_Wizard\bin\\Debug\net6.0-windows\\Projects\\purject\\proot";
+			Recursive_Tree_Stuff(Proj_Mng.Get_Project_Root_Folder(), 0);
 		}
 
 			
