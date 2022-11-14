@@ -62,7 +62,7 @@ namespace AC_Wizard
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
 			treeView1.BeginUpdate();
-			treeView1.Nodes.Clear();
+			// treeView1.Nodes.Clear();
 			//TreeNode root = treeView1.Nodes.Add("root");
 			//treeView1.ExpandAll();
 			Recursive_Tree_Stuff(Proj_Mng.Get_Project_Root_Folder(), 0);
@@ -74,7 +74,7 @@ namespace AC_Wizard
 		
 		private void Recursive_Tree_Stuff(string curr_dir, int level, TreeNode? parent_node = null)
 		{
-			Debug.WriteLine("curr_dir = " + curr_dir);
+			//This function shall only be called with 'parent_node' not called when it is to refresh from the root.
 			
 			// Provisory hard-code because I'm lazy!
 				//It caused more problems than it solved!
@@ -109,6 +109,14 @@ namespace AC_Wizard
 			Debug.WriteLine("l = " + level);
 			can_next_level = false;
 			
+			if (parent_node == null) //If this function is being called from 'root'...
+			{
+				treeView1.Nodes.Clear(); //Clear all nodes.
+			}
+			else
+			{
+				parent_node.Nodes.Clear(); // If not, just clear all nodes inside the selected node
+			}
 			for (int i = 0; i < item_list.Length; i++) // Iterate items in root folder
 			{
 				Debug.WriteLine("i = " + i);
