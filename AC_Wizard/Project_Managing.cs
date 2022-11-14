@@ -112,16 +112,16 @@ namespace AC_Wizard
 		}
 		public string[] Get_Items_inPath(string path, bool only_file_name, int type_mode)
 		{
-			//bool only_item_name:
-			//	- true = return only item names
-			//	- false = return whole path
-			//int type_mode:
-			//	- 0 = return files only
-			//	- 1 = return folders only
+			/*
+			bool only_item_name:
+				- true = return only item names
+				- false = return whole path
+			int type_mode:
+				- 0 = return files only
+				- 1 = return folders only */
 
 			string[] root_list = Get_Items_inDir(path);
-			//string[] root_list;
-			
+
 			switch (type_mode)
 			{
 				case 0: // Files only
@@ -137,46 +137,18 @@ namespace AC_Wizard
 			if (only_file_name)
 			{
 				for(int i=0; i< root_list.Length; i++)
-				{
-					root_list[i] = Path.GetFileName( root_list[i] );
-                }
+					root_list[i] = Path.GetFileName(root_list[i]);
 			}
 			return root_list;
 		}
-		public bool Is_Correspondent(string file, string folder)
+		public bool IsCorrespondent(string file, string folder)
 		{
 			// For the correspondent file and folder thingie
 			string original_char = "—";
 			string new_char = ".";
 			int replace_index = folder.LastIndexOf(original_char);
 
-			//Debug.WriteLine(folder);
-			//Debug.WriteLine(file);
-			/*
-			Debug.WriteLine("index!");
-			Debug.WriteLine(replace_index);
-			*/
-
 			folder = folder.Replace(original_char, new_char);
-			//Debug.WriteLine("folderafter = " + folder);
-			/*
-			if (replace_index != -1) //If replacement index is valid...
-			{
-				// Continue.
-				StringBuilder sb = new StringBuilder(folder);
-
-				sb[replace_index] = new_char;
-				folder = sb.ToString();
-
-				Debug.WriteLine("folder = ", folder);
-			}
-			else
-			{
-				// Or else, it has no point!
-				return false;
-            }
-			*/
-
 
 			if (file == folder)
 				return true;
