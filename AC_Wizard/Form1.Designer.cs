@@ -36,15 +36,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.openProgramDialog = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // btnOpenFile
             // 
             this.btnOpenFile.Location = new System.Drawing.Point(161, 12);
             this.btnOpenFile.Name = "btnOpenFile";
-            this.btnOpenFile.Size = new System.Drawing.Size(122, 29);
+            this.btnOpenFile.Size = new System.Drawing.Size(154, 29);
             this.btnOpenFile.TabIndex = 0;
-            this.btnOpenFile.Text = "Import File";
+            this.btnOpenFile.Text = "Import File to Root";
             this.btnOpenFile.UseVisualStyleBackColor = true;
             this.btnOpenFile.Click += new System.EventHandler(this.btnOpenFile_Click);
             // 
@@ -87,7 +88,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(289, 12);
+            this.btnRefresh.Location = new System.Drawing.Point(321, 12);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(94, 29);
             this.btnRefresh.TabIndex = 6;
@@ -103,6 +104,12 @@
             this.treeView1.TabIndex = 7;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             this.treeView1.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.treeView1_NodeMouseDoubleClick);
+            // 
+            // openProgramDialog
+            // 
+            this.openProgramDialog.Filter = "Executables(*.exe;*.py)|*.exe;*.py|All files (*.*)|*.*";
+            this.openProgramDialog.Title = "Choose program to open file:";
+            this.openProgramDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openProgramDialog_FileOk);
             // 
             // Form1
             // 
@@ -133,5 +140,6 @@
         private Label label2;
         private Button btnRefresh;
         private TreeView treeView1;
+        private OpenFileDialog openProgramDialog;
     }
 }

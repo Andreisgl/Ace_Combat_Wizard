@@ -68,9 +68,6 @@ namespace AC_Wizard
 			Recursive_Tree_Stuff(Proj_Mng.Get_Project_Root_Folder(), 0);
 			treeView1.EndUpdate();
 		}
-
-			
-
 		
 		private void Recursive_Tree_Stuff(string curr_dir, int level, TreeNode? parent_node = null)
 		{
@@ -140,8 +137,6 @@ namespace AC_Wizard
 			}
 		}
 
-
-
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
 			
@@ -149,8 +144,18 @@ namespace AC_Wizard
 
 		private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
-			//Debug.WriteLine("eeeeee");
-			Proj_Mng.Open_File_inProject(treeView1.SelectedNode.FullPath);
+
+			
+			if (openProgramDialog.ShowDialog() == DialogResult.OK)
+			{
+				string program_path = openProgramDialog.FileName;
+				Proj_Mng.Open_File_inProject(treeView1.SelectedNode.FullPath, program_path);
+			}
 		}
-	}
+
+		private void openProgramDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			
+		}
+    }
 }
