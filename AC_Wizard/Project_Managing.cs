@@ -160,26 +160,73 @@ namespace AC_Wizard
 			return root_list;
 		}
 		public bool IsCorrespondent(string file, string folder)
-		{
-			// For the correspondent file and folder thingie
-			string original_char = "—";
-			string new_char = ".";
-			int replace_index = folder.LastIndexOf(original_char);
-
-			folder = folder.Replace(original_char, new_char);
-
-			if (file == folder)
+		{	
+			if (folder == GetCorrespondent(file, true))
 				return true;
 			else
 				return false;
 		}
 
-		public void Open_File_inProject(string file_path)
+		string GetCorrespondent(string file, bool isFile)
+		{
+			// Returns the correspondent name for the input
+			// if isFile == true, generate the name it's folder should have
+			// if isFile == false, generate the name it's file should have
+			char original_char;
+			char new_char;
+
+			if (isFile)
+			{
+				original_char = '.';
+				new_char = '—';
+			}
+			else
+			{
+				original_char = '—';
+				new_char = '.';
+			}
+
+			
+			int replace_index = file.LastIndexOf(original_char);
+
+
+			//file = file.Substring(0, replace_index) + new_char + file.Substring(replace_index + 1);
+			char[] aux = file.ToCharArray();
+			aux[replace_index] = new_char;
+			file = new string(aux);
+			
+
+			//file = file.Replace(original_char, new_char);
+			return file;
+			
+		}
+
+		public void Open_File_inProject(string file_path, string program_path)
 		{
 			file_path = Path.Join(PROJECT_ROOT_FOLDER, file_path);
-			Debug.WriteLine("Open: " + file_path);
+			Debug.WriteLine("Open: " + file_path + " with " + program_path);
+
+			string ?dest_folder = Path.GetDirectoryName(file_path);
+			if (dest_folder != null)
+			{
+				using (System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
+				{
+					pProcess.StartInfo.FileName = program_path;
+					pProcess.StartInfo.Arguments = dest_folder; //argument
+					pProcess.StartInfo.UseShellExecute = false;
+					pProcess.StartInfo.RedirectStandardOutput = true;
+					pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+					pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
+					pProcess.Start();
+					string output = pProcess.StandardOutput.ReadToEnd(); //The output result
+					pProcess.WaitForExit();
+				}
+			}
+
+
 			
-        }
+
+		}
 
 
 
