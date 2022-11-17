@@ -174,8 +174,10 @@ namespace AC_Wizard
 				return false;
 		}
 
-		void Open_File_inProject(string file_path)
+		public void Open_File_inProject(string file_path)
 		{
+			file_path = Path.Join(PROJECT_ROOT_FOLDER, file_path);
+			Debug.WriteLine("Open: " + file_path);
 			
         }
 

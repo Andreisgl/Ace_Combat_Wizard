@@ -139,5 +139,18 @@ namespace AC_Wizard
 				}
 			}
 		}
+
+
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+			
+		}
+
+		private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			//Debug.WriteLine("eeeeee");
+			Proj_Mng.Open_File_inProject(treeView1.SelectedNode.FullPath);
+		}
 	}
 }
