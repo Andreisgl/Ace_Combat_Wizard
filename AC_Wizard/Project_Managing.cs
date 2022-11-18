@@ -205,26 +205,44 @@ namespace AC_Wizard
 		{
 			file_path = Path.Join(PROJECT_ROOT_FOLDER, file_path);
 			Debug.WriteLine("Open: " + file_path + " with " + program_path);
+			string dest_folder = "";
 
-			string ?dest_folder = Path.GetDirectoryName(file_path);
-			if (dest_folder != null)
+			if (File.Exists(file_path))
 			{
-				using (System.Diagnostics.Process pProcess = new System.Diagnostics.Process())
-				{
-					pProcess.StartInfo.FileName = program_path;
-					pProcess.StartInfo.Arguments = dest_folder; //argument
-					pProcess.StartInfo.UseShellExecute = false;
-					pProcess.StartInfo.RedirectStandardOutput = true;
-					pProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-					pProcess.StartInfo.CreateNoWindow = true; //not diplay a windows
-					pProcess.Start();
-					string output = pProcess.StandardOutput.ReadToEnd(); //The output result
-					pProcess.WaitForExit();
-				}
+				// This path is a file
+				dest_folder = Path.GetDirectoryName(file_path) + "\\" + Path.GetFileNameWithoutExtension(GetCorrespondent(file_path, true));
+				
+			}
+			else if (Directory.Exists(file_path))
+			{
+				// This path is a directory
+				dest_folder = Path.GetDirectoryName(file_path);
+
 			}
 
+			// WHY DO THIS?!
+			//Simple. Creating a '.bat' and then running it saves me the trouble of integrating with Python!
 
-			
+			string args = "\"" + file_path + "\"" + " "
+			+ "\"" + dest_folder + "\"";
+
+			// Run file
+			string run_file_name = "./ACWRun.bat";
+			string full_string = "chcp 65001\nStart \"\" "
+			+ "\"" + program_path + "\" " + args;
+
+			//Start ""  "C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe"
+			File.WriteAllText(run_file_name, full_string);
+			//File.Create( curr_project_path + );
+
+			Process ExternalProcess = new Process();
+			ExternalProcess.StartInfo.FileName = run_file_name;
+			ExternalProcess.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+			ExternalProcess.Start();
+			ExternalProcess.WaitForExit();
+
+
+
 
 		}
 
