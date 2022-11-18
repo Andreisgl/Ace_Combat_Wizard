@@ -144,8 +144,6 @@ namespace AC_Wizard
 
 		private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
-
-			
 			if (openProgramDialog.ShowDialog() == DialogResult.OK)
 			{
 				string program_path = openProgramDialog.FileName;
