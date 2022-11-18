@@ -201,54 +201,41 @@ namespace AC_Wizard
 			
 		}
 
-		public void Open_File_inProject(string file_path, string program_path)
+		public void Open_File_inProject(string input_path, string program_path)
 		{
-			file_path = Path.Join(PROJECT_ROOT_FOLDER, file_path);
-			Debug.WriteLine("Open: " + file_path + " with " + program_path);
-			string dest_folder = "";
+			input_path = Path.Join(PROJECT_ROOT_FOLDER, input_path);
+			Debug.WriteLine("Open: " + input_path + " with " + program_path);
+			string dest_path = "";
 
-			if (File.Exists(file_path))
+			if (File.Exists(input_path))
 			{
 				// This path is a file
-				dest_folder = Path.GetDirectoryName(file_path) + "\\" + Path.GetFileNameWithoutExtension(GetCorrespondent(file_path, true));
+				dest_path = Path.GetDirectoryName(input_path) + "\\" + Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
 				
 			}
-			else if (Directory.Exists(file_path))
+			else if (Directory.Exists(input_path))
 			{
 				// This path is a directory
-				dest_folder = Path.GetDirectoryName(file_path);
+				dest_path = Path.GetDirectoryName(input_path);
 
 			}
 
 			// WHY DO THIS?!
-			//Simple. Creating a '.bat' and then running it saves me the trouble of integrating with Python!
-
-			string args = "\"" + file_path + "\"" + " "
-			+ "\"" + dest_folder + "\"";
+			//Simple: Creating a '.bat' and then running it saves me the trouble of integrating with Python!
+			string args = "\"" + input_path + "\"" + " "
+			+ "\"" + dest_path + "\"";
 
 			// Run file
 			string run_file_name = "./ACWRun.bat";
 			string full_string = "chcp 65001\nStart \"\" "
 			+ "\"" + program_path + "\" " + args;
 
-			//Start ""  "C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe"
 			File.WriteAllText(run_file_name, full_string);
-			//File.Create( curr_project_path + );
-
 			Process ExternalProcess = new Process();
 			ExternalProcess.StartInfo.FileName = run_file_name;
 			ExternalProcess.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
 			ExternalProcess.Start();
 			ExternalProcess.WaitForExit();
-
-
-
-
 		}
-
-
-
-
-
 	}
 }
