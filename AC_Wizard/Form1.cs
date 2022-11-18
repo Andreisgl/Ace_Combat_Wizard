@@ -61,12 +61,7 @@ namespace AC_Wizard
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
-			treeView1.BeginUpdate();
-			// treeView1.Nodes.Clear();
-			//TreeNode root = treeView1.Nodes.Add("root");
-			//treeView1.ExpandAll();
 			Recursive_Tree_Stuff(Proj_Mng.Get_Project_Root_Folder(), 0);
-			treeView1.EndUpdate();
 		}
 		
 		private void Recursive_Tree_Stuff(string curr_dir, int level, TreeNode? parent_node = null)
@@ -80,6 +75,8 @@ namespace AC_Wizard
 			string[] folder_list = Proj_Mng.Get_Items_inPath(curr_dir, true, 1);
 			string[] folder_path_list = Proj_Mng.Get_Items_inPath(curr_dir, false, 1);
 			bool can_next_level = false;
+
+			treeView1.BeginUpdate();
 
 			if (parent_node == null) //If this function is being called from 'root'...
 				treeView1.Nodes.Clear(); //Clear all nodes.
@@ -135,6 +132,7 @@ namespace AC_Wizard
 						parent_node.Nodes.Add(item_list[i]);
 				}
 			}
+			treeView1.EndUpdate();
 		}
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
