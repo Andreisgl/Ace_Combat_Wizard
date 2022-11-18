@@ -61,10 +61,10 @@ namespace AC_Wizard
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
-			Recursive_Tree_Stuff(Proj_Mng.Get_Project_Root_Folder(), 0);
+			Refresh_Tree(Proj_Mng.Get_Project_Root_Folder(), 0);
 		}
 		
-		private void Recursive_Tree_Stuff(string curr_dir, int level, TreeNode? parent_node = null)
+		private void Refresh_Tree(string curr_dir, int level, TreeNode? parent_node = null)
 		{
 			//This function shall only be called without 'parent_node' when it is to refresh from the root.
 
@@ -117,7 +117,7 @@ namespace AC_Wizard
 							new_node = parent_node.Nodes.Add(item_list[i]); //
 
 						can_next_level = true;
-						Recursive_Tree_Stuff(folder_path_list[j], level + 1, parent_node: new_node);
+						Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
 					}
 					else
 						//If it doesn't, just put it as the node.
