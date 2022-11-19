@@ -167,7 +167,7 @@ namespace AC_Wizard
 				return false;
 		}
 
-		string GetCorrespondent(string file, bool isFile)
+		public string GetCorrespondent(string file, bool isFile)
 		{
 			// Returns the correspondent name for the input
 			// if isFile == true, generate the name it's folder should have
@@ -218,7 +218,6 @@ namespace AC_Wizard
 			{
 				// This path is a directory
 				dest_path = Path.GetDirectoryName(input_path);
-
 			}
 
 			// WHY DO THIS?!
