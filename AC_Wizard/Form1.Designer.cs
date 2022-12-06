@@ -37,6 +37,7 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.openProgramDialog = new System.Windows.Forms.OpenFileDialog();
+            this.btnProgramStuff = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOpenFile
@@ -111,11 +112,22 @@
             this.openProgramDialog.Title = "Choose program to open file:";
             this.openProgramDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openProgramDialog_FileOk);
             // 
+            // btnProgramStuff
+            // 
+            this.btnProgramStuff.Location = new System.Drawing.Point(351, 152);
+            this.btnProgramStuff.Name = "btnProgramStuff";
+            this.btnProgramStuff.Size = new System.Drawing.Size(173, 29);
+            this.btnProgramStuff.TabIndex = 8;
+            this.btnProgramStuff.Text = "Program Stuff";
+            this.btnProgramStuff.UseVisualStyleBackColor = true;
+            this.btnProgramStuff.Click += new System.EventHandler(this.btnProgramStuff_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnProgramStuff);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.label2);
@@ -141,5 +153,6 @@
         private Button btnRefresh;
         private TreeView treeView1;
         private OpenFileDialog openProgramDialog;
+        private Button btnProgramStuff;
     }
 }

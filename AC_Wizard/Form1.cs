@@ -4,9 +4,16 @@ namespace AC_Wizard
 	using System.Diagnostics;
 	using System.IO;
 	using System.Text;
+
+	using Programs;
+	using Wz_Prog = Programs.Wizard_Program;
+	//using Prog_Mng = Programs.Program_Manager;
+
 	public partial class Form1 : Form
 	{
 		Project_Managing Proj_Mng = new();
+		Program_Manager Prog_Mng = new();
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -152,6 +159,20 @@ namespace AC_Wizard
 		private void openProgramDialog_FileOk(object sender, System.ComponentModel.CancelEventArgs e)
 		{
 			
+		}
+
+
+		
+		private void btnProgramStuff_Click(object sender, EventArgs e)
+        {
+			/*
+			if (openProgramDialog.ShowDialog() == DialogResult.OK)
+			{
+				
+			}
+			*/
+			//string program_path = openProgramDialog.FileName;
+			Prog_Mng.btnPush("ppgp");
 		}
     }
 }
