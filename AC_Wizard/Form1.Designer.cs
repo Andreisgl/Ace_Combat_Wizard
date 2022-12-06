@@ -114,7 +114,7 @@
             // 
             // btnProgramStuff
             // 
-            this.btnProgramStuff.Location = new System.Drawing.Point(351, 152);
+            this.btnProgramStuff.Location = new System.Drawing.Point(357, 122);
             this.btnProgramStuff.Name = "btnProgramStuff";
             this.btnProgramStuff.Size = new System.Drawing.Size(173, 29);
             this.btnProgramStuff.TabIndex = 8;
@@ -135,7 +135,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOpenFile);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Ace Combat Wizard";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

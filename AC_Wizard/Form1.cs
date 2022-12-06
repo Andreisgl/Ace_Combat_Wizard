@@ -165,14 +165,15 @@ namespace AC_Wizard
 		
 		private void btnProgramStuff_Click(object sender, EventArgs e)
         {
-			/*
+			
 			if (openProgramDialog.ShowDialog() == DialogResult.OK)
 			{
-				
+				string program_path = openProgramDialog.FileName;
+				Prog_Mng.btnPush(program_path);
 			}
-			*/
-			//string program_path = openProgramDialog.FileName;
-			Prog_Mng.btnPush("ppgp");
+			
+
+			
 		}
     }
 }
