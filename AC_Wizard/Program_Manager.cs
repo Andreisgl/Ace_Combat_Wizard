@@ -6,6 +6,7 @@ using System.Text;
 
 using Wz_Prog = Programs.Wizard_Program;
 
+
 namespace Programs
 {
 	public class Program_Manager
@@ -20,6 +21,11 @@ namespace Programs
 
 
 		}
+
+		public void Record_File_Opening(string file_path, string program_path)
+		{
+			
+        }
 	}
 
 }

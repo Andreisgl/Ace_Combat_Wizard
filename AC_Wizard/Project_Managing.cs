@@ -2,10 +2,16 @@
 using System.Text;
 using System.Diagnostics;
 
+//using Prog_Mng = Programs.Program_Manager;
+using Programs;
+
 namespace AC_Wizard
 {
+	
 	public class Project_Managing
 	{
+		Program_Manager Prog_Mng = new();
+
 		readonly string cwd = Directory.GetCurrentDirectory();
 
 		string PROJECT_FOLDER = "Projects";
@@ -235,6 +241,9 @@ namespace AC_Wizard
 			ExternalProcess.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
 			ExternalProcess.Start();
 			ExternalProcess.WaitForExit();
+
+			// Tell the program manager to record this opening
+			Prog_Mng.Record_File_Opening(input_path, program_path);
 		}
 	}
 }
