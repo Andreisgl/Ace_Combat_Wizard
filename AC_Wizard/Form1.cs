@@ -149,12 +149,8 @@ namespace AC_Wizard
 						String[] aux_list = received.Split("\n");
 						for(int l=0; l<aux_list.Length; l++)
 						{
-							list_data += "\t" + aux_list[l];
-							if(l != aux_list.Length -1)
-							{
-								list_data += "\n";
-
-							}
+							list_data += "\t" + aux_list[l] + "\n";
+							
 
 						}
 
