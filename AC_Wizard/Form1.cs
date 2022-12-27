@@ -71,7 +71,7 @@ namespace AC_Wizard
 			Refresh_Tree(Proj_Mng.Get_Project_Root_Folder(), 0);
 		}
 		
-		private void Refresh_Tree(string curr_dir, int level, TreeNode? parent_node = null)
+		private string Refresh_Tree(string curr_dir, int level, TreeNode? parent_node = null)
 		{
 			//This function shall only be called without 'parent_node' when it is to refresh from the root.
 
@@ -85,19 +85,9 @@ namespace AC_Wizard
 
 			treeView1.BeginUpdate();
 
-			label1.Text = item_path_list[0];
-			string list_filename = "list.list";
-			using (StreamWriter writer = new StreamWriter(curr_dir + list_filename))
-			{
-				for(int i=0; i<item_list.Length; i++)
-				{
-					if (Path.GetExtension(item_list[i]) != ".list")
-					{
-						writer.WriteLine(item_list[i]);
-					}
-				}
-				
-			}
+			
+			
+			
 
 			
 
@@ -106,11 +96,20 @@ namespace AC_Wizard
 			else
 				parent_node.Nodes.Clear(); // If not, just clear all nodes inside the selected node
 
+
+			string list_data = "";
+
 			for (int i = 0; i < item_list.Length; i++) // Iterate items in root folder
 			{
+				if (Path.GetExtension(item_list[i]) != ".list")
+					list_data += item_list[i] + "\n";
+					
 				//See if current file has a correspondent folder.
 				for (int j = 0; j < folder_list.Length; j++) // Iterate folders in root folder
 				{
+					// Make list_data info
+					
+
 					//CORE CONCEPT: ||| CORRESPONDENCE ||| - read below
 					{
 						/*
@@ -140,7 +139,26 @@ namespace AC_Wizard
 							new_node = parent_node.Nodes.Add(item_list[i]); //
 
 						can_next_level = true;
-						Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
+
+						
+							
+                        
+						//list_data += new_node.Text;
+						//list_data += "\t" + Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
+						String received = Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
+						String[] aux_list = received.Split("\n");
+						for(int l=0; l<aux_list.Length; l++)
+						{
+							list_data += "\t" + aux_list[l];
+							if(l != aux_list.Length -1)
+							{
+								list_data += "\n";
+
+							}
+
+						}
+
+
 					}
 					else
 						//If it doesn't, just put it as the node.
@@ -148,17 +166,32 @@ namespace AC_Wizard
 				}
 
 				if (!can_next_level)
-				{ 
+				{
 					if (parent_node == null)
 						treeView1.Nodes.Add(item_list[i]);
 					else
 						parent_node.Nodes.Add(item_list[i]);
+					
 				}
 			}
 			treeView1.EndUpdate();
+
+			//label1.Text = item_path_list[0];
+			string list_filename = "list.list";
+
+
+			// Write fileEEEEEEEEEEEe
+			using (StreamWriter writer = new StreamWriter(curr_dir + "\\" + list_filename))
+			{
+				writer.Write(list_data);
+			}
+
+			label1.Text = list_data;
+
+			return list_data;
 		}
 
-        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
 			
 		}
@@ -191,5 +224,10 @@ namespace AC_Wizard
 
 			
 		}
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
