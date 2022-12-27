@@ -85,6 +85,22 @@ namespace AC_Wizard
 
 			treeView1.BeginUpdate();
 
+			label1.Text = item_path_list[0];
+			string list_filename = "list.list";
+			using (StreamWriter writer = new StreamWriter(curr_dir + list_filename))
+			{
+				for(int i=0; i<item_list.Length; i++)
+				{
+					if (Path.GetExtension(item_list[i]) != ".list")
+					{
+						writer.WriteLine(item_list[i]);
+					}
+				}
+				
+			}
+
+			
+
 			if (parent_node == null) //If this function is being called from 'root'...
 				treeView1.Nodes.Clear(); //Clear all nodes.
 			else

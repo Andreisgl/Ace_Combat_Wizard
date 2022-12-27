@@ -243,7 +243,7 @@ namespace AC_Wizard
 			ExternalProcess.WaitForExit();
 
 			// Tell the program manager to record this opening
-			Prog_Mng.Record_File_Opening(input_path, program_path);
+			//Prog_Mng.Record_File_Opening(input_path, program_path);
 		}
 	}
 }
