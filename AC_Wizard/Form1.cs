@@ -171,19 +171,6 @@ namespace AC_Wizard
 				}
 			}
 			treeView1.EndUpdate();
-
-			//label1.Text = item_path_list[0];
-			string list_filename = "list.list";
-
-
-			// Write fileEEEEEEEEEEEe
-			using (StreamWriter writer = new StreamWriter(curr_dir + "\\" + list_filename))
-			{
-				writer.Write(list_data);
-			}
-
-			label1.Text = list_data;
-
 			return list_data;
 		}
 
