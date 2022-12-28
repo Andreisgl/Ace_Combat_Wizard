@@ -223,7 +223,7 @@ namespace AC_Wizard
 
         private void label2_Click(object sender, EventArgs e)
         {
-
-        }
+			label2.Text = Refresh_Tree(Proj_Mng.Get_Project_Root_Folder(), 0);
+		}
     }
 }
