@@ -10,8 +10,6 @@ namespace AC_Wizard
 	
 	public class Project_Managing
 	{
-		Program_Manager Prog_Mng = new();
-
 		readonly string cwd = Directory.GetCurrentDirectory();
 
 		string PROJECT_FOLDER = "Projects";
