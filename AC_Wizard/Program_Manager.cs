@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using Wz_Prog = Programs.Wizard_Program;
+//using Wz_Prog = Programs.Wizard_Program;
 
 
 namespace Programs
@@ -15,17 +15,11 @@ namespace Programs
 		{
 		}
 
-		List<Wz_Prog> program_list = new List<Wz_Prog>();
 		public void btnPush(string program_path)
 		{
 
 
 		}
-
-		public void list_files_in_level()
-		{
-			
-        }
 
 		
 	}
