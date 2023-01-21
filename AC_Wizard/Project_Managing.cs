@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Diagnostics;
+using AC_Wizard;
 
 //using Prog_Mng = Programs.Program_Manager;
 using Programs;
@@ -84,6 +85,7 @@ namespace AC_Wizard
 					return true;
 				return false;
 			}
+
 			return true;
 		}
 
