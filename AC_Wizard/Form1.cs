@@ -181,8 +181,10 @@ namespace AC_Wizard
 
 		private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
+			label1.Text = treeView1.SelectedNode.FullPath;
 			if (openProgramDialog.ShowDialog() == DialogResult.OK)
 			{
+				
 				string program_path = openProgramDialog.FileName;
 				Proj_Mng.Open_File_inProject(treeView1.SelectedNode.FullPath, program_path);
 			}

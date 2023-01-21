@@ -22,6 +22,9 @@ namespace AC_Wizard
 		string PROJECT_ROOT_FOLDER_NAME = "proot";
 		string PROJECT_ROOT_FOLDER = "";
 
+		string PROJECT_TREE_FOLDER_NAME = "tree";
+		string PROJECT_TREE_FOLDER = "";
+
 		string curr_project_path = "";
 
 		public Project_Managing()
@@ -60,6 +63,12 @@ namespace AC_Wizard
 			{
 				Directory.CreateDirectory(PROJECT_ROOT_FOLDER);
 			}
+
+			PROJECT_TREE_FOLDER = Path.Join(project_path, PROJECT_TREE_FOLDER_NAME);
+			if (!Directory.Exists(PROJECT_TREE_FOLDER))
+			{
+				Directory.CreateDirectory(PROJECT_TREE_FOLDER);
+			}
 		}
 		public string Get_Project_Folder()
         {
@@ -68,6 +77,11 @@ namespace AC_Wizard
 		public string Get_Project_Root_Folder()
 		{
 			return PROJECT_ROOT_FOLDER;
+		}
+
+		public string Get_Project_Tree_Folder()
+		{
+			return PROJECT_TREE_FOLDER;
 		}
 
 		public bool Open_Project(string project_path)
@@ -209,6 +223,7 @@ namespace AC_Wizard
 
 		public void Open_File_inProject(string input_path, string program_path)
 		{
+			string naked_path = input_path;
 			input_path = Path.Join(PROJECT_ROOT_FOLDER, input_path);
 			string dest_path = "";
 
@@ -244,6 +259,41 @@ namespace AC_Wizard
 
 			// Tell the program manager to record this opening
 			//Prog_Mng.Record_File_Opening(input_path, program_path);
+			TreeFolder_updater(naked_path, program_path);
 		}
+		
+		public void TreeFolder_updater(string naked_path, string program_path)
+		{
+			//string dest_path = Path.Join(PROJECT_TREE_FOLDER, naked_path);
+			string[] path_list = naked_path.Split("\\");
+			int last_index = path_list.GetUpperBound(0);
+			string dest_path = PROJECT_TREE_FOLDER;
+			string file_name = path_list[last_index] + ".txt";
+			string file_path = "";
+
+			for(int i=0; i<last_index; i++)
+			{
+				dest_path = Path.Join(dest_path, path_list[i]);
+				if(!Directory.Exists(dest_path))
+				{
+					Directory.CreateDirectory(dest_path);
+                }
+				//dest_path += "\\" + path_list[i];
+            }
+
+			file_path = Path.Join(dest_path, file_name);
+
+			using (FileStream fs = File.Create(file_path))
+			{
+				// Add some text to file    
+				Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");
+				fs.Write(title, 0, title.Length);
+				byte[] author = new UTF8Encoding(true).GetBytes("Mahesh Chand");
+				fs.Write(author, 0, author.Length);
+			}
+
+
+			Debug.WriteLine(file_path);
+        }
 	}
 }
