@@ -226,14 +226,22 @@ namespace AC_Wizard
 			string naked_path = input_path;
 			input_path = Path.Join(PROJECT_ROOT_FOLDER, input_path);
 			string dest_path = "";
+			string dest_newpath = "";
 
 			//Choose destination File/Folder
 			if (File.Exists(input_path))
 			{
 				// This path is a file
-				dest_path = Path.Join( Path.GetDirectoryName(input_path),
-				Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true)) );
+				string name = Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
+				string parent_path = Path.GetDirectoryName(input_path);
+
+				dest_newpath = Path.Join(parent_path, GetCorrespondent(name, false));
+
+				dest_path = Path.Join(parent_path, name);
 				
+
+				
+
 			}
 			else if (Directory.Exists(input_path))
 			{
@@ -248,7 +256,7 @@ namespace AC_Wizard
 
 			// Run file
 			string run_file_name = "./ACWRun.bat";
-			string full_string = $"chcp 65001\nStart \"\" \"{program_path}\" {args}";
+			string full_string = $"chcp 65001\nStart /B /wait \"\" \"{program_path}\" {args}";
 
 			File.WriteAllText(run_file_name, full_string);
 			Process ExternalProcess = new Process();
@@ -260,6 +268,9 @@ namespace AC_Wizard
 			// Tell the program manager to record this opening
 			//Prog_Mng.Record_File_Opening(input_path, program_path);
 			TreeFolder_updater(naked_path, program_path);
+
+			System.IO.File.Delete(input_path);
+			System.IO.Directory.Move(dest_path, dest_newpath);
 		}
 		
 		public void TreeFolder_updater(string naked_path, string program_path)
