@@ -105,70 +105,45 @@ namespace AC_Wizard
 					list_data += item_list[i] + "\n";
 					
 				//See if current file has a correspondent folder.
-				for (int j = 0; j < folder_list.Length; j++) // Iterate folders in root folder
+				/*
+				*/
+
+				
+				if (parent_node == null)
+					treeView1.Nodes.Add(item_list[i]);
+				else
+					parent_node.Nodes.Add(item_list[i]);
+				
+			}
+
+			for (int j = 0; j < folder_list.Length; j++) // Iterate folders in root folder
+			{
+				
+				TreeNode new_node;
+				if (parent_node == null)
+					new_node = treeView1.Nodes.Add(folder_list[j]);
+				else
+					new_node = parent_node.Nodes.Add(folder_list[j]); //
+
+				can_next_level = true;
+
+
+
+
+				//list_data += new_node.Text;
+				//list_data += "\t" + Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
+				String received = Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
+				String[] aux_list = received.Split("\n");
+				for (int l = 0; l < aux_list.Length; l++)
 				{
-					// Make list_data info
-					
-
-					//CORE CONCEPT: ||| CORRESPONDENCE ||| - read below
-					{
-						/*
-						In order to make the file tree, we need to delve deeper
-						and extract the components of each file.
-						The contents of such extractions are kept in a correspondent folder.
-
-						The correspondent folder for a file has the exact same name, except that
-						the "." of the file extension is swapped out for "—" ("Em Dash", ALT+0151).
-						This swapping is necessary, since a folder and a file with the same name
-						cannot coexist.
-
-						This correspondence will be kept in a bi-dimensional array,
-						must any more of those correspondences be made
-						*/
-						// I'm commenting this until I find it's right place in the code!
-						// char[,] SWAPPING_DICTIONARY = { {'.', '—' } };
-					}
-					//Check if there is any folder corresponding to a file
-					if (Proj_Mng.IsCorrespondent(item_list[i], folder_list[j])) 
-					{
-						//If it does, add the folder as a tree node instead of it.
-						TreeNode new_node;
-						if(parent_node == null)
-							new_node = treeView1.Nodes.Add(item_list[i]);
-						else
-							new_node = parent_node.Nodes.Add(item_list[i]); //
-
-						can_next_level = true;
-
-						
-							
-                        
-						//list_data += new_node.Text;
-						//list_data += "\t" + Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
-						String received = Refresh_Tree(folder_path_list[j], level + 1, parent_node: new_node);
-						String[] aux_list = received.Split("\n");
-						for(int l=0; l<aux_list.Length; l++)
-						{
-							list_data += "\t" + aux_list[l] + "\n";
-							
-
-						}
+					list_data += "\t" + aux_list[l] + "\n";
 
 
-					}
-					else
-						//If it doesn't, just put it as the node.
-						can_next_level = false;
 				}
 
-				if (!can_next_level)
-				{
-					if (parent_node == null)
-						treeView1.Nodes.Add(item_list[i]);
-					else
-						parent_node.Nodes.Add(item_list[i]);
-					
-				}
+
+				
+				
 			}
 			treeView1.EndUpdate();
 			return list_data;
