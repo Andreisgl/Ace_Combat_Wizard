@@ -156,7 +156,7 @@ namespace AC_Wizard
 
 		private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
-			label1.Text = treeView1.SelectedNode.FullPath;
+			//label1.Text = treeView1.SelectedNode.FullPath;
 			if (openProgramDialog.ShowDialog() == DialogResult.OK)
 			{
 				

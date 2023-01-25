@@ -251,8 +251,9 @@ namespace AC_Wizard
 			{
 				// This path is a directory
 				isFile = false;
-				dest_path = Path.GetDirectoryName(input_path);
-				dest_newpath = Path.Join(parent_path, GetCorrespondent(name, true));
+				name = input_path;
+				dest_path = GetCorrespondent(input_path, true);
+				dest_newpath = Path.Join(parent_path, name);
 			}
 
 			// WHY DO THIS?!
@@ -277,13 +278,13 @@ namespace AC_Wizard
 
 			if(isFile)
 			{
-				System.IO.File.Delete(input_path);
+				//System.IO.File.Delete(input_path);
 				System.IO.Directory.Move(dest_path, dest_newpath);
 			}
 			else
 			{
-				System.IO.Directory.Delete(input_path, true);
-				System.IO.File.Move(dest_path, dest_newpath);
+				//System.IO.Directory.Delete(input_path, true);
+				//System.IO.File.Move(dest_path, dest_newpath, true);
 			}
 			
 		}
