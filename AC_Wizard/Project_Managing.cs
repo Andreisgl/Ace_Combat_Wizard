@@ -228,12 +228,16 @@ namespace AC_Wizard
 			string dest_path = "";
 			string dest_newpath = "";
 
+			string name = "";
+			string parent_path = "";
+			bool isFile = true;
 			//Choose destination File/Folder
 			if (File.Exists(input_path))
 			{
 				// This path is a file
-				string name = Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
-				string parent_path = Path.GetDirectoryName(input_path);
+				isFile = true;
+				name = Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
+				parent_path = Path.GetDirectoryName(input_path);
 
 				dest_newpath = Path.Join(parent_path, GetCorrespondent(name, false));
 
@@ -246,7 +250,9 @@ namespace AC_Wizard
 			else if (Directory.Exists(input_path))
 			{
 				// This path is a directory
+				isFile = false;
 				dest_path = Path.GetDirectoryName(input_path);
+				dest_newpath = Path.Join(parent_path, GetCorrespondent(name, true));
 			}
 
 			// WHY DO THIS?!
@@ -269,8 +275,17 @@ namespace AC_Wizard
 			//Prog_Mng.Record_File_Opening(input_path, program_path);
 			TreeFolder_updater(naked_path, program_path);
 
-			System.IO.File.Delete(input_path);
-			System.IO.Directory.Move(dest_path, dest_newpath);
+			if(isFile)
+			{
+				System.IO.File.Delete(input_path);
+				System.IO.Directory.Move(dest_path, dest_newpath);
+			}
+			else
+			{
+				System.IO.Directory.Delete(input_path, true);
+				System.IO.File.Move(dest_path, dest_newpath);
+			}
+			
 		}
 		
 		public void TreeFolder_updater(string naked_path, string program_path)
