@@ -239,7 +239,7 @@ namespace AC_Wizard
 				name = Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
 				parent_path = Path.GetDirectoryName(input_path);
 
-				dest_newpath = Path.Join(parent_path, GetCorrespondent(name, false));
+				//dest_newpath = Path.Join(parent_path, GetCorrespondent(name, false));
 
 				dest_path = Path.Join(parent_path, name);
 				
@@ -252,8 +252,9 @@ namespace AC_Wizard
 				// This path is a directory
 				isFile = false;
 				name = input_path;
-				dest_path = GetCorrespondent(input_path, true);
-				dest_newpath = Path.Join(parent_path, name);
+				//dest_path = GetCorrespondent(input_path, true);
+				dest_path = input_path;
+				//dest_newpath = Path.Join(parent_path, name);
 			}
 
 			// WHY DO THIS?!
@@ -275,18 +276,6 @@ namespace AC_Wizard
 			// Tell the program manager to record this opening
 			//Prog_Mng.Record_File_Opening(input_path, program_path);
 			TreeFolder_updater(naked_path, program_path);
-
-			if(isFile)
-			{
-				//System.IO.File.Delete(input_path);
-				System.IO.Directory.Move(dest_path, dest_newpath);
-			}
-			else
-			{
-				//System.IO.Directory.Delete(input_path, true);
-				//System.IO.File.Move(dest_path, dest_newpath, true);
-			}
-			
 		}
 		
 		public void TreeFolder_updater(string naked_path, string program_path)
