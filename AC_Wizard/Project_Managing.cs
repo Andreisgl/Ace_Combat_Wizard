@@ -236,7 +236,8 @@ namespace AC_Wizard
 			{
 				// This path is a file
 				isFile = true;
-				name = Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
+				//name = Path.GetFileNameWithoutExtension(GetCorrespondent(input_path, true));
+				name = input_path;
 				parent_path = Path.GetDirectoryName(input_path);
 
 				//dest_newpath = Path.Join(parent_path, GetCorrespondent(name, false));
