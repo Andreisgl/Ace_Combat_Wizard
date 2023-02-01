@@ -226,7 +226,6 @@ namespace AC_Wizard
 			string naked_path = input_path;
 			input_path = Path.Join(PROJECT_ROOT_FOLDER, input_path);
 			string dest_path = "";
-			string dest_newpath = "";
 
 			string name = "";
 			string parent_path = "";
@@ -243,10 +242,6 @@ namespace AC_Wizard
 				//dest_newpath = Path.Join(parent_path, GetCorrespondent(name, false));
 
 				dest_path = Path.Join(parent_path, name);
-				
-
-				
-
 			}
 			else if (Directory.Exists(input_path))
 			{
