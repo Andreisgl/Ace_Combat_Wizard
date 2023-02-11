@@ -18,6 +18,7 @@ namespace PAC_Utility
 			for (int i = 0; i < 4; i++)
 			{
 				n_files[i] = input_stream[index + i];
+				index++;
             }
 
 
