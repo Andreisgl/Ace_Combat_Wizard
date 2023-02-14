@@ -2,6 +2,7 @@
 *.PAC
 *.TBL
 *.dat
+*.zof
 
 
 # Standard Python ignores:
