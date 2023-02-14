@@ -143,9 +143,12 @@ def rebuild_PAC_data(pac_path, tbl_path):
 
 
 # DAT MANIPULATION SECTION ------------------------------------
+dat_file_name_list = os.listdir(PAC_path)
+dat_file_path_list = dat_file_name_list
+for index in range(len(dat_file_path_list)):
+    dat_file_path_list[index] = os.path.join(PAC_path, dat_file_path_list[index])
 
-
-
+test_dat_file_path = dat_file_path_list[0]
 # END DAT MANIPULATION SECTION ------------------------------------
 
 
