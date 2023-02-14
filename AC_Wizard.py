@@ -11,8 +11,12 @@ import os
 EXE_ROOT = ".\\"
 PROJECTS_FOLDER = "PROJECTS"
 CURRENT_PROJECT_PATH = ""
+CURRENT_PROJECT_ROOT_PATH = "root"
 
+PAC_name = "DATA.PAC"
+TBL_name = "DATA.TBL"
 
+# PROJECT INITIALIZING FUNCTIONS ------------------------------------
 
 def check_main_folders():
     # Check if all core folders are present.
@@ -53,14 +57,44 @@ def open_project_prompt():
         open_project(os.path.join(PROJECTS_FOLDER, next_project))
         can_repeat = False
 
+def check_project_folders(project_path):
+    global CURRENT_PROJECT_ROOT_PATH
+    CURRENT_PROJECT_ROOT_PATH = os.path.join(CURRENT_PROJECT_PATH, CURRENT_PROJECT_ROOT_PATH)
+    if not os.path.isdir(CURRENT_PROJECT_ROOT_PATH):
+        os.mkdir(CURRENT_PROJECT_ROOT_PATH)
 
+def check_project_files(project_path):
+    global PAC_name
+    global TBL_name
+
+    PAC = os.path.join(CURRENT_PROJECT_ROOT_PATH, PAC_name)
+    TBL = os.path.join(CURRENT_PROJECT_ROOT_PATH, TBL_name)
+    if not os.path.isfile(PAC):
+        return False
+    if not os.path.isfile(TBL):
+        return False
+        
+    return True
 
 def open_project(project_path):
     # Opens a project from its path.
-    print("OPENING: " + project_path)
-
+    global CURRENT_PROJECT_PATH
+    CURRENT_PROJECT_PATH = project_path
+    check_project_folders(project_path)
+    
+    if not check_project_files(project_path):
+        print("Either DATA.PAC or DATA.TBL missing!")
 
 if check_main_folders():
     open_project_prompt()
+# END PROJECT INITIALIZING FUNCTIONS ------------------------------------  
+
+
+# File manipulation functions ------------------------------------
+
+
+
+
+
 
 print("end")
