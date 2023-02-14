@@ -45,7 +45,10 @@ def open_project_prompt():
     
     can_repeat = True
     while can_repeat:
-        answer = int(input("Select project index: "))
+        try:
+            answer = int(input("Select project index: "))
+        except ValueError:
+            continue
         
         #if not isinstance(answer, int):
         #    continue
@@ -143,12 +146,36 @@ def rebuild_PAC_data(pac_path, tbl_path):
 
 
 # DAT MANIPULATION SECTION ------------------------------------
+import AC5Z_tools_package.DAT_manager.DAT_manager as DAT_manager
+DAT_manager.check_main_folders(CURRENT_PROJECT_PATH)
+
+def extract_DAT_data(dat_file_path):
+    subdat_data_list = []
+    subdat_name_list = []
+
+    with open(dat_file_path, "rb") as dat:
+        subdat_data_list, subdat_name_list = DAT_manager.extract(dat)
+        pass
+
+    os.remove(dat_file_path)
+    os.mkdir(dat_file_path)
+    for index in range(len(subdat_data_list)):
+        file_path = os.path.join(dat_file_path, subdat_name_list[index])
+        with open(file_path, 'wb') as file:
+            file.write(subdat_data_list[index])
+
+# Store all available .dat files.
 dat_file_name_list = os.listdir(PAC_path)
 dat_file_path_list = dat_file_name_list
 for index in range(len(dat_file_path_list)):
     dat_file_path_list[index] = os.path.join(PAC_path, dat_file_path_list[index])
 
-test_dat_file_path = dat_file_path_list[0]
+test_dat_file_path = dat_file_path_list[251]
+
+extract_DAT_data(test_dat_file_path)
+
+
+
 # END DAT MANIPULATION SECTION ------------------------------------
 
 
