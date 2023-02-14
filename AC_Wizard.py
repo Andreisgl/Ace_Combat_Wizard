@@ -6,6 +6,7 @@
 # to speed up the modding process.
 
 import os
+import shutil
 
 
 EXE_ROOT = ".\\"
@@ -16,7 +17,7 @@ CURRENT_PROJECT_ROOT_PATH = "root"
 PAC_name = "DATA.PAC"
 TBL_name = "DATA.TBL"
 
-# PROJECT INITIALIZING FUNCTIONS ------------------------------------
+# PROJECT INITIALIZING SECTION ------------------------------------
 
 def check_main_folders():
     # Check if all core folders are present.
@@ -67,12 +68,14 @@ def check_project_files(project_path):
     global PAC_name
     global TBL_name
 
-    PAC = os.path.join(CURRENT_PROJECT_ROOT_PATH, PAC_name)
-    TBL = os.path.join(CURRENT_PROJECT_ROOT_PATH, TBL_name)
-    if not os.path.isfile(PAC):
-        return False
-    if not os.path.isfile(TBL):
-        return False
+    global PAC_path
+    global TBL_path
+    PAC_path = os.path.join(CURRENT_PROJECT_ROOT_PATH, PAC_name)
+    TBL_path = os.path.join(CURRENT_PROJECT_ROOT_PATH, TBL_name)
+    #if not os.path.isfile(PAC_path):
+    #    return False
+    #if not os.path.isfile(TBL_path):
+    #    return False
         
     return True
 
@@ -87,10 +90,51 @@ def open_project(project_path):
 
 if check_main_folders():
     open_project_prompt()
-# END PROJECT INITIALIZING FUNCTIONS ------------------------------------  
+# END PROJECT INITIALIZING SECTION ------------------------------------  
 
 
-# File manipulation functions ------------------------------------
+# PAC manipulation section ------------------------------------
+import AC5Z_tools_package.PAC_manager.PAC_extractor as PAC_Extractor
+
+def extract_PAC_data(pac_path, tbl_path):
+    # Gets data from DATA.PAC file and replaces it with a folder
+    # with its extracted .dat contents.
+    DAT_file_data_list = []
+    DAT_file_name_list = []
+    with open(pac_path, 'rb') as pac:
+        with open(tbl_path, 'rb') as tbl:
+            DAT_file_data_list, DAT_file_name_list = PAC_Extractor.extraction(pac, tbl)
+    
+    os.remove(pac_path)
+    os.mkdir(pac_path)
+    for index in range(len(DAT_file_data_list)):
+        
+        with open(os.path.join(pac_path, DAT_file_name_list[index] ), 'wb') as file:
+            file.write(DAT_file_data_list[index])
+        
+def rebuild_PAC_data(pac_path, tbl_path):
+    dat_list = os.listdir(pac_path)
+    dat_data_list = []
+    tbl_data_list = []
+    for index in range(len(dat_list)):
+        dat_list[index] = os.path.join(pac_path, dat_list[index])
+        with open(dat_list[index], "rb") as file:
+            dat_data_list.append(file.read())
+
+    tbl_data_list = PAC_Extractor.rebuilding(dat_data_list)
+
+    shutil.rmtree(pac_path)
+    
+    with open(pac_path, "wb") as pac:
+        for file in dat_data_list: 
+            pac.write(file)
+    with open(tbl_path, "wb") as tbl:
+        for data in tbl_data_list:
+            tbl.write(data)
+
+
+#extract_PAC_data(PAC_path, TBL_path)
+rebuild_PAC_data(PAC_path, TBL_path)
 
 
 
