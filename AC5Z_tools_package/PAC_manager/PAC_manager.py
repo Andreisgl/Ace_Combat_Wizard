@@ -1,4 +1,5 @@
-# This code extracts a DATA.PAC file into smaller .dat files.
+# This module is responsible for extracting and rebuilding .PAC files.
+# Code based on the "ACZ_PAC_TOOLS.2" by Death_the_d0g (deaththed0g @ Github, Death_the_d0g @ Twitter)
 
 def extraction(pac_file, tbl_file):
     val = 0
