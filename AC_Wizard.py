@@ -94,7 +94,7 @@ if check_main_folders():
 
 
 # PAC manipulation section ------------------------------------
-import AC5Z_tools_package.PAC_manager.PAC_extractor as PAC_Extractor
+import AC5Z_tools_package.PAC_manager.PAC_manager as PAC_manager
 
 def extract_PAC_data(pac_path, tbl_path):
     # Gets data from DATA.PAC file and replaces it with a folder
@@ -103,7 +103,7 @@ def extract_PAC_data(pac_path, tbl_path):
     DAT_file_name_list = []
     with open(pac_path, 'rb') as pac:
         with open(tbl_path, 'rb') as tbl:
-            DAT_file_data_list, DAT_file_name_list = PAC_Extractor.extraction(pac, tbl)
+            DAT_file_data_list, DAT_file_name_list = PAC_manager.extraction(pac, tbl)
     
     os.remove(pac_path)
     os.mkdir(pac_path)
@@ -121,7 +121,7 @@ def rebuild_PAC_data(pac_path, tbl_path):
         with open(dat_list[index], "rb") as file:
             dat_data_list.append(file.read())
 
-    tbl_data_list = PAC_Extractor.rebuilding(dat_data_list)
+    tbl_data_list = PAC_manager.rebuilding(dat_data_list)
 
     shutil.rmtree(pac_path)
     
