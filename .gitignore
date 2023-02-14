@@ -1,6 +1,7 @@
 # Project-specific ignores:
 *.PAC
 *.TBL
+*.dat
 
 
 # Standard Python ignores:
