@@ -90,6 +90,7 @@ def open_project(project_path):
 
 if check_main_folders():
     open_project_prompt()
+
 # END PROJECT INITIALIZING SECTION ------------------------------------  
 
 
@@ -135,13 +136,18 @@ def rebuild_PAC_data(pac_path, tbl_path):
         for data in tbl_data_list:
             tbl.write(data)
 
-
 #extract_PAC_data(PAC_path, TBL_path)
-rebuild_PAC_data(PAC_path, TBL_path)
+#rebuild_PAC_data(PAC_path, TBL_path)
+
+# END PAC MANIPULATION SECTION ------------------------------------
+
+
+# DAT MANIPULATION SECTION ------------------------------------
 
 
 
+# END DAT MANIPULATION SECTION ------------------------------------
 
 
 
-print("end")
+pass
