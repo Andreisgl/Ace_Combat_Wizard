@@ -93,7 +93,7 @@ if check_main_folders():
 # END PROJECT INITIALIZING SECTION ------------------------------------  
 
 
-# PAC manipulation section ------------------------------------
+# PAC MANIPULATION SECTION ------------------------------------
 import AC5Z_tools_package.PAC_manager.PAC_manager as PAC_manager
 
 def extract_PAC_data(pac_path, tbl_path):
@@ -108,11 +108,14 @@ def extract_PAC_data(pac_path, tbl_path):
     os.remove(pac_path)
     os.mkdir(pac_path)
     for index in range(len(DAT_file_data_list)):
-        
-        with open(os.path.join(pac_path, DAT_file_name_list[index] ), 'wb') as file:
+        file_path = os.path.join(pac_path, DAT_file_name_list[index])
+        with open(file_path, 'wb') as file:
             file.write(DAT_file_data_list[index])
         
 def rebuild_PAC_data(pac_path, tbl_path):
+    # Sends a list of all .DAT's streams to package,
+    # gets a new .TBL file and reassembles .PAC file in-function.
+    # Removes DATA.PAC folder and replaces it with new DATA.PAC file.
     dat_list = os.listdir(pac_path)
     dat_data_list = []
     tbl_data_list = []
