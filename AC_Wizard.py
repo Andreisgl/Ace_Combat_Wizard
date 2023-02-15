@@ -172,7 +172,13 @@ for index in range(len(dat_file_path_list)):
 
 test_dat_file_path = dat_file_path_list[251]
 
-extract_DAT_data(test_dat_file_path)
+#extract_DAT_data(test_dat_file_path)
+
+### repack (will become a function later)
+
+aux = DAT_manager.repack(test_dat_file_path)
+
+
 
 
 
