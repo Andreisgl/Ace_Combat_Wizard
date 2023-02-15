@@ -164,23 +164,42 @@ def extract_DAT_data(dat_file_path):
         with open(file_path, 'wb') as file:
             file.write(subdat_data_list[index])
 
-# Store all available .dat files.
-dat_file_name_list = os.listdir(PAC_path)
-dat_file_path_list = dat_file_name_list
-for index in range(len(dat_file_path_list)):
-    dat_file_path_list[index] = os.path.join(PAC_path, dat_file_path_list[index])
+def repack_DAT_data(dat_file_path):
+    ### repack (will become a function later)
 
-test_dat_file_path = dat_file_path_list[251]
-
-#extract_DAT_data(test_dat_file_path)
-
-### repack (will become a function later)
-
-aux = DAT_manager.repack(test_dat_file_path)
+    repacked_dat = DAT_manager.repack(dat_file_path)
+    shutil.rmtree(dat_file_path)
+    with open(dat_file_path, 'wb') as dat:
+        for data in repacked_dat:
+            dat.write(data)
 
 
+def list_all_paths_in_dir(base_dir):
+    # Store all available .dat files.
+    dat_file_name_list = os.listdir(base_dir)
+    file_path_list = dat_file_name_list
+    for index in range(len(file_path_list)):
+        file_path_list[index] = os.path.join(base_dir, file_path_list[index])
+    return file_path_list
+
+    #dat_file_path = file_path_list[251]
 
 
+def extract_all_DATs(DAT_dir):
+    path_list = list_all_paths_in_dir(DAT_dir)
+    for path in path_list:
+        extract_DAT_data(path)
+    pass
+
+def repack_all_DATs(DAT_dir):
+    path_list = list_all_paths_in_dir(DAT_dir)
+    for path in path_list:
+        repack_DAT_data(path)
+    pass
+
+
+#extract_all_DATs(PAC_path)
+repack_all_DATs(PAC_path)
 
 # END DAT MANIPULATION SECTION ------------------------------------
 

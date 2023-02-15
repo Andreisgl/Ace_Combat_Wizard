@@ -4,7 +4,6 @@
 # Andrei Segal (Andreisgl @ Github, SegalAndrei @ Twitter)
 
 import os
-import re
 
 CURRENT_PROJECT_PATH = ""
 DAT_MANAGER_FOLDER = "DAT_Manager_data"
@@ -105,7 +104,12 @@ def repack(dat_folder_path):
     for index in range(len(size_list)):
         if index==0:
             index += 1
-        size_list[index] = size_list[index] + size_list[index-1]
+        
+        try:
+            size_list[index] = size_list[index] + size_list[index-1]
+        except IndexError:
+            return False
+
     for index in range(len(size_list)):
         size_list[index] += header_length
     offset_list = size_list
@@ -115,12 +119,26 @@ def repack(dat_folder_path):
     offset_list.pop()
     
     header_list_dec = []
+    header_list_hex = []
     header_list_dec.append(nof)
     for offset in offset_list:
         header_list_dec.append(offset)
     for index in range(int(pad/4)):
         header_list_dec.append(0)
-    pass
+
+    for index in range(len(header_list_dec)):
+        data = header_list_dec[index].to_bytes(4, "little")
+        header_list_hex.append(data)
+
+
+    final_data_list = []
+
+    for data in header_list_hex:
+        final_data_list.append(data)
+    for data in file_data_list:
+        final_data_list.append(data)
+
+    return final_data_list
 
 
 def line_fill(position, line_length):
