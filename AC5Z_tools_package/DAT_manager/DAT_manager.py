@@ -36,7 +36,15 @@ def extract(dat):
     offset_list = []
     zero_offset_list = []
     number_of_files = int.from_bytes(dat.read(4), byteorder = "little")
+    
+    if number_of_files == 0:
+        dat_name = os.path.basename(dat.name)
+        print("NOF == 0 @ " + dat_name)
+        file_data_list.append(dat.read())
+        file_name_list.append(dat_name)
+        return file_data_list, file_name_list
     aux = (number_of_files + 1) * 4
+
     header_length = line_fill(aux, 16)
     header_length += aux
 
@@ -76,11 +84,17 @@ def repack(dat_folder_path):
     file_path_list = os.listdir(dat_folder_path)
     file_data_list = []
     
+     
+
     # Pick file data
     for index in range(len(file_path_list)):
         file_path_list[index] = os.path.join(dat_folder_path, file_path_list[index])
         with open(file_path_list[index], 'rb') as subdat:
             file_data_list.append(subdat.read())
+
+    if len(file_path_list) == 1:
+        return file_data_list
+    
     # Create new header:
     #Pick all empty offsets
     zof_name = os.path.basename(dat_folder_path).split('.')[0]

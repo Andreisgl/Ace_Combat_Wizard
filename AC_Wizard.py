@@ -176,33 +176,76 @@ def repack_DAT_data(dat_file_path):
 
 def list_all_paths_in_dir(base_dir):
     # Store all available .dat files.
+
+    # Can cover all files, will do only 251 to 281, the missions.
     dat_file_name_list = os.listdir(base_dir)
     file_path_list = dat_file_name_list
     for index in range(len(file_path_list)):
         file_path_list[index] = os.path.join(base_dir, file_path_list[index])
-    return file_path_list
+    #return file_path_list
+    
+    # return files in
 
     #dat_file_path = file_path_list[251]
+    return file_path_list
 
 
 def extract_all_DATs(DAT_dir):
     path_list = list_all_paths_in_dir(DAT_dir)
-    for path in path_list:
-        extract_DAT_data(path)
+    if len(path_list) == 1:
+        extract_DAT_data(path_list[0])
+    else:
+        for path in path_list:
+            extract_DAT_data(path)
     pass
 
 def repack_all_DATs(DAT_dir):
     path_list = list_all_paths_in_dir(DAT_dir)
-    for path in path_list:
-        repack_DAT_data(path)
+    if len(path_list) == 1:
+        repack_DAT_data(path_list[0])
+    else:
+        for path in path_list:
+            repack_DAT_data(path)
     pass
 
 
 #extract_all_DATs(PAC_path)
-repack_all_DATs(PAC_path)
+#repack_all_DATs(PAC_path)
 
 # END DAT MANIPULATION SECTION ------------------------------------
 
+
+# FULL MANIPULATION
+def total_unpack():
+    extract_PAC_data(PAC_path, TBL_path)
+    extract_all_DATs(PAC_path)
+
+def total_repack():
+    repack_all_DATs(PAC_path)
+    extract_all_DATs(PAC_path)
+# END FULL MANIPULATION
+
+
+# ACTUAL INTERFACE
+
+print("Unpack or Repack?\n")
+print("0 - UNPACK\n1 - REPACK")
+
+
+while True:
+    answer = int(input("Enter index: "))
+    
+    if answer == 0:
+        total_unpack()
+    elif answer == 1:
+        total_repack()
+    else:
+        continue
+    break
+
+
+
+# END ACTUAL INTERFACE
 
 
 pass
