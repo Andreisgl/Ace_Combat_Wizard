@@ -30,15 +30,28 @@ def extract(dat):
     # Receives BufferedRead of .dat file,
     # returns list of streams and names for each file.
     
+    dat_name = os.path.basename(dat.name)
+
     file_data_list = []
     file_name_list = []
     #type 1 extraction:
     offset_list = []
     zero_offset_list = []
-    number_of_files = int.from_bytes(dat.read(4), byteorder = "little")
     
+    dat.seek(0, 0)
+    dat_type_check = dat.read(32)
+    if dat_type_check == b"\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00":
+        input("(goto = 32) dat_type check 1 @ " + dat_name)
+    
+    dat.seek(0, 0)
+    dat_type_check = dat.read(16)
+    if dat_type_check == b'\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00':
+        input("ext_type_2 @ " + dat_name)
+
+    dat.seek(0, 0)
+    number_of_files = int.from_bytes(dat.read(4), byteorder = "little")
+
     if number_of_files == 0:
-        dat_name = os.path.basename(dat.name)
         print("NOF == 0 @ " + dat_name)
         file_data_list.append(dat.read())
         file_name_list.append(dat_name)
