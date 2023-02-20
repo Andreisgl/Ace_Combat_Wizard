@@ -225,7 +225,7 @@ def total_unpack():
 
 def total_repack():
     repack_all_DATs(PAC_path)
-    extract_all_DATs(PAC_path)
+    rebuild_PAC_data(PAC_path, TBL_path)
 # END FULL MANIPULATION
 
 
