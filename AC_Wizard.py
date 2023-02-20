@@ -187,7 +187,10 @@ def list_all_paths_in_dir(base_dir):
     # return files in
 
     #dat_file_path = file_path_list[251]
-    return file_path_list
+    #return file_path_list[251:282]
+
+    interval = file_path_list[251:282]
+    return interval
 
 
 def extract_all_DATs(DAT_dir):
@@ -243,7 +246,7 @@ while True:
         continue
     break
 
-
+#extract_all_DATs(PAC_path)
 
 # END ACTUAL INTERFACE
 
