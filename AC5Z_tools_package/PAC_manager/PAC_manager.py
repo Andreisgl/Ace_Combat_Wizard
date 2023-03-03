@@ -43,16 +43,17 @@ def rebuilding(dat_data_list):
     tbl_data_list.append(true_nof_hex)
     tbl_data_list.append(pad_hex)
     # Rest of the data
-    offset = 0 
+    offset = 0
     for file in dat_data_list:
         # TBL:
         size = len(file)
         tbl_data_list.append(offset.to_bytes(4, "little"))
         tbl_data_list.append(size.to_bytes(4, "little"))
         offset = offset + size
+    final_TBL_data = b''.join(tbl_data_list)    
 
     print("Building DATA.PAC")
     final_PAC_data = b''.join(dat_data_list)
 
-    return final_PAC_data, tbl_data_list
+    return final_PAC_data, final_TBL_data
 

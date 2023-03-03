@@ -130,15 +130,14 @@ def rebuild_PAC_data(pac_path, tbl_path):
         with open(dat_list[index], "rb") as file:
             dat_data_list.append(file.read())
 
-    pac_data, tbl_data_list = PAC_manager.rebuilding(dat_data_list)
+    pac_data, tbl_data = PAC_manager.rebuilding(dat_data_list)
 
     shutil.rmtree(pac_path)
     
     with open(pac_path, "wb") as pac:
-            pac.write(pac_data)
+        pac.write(pac_data)
     with open(tbl_path, "wb") as tbl:
-        for data in tbl_data_list:
-            tbl.write(data)
+        tbl.write(tbl_data)
 
 #extract_PAC_data(PAC_path, TBL_path)
 #rebuild_PAC_data(PAC_path, TBL_path)
