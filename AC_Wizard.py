@@ -123,18 +123,19 @@ def rebuild_PAC_data(pac_path, tbl_path):
     dat_list = os.listdir(pac_path)
     dat_data_list = []
     tbl_data_list = []
+    tbl_data = b''
+    pac_data = b''
     for index in range(len(dat_list)):
         dat_list[index] = os.path.join(pac_path, dat_list[index])
         with open(dat_list[index], "rb") as file:
             dat_data_list.append(file.read())
 
-    tbl_data_list = PAC_manager.rebuilding(dat_data_list)
+    pac_data, tbl_data_list = PAC_manager.rebuilding(dat_data_list)
 
     shutil.rmtree(pac_path)
     
     with open(pac_path, "wb") as pac:
-        for file in dat_data_list: 
-            pac.write(file)
+            pac.write(pac_data)
     with open(tbl_path, "wb") as tbl:
         for data in tbl_data_list:
             tbl.write(data)

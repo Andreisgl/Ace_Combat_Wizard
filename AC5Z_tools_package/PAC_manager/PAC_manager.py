@@ -32,6 +32,7 @@ def extraction(pac_file, tbl_file):
     return file_data_list, file_name_list
 
 def rebuilding(dat_data_list):
+    print("Building DATA.TBL")
     tbl_data_list = []
     
     # Add header
@@ -50,7 +51,8 @@ def rebuilding(dat_data_list):
         tbl_data_list.append(size.to_bytes(4, "little"))
         offset = offset + size
 
+    print("Building DATA.PAC")
+    final_PAC_data = b''.join(dat_data_list)
 
-
-    return tbl_data_list
+    return final_PAC_data, tbl_data_list
 
