@@ -101,8 +101,6 @@ def repack(dat_folder_path):
 
     # Pick file data
     for index in range(len(file_path_list)):
-        print(file_path_list[index])
-
         file_path_list[index] = os.path.join(dat_folder_path, file_path_list[index])
         with open(file_path_list[index], 'rb') as subdat:
             file_data_list.append(subdat.read())
