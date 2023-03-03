@@ -31,7 +31,7 @@ def extract(dat):
     # returns list of streams and names for each file.
     
     dat_name = os.path.basename(dat.name)
-
+    print("Extracting " + dat_name)
     file_data_list = []
     file_name_list = []
     #type 1 extraction:
@@ -96,11 +96,13 @@ def extract(dat):
 def repack(dat_folder_path):
     file_path_list = os.listdir(dat_folder_path)
     file_data_list = []
-    
+    print("Repacking " + os.path.basename(dat_folder_path))
      
 
     # Pick file data
     for index in range(len(file_path_list)):
+        print(file_path_list[index])
+
         file_path_list[index] = os.path.join(dat_folder_path, file_path_list[index])
         with open(file_path_list[index], 'rb') as subdat:
             file_data_list.append(subdat.read())

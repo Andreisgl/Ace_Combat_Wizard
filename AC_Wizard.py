@@ -219,12 +219,12 @@ def repack_all_DATs(DAT_dir):
 
 # FULL MANIPULATION
 def total_unpack():
-    #extract_PAC_data(PAC_path, TBL_path)
+    extract_PAC_data(PAC_path, TBL_path)
     extract_all_DATs(PAC_path)
 
 def total_repack():
     repack_all_DATs(PAC_path)
-    #rebuild_PAC_data(PAC_path, TBL_path)
+    rebuild_PAC_data(PAC_path, TBL_path)
 # END FULL MANIPULATION
 
 
