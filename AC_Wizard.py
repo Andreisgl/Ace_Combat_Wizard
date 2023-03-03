@@ -170,8 +170,7 @@ def repack_DAT_data(dat_file_path):
     repacked_dat = DAT_manager.repack(dat_file_path)
     shutil.rmtree(dat_file_path)
     with open(dat_file_path, 'wb') as dat:
-        for data in repacked_dat:
-            dat.write(data)
+        dat.write(repacked_dat)
 
 
 def list_all_paths_in_dir(base_dir):
@@ -220,12 +219,12 @@ def repack_all_DATs(DAT_dir):
 
 # FULL MANIPULATION
 def total_unpack():
-    extract_PAC_data(PAC_path, TBL_path)
+    #extract_PAC_data(PAC_path, TBL_path)
     extract_all_DATs(PAC_path)
 
 def total_repack():
     repack_all_DATs(PAC_path)
-    rebuild_PAC_data(PAC_path, TBL_path)
+    #rebuild_PAC_data(PAC_path, TBL_path)
 # END FULL MANIPULATION
 
 

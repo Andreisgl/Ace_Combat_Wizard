@@ -158,14 +158,16 @@ def repack(dat_folder_path):
         header_list_hex.append(data)
 
 
-    final_data_list = []
+    final_data = b''
 
     for data in header_list_hex:
-        final_data_list.append(data)
+        final_data += data
     for data in file_data_list:
-        final_data_list.append(data)
+        final_data += data
 
-    return final_data_list
+
+
+    return final_data
 
 
 def line_fill(position, line_length):
