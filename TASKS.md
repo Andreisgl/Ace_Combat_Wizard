@@ -9,7 +9,8 @@
         - (3) Refactor is needed
         - (4) Complete rewrite is needed
     1. **TARGETS:**
-        1. Central script "AC_Wizard.py"
+        1. Central script "AC_Wizard.py" (3)
+            - Fix path handling to a system-agnostic standard (os.path.join())
         1. Extraction modules
             1. PAC
             1. DAT
