@@ -9,7 +9,7 @@ import os
 import shutil
 
 
-EXE_ROOT = ".\\"
+EXE_ROOT = "."
 PROJECTS_FOLDER = "PROJECTS"
 CURRENT_PROJECT_PATH = ""
 CURRENT_PROJECT_ROOT_PATH = "root"
