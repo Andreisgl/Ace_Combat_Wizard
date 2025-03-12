@@ -3,6 +3,9 @@
 # by Death_the_d0g (deaththed0g @ Github, Death_the_d0g @ Twitter) and
 # Andrei Segal (Andreisgl @ Github, SegalAndrei @ Twitter)
 
+# TODO: extract(): Make input param a path, not a BufferedRead
+
+
 import os
 
 CURRENT_PROJECT_PATH = ""
