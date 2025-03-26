@@ -43,6 +43,8 @@ Records changes made to the original files in a differential manner (records onl
             - ...
     1. -ORIGINAL FILES:
         - e.g.: DATA.PAC (depends on the game)
+    1. OUTPUT FILES:
+        - The modified files. Consider assembling new .iso in the pipeline.
 
 
 
