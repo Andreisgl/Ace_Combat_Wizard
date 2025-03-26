@@ -1,0 +1,8 @@
+file,type,preset
+BIN, folder, enter_folder
+IRX, folder, enter_folder
+SMV, folder, enter_folder
+STREAM, folder, enter_folder
+ioprp300.img,file,
+SLUS_213.46,file,
+SYSTEM.CNF,file,
