@@ -1,6 +1,8 @@
 # This module is responsible for extracting and rebuilding .PAC files.
 # Code based on the "ACZ_PAC_TOOLS.2" by Death_the_d0g (deaththed0g @ Github, Death_the_d0g @ Twitter)
 
+import argparse as argp
+
 def extraction(pac_file, tbl_file):
     val = 0
     f_n = 0
@@ -57,3 +59,29 @@ def rebuilding(dat_data_list):
 
     return final_PAC_data, final_TBL_data
 
+
+def main():
+    parser = argp.ArgumentParser()
+    # Arguments:
+        # Mode:
+            # Extraction
+            # Rebuilding
+        # Paths:
+            # Input Path
+            # Output Path
+
+    parser.add_argument("mode")
+    parser.add_argument("input_path")
+    parser.add_argument("output_path")
+
+
+
+    args = parser.parse_args()
+    print(args)
+
+    pass
+
+
+
+if __name__ == '__main__':
+    main()
