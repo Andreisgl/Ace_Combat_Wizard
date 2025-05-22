@@ -62,13 +62,6 @@ def rebuilding(dat_data_list):
 
 def main():
     parser = argp.ArgumentParser()
-    # Arguments:
-        # Mode:
-            # Extraction
-            # Rebuilding
-        # Paths:
-            # Input Path
-            # Output Path
 
     parser.add_argument("mode")
     parser.add_argument("input_path")
