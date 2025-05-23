@@ -125,6 +125,7 @@ def main():
     if not argcheck_return:
         print('paths failed check!')
         input('Press Enter to exit...')
+        return False
     else:
         print('paths are valid!')
     
