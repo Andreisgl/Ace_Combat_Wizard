@@ -3,6 +3,7 @@
 *.TBL
 *.dat
 *.zof
+testfile
 
 
 # Standard Python ignores:
