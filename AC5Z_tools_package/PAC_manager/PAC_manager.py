@@ -4,34 +4,36 @@
 import argparse as argp
 import os
 
-def extraction(pac_file, tbl_file):
-    val = 0
-    f_n = 0
-    f_offset = 8
-    offset_list = []
-    size_list = []
-    file_data_list = []
-    file_name_list = []
+def unpack(pac_path, tbl_path):
+    with open(tbl_path, 'rb') as tbl_file:
+        val = 0
+        f_n = 0
+        f_offset = 8
+        offset_list = []
+        size_list = []
+        file_data_list = []
+        file_name_list = []
 
-    tbl_file.seek(0, 0)
-    tbl_nof = int.from_bytes(tbl_file.read(4), byteorder = "little")
-    for f in range(tbl_nof):
-        tbl_file.seek(f_offset, 0)
-        offset_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
-        f_offset = f_offset + 4
-        tbl_file.seek(f_offset, 0)
-        size_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
-        f_offset = f_offset + 4
-    for f in range(tbl_nof):
-        file_name_list.append(str(f).zfill(4) + ".dat")
+        tbl_file.seek(0, 0)
+        tbl_nof = int.from_bytes(tbl_file.read(4), byteorder = "little")
+        for f in range(tbl_nof):
+            tbl_file.seek(f_offset, 0)
+            offset_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
+            f_offset = f_offset + 4
+            tbl_file.seek(f_offset, 0)
+            size_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
+            f_offset = f_offset + 4
+    with open(pac_path, 'rb') as pac_file:
+        for f in range(tbl_nof):
+            file_name_list.append(str(f).zfill(4) + ".dat")
 
-        pac_file.seek(offset_list[val])
-        data = pac_file.read(size_list[val])
-        file_data_list.append(data)
+            pac_file.seek(offset_list[val])
+            data = pac_file.read(size_list[val])
+            file_data_list.append(data)
 
-        print("file:", file_name_list[f], "offset:", hex(offset_list[val]), "size:", size_list[val])
-        val = val + 1
-        #f_n = f_n + 1
+            print("file:", file_name_list[f], "offset:", hex(offset_list[val]), "size:", size_list[val])
+            val = val + 1
+            #f_n = f_n + 1
     return file_data_list, file_name_list
 
 def rebuilding(dat_data_list):
