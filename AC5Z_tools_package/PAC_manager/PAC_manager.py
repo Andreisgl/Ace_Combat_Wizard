@@ -2,6 +2,7 @@
 # Code based on the "ACZ_PAC_TOOLS.2" by Death_the_d0g (deaththed0g @ Github, Death_the_d0g @ Twitter)
 
 import argparse as argp
+import os
 
 def extraction(pac_file, tbl_file):
     val = 0
@@ -59,20 +60,79 @@ def rebuilding(dat_data_list):
 
     return final_PAC_data, final_TBL_data
 
+###
+
+def argcheck(args, mode_options, path_types):
+    # Argument validation    
+    while True:
+        # Check mode
+        if not args.mode in mode_options:
+            print(f'Argument *mode* is invalid!')
+            print(f'Valid options: {mode_options}')
+            input('Press any key to exit')
+            break
+        print('mode is valid!')
+        
+        # Check paths
+        invalid_path_flag = False
+        #
+        input_shouldbedir = False
+        output_shouldbedir = False
+        if args.mode == 'extract':
+            input_shouldbedir = False
+            output_shouldbedir = True
+        else:
+            input_shouldbedir = True
+            output_shouldbedir = False
+
+        paths = ((args.input_path, input_shouldbedir), (args.output_path, output_shouldbedir))
+        
+        for path in paths:
+            if not os.path.exists(path[0]):
+                print(f'Path {path[0]} is not valid!')
+                invalid_path_flag = True
+                break
+            
+            if not os.path.isdir(path[0]) == path[1]:
+                typestring = path_types[0]
+                if not path[1]:
+                    typestring = path_types[1]
+                print(f'Path {path[0]} must be a {typestring}')
+                invalid_path_flag = True
+            
+        if invalid_path_flag:
+            return False
+        
+        return True
 
 def main():
+    # Argument parsing
     parser = argp.ArgumentParser()
-
     parser.add_argument("mode")
     parser.add_argument("input_path")
     parser.add_argument("output_path")
-
-
-
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except:
+        print('Uncaught exception!')
+        input('Press Enter to exit...')
     print(args)
+    
+    arg_mode_options = ['extract', 'rebuild']
+    arg_path_types = ['folder', 'file']
+    argcheck_return = argcheck(args, arg_mode_options, arg_path_types)
+    
+    if not argcheck_return:
+        print('paths failed check!')
+        input('Press Enter to exit...')
+    else:
+        print('paths are valid!')
+    
+    ## Apply args
+    #if args.mode
 
-    pass
+
+
 
 
 
