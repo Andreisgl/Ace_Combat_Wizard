@@ -10,9 +10,6 @@ def unpack(pac_path, tbl_path, output_path):
     f_offset = 8
     offset_list = []
     size_list = []
-    file_data_list = []
-    file_name_list = []
-    file_master_list = []
     
     with open(tbl_path, 'rb') as tbl_file:
         tbl_file.seek(0, 0)
@@ -45,28 +42,7 @@ def unpack(pac_path, tbl_path, output_path):
             #f_n = f_n + 1
     
     
-        
-
-    #for file in file_master_list:
-    #    with open(os.path.join(output_path, file[0]), 'wb') as f:
-    #        f.write(file[1])
     
-    #return file_master_list
-
-def _write_unpacked_PAC(output_path, file_master_list):
-    # Check lenghts
-    #if len(file_data_list) != len(file_name_list):
-    #    input('(_write_unpacked_PAC) - Length of name and data lists are not equal! Check this!')
-    
-    # Assemble master list with unified name and data
-    #file_master_list = []
-    #for i, filename in enumerate(file_data_list):
-    #    file_master_list.append((filename, file_data_list[i]))
-
-    for file in file_master_list:
-        with open(os.path.join(output_path, file[0]), 'wb') as f:
-            f.write(file[1])
-
 def rebuilding(dat_data_list):
     print("Building DATA.TBL")
     tbl_data_list = []
@@ -175,19 +151,11 @@ def main():
     
     ## Apply args
     if args.mode == 'extract':
-        # Open file, extract data.
         print(f'extracting... in:{args.input_path} to {args.output_path}')
-        # output_data = extract(data)
         # Assumes TBL has the same name as PAC
         TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
-        #file_list = unpack(args.input_path, TBL_path) 
         unpack(args.input_path, TBL_path, args.output_path) 
-        
-        #_write_unpacked_PAC(args.output_path, file_list)
 
-        
-        # Save output_data
-        pass
     elif args.mode == 'rebuild':
         # Open folder, extract data.
         # output_data = rebuild(data)
