@@ -5,25 +5,29 @@ import argparse as argp
 import os
 
 def unpack(pac_path, tbl_path, output_path):
+    val = 0
+    f_n = 0
+    f_offset = 8
+    offset_list = []
+    size_list = []
+    file_data_list = []
+    file_name_list = []
+    file_master_list = []
+    
     with open(tbl_path, 'rb') as tbl_file:
-        val = 0
-        f_n = 0
-        f_offset = 8
-        offset_list = []
-        size_list = []
-        file_data_list = []
-        file_name_list = []
-        file_master_list = []
-
         tbl_file.seek(0, 0)
         tbl_nof = int.from_bytes(tbl_file.read(4), byteorder = "little")
         for f in range(tbl_nof):
             tbl_file.seek(f_offset, 0)
             offset_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
-            f_offset = f_offset + 4
-            tbl_file.seek(f_offset, 0)
+            f_offset = f_offset + 4 # TODO: These seem unnecessary...
+            tbl_file.seek(f_offset, 0) # TODO: These too...
             size_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
             f_offset = f_offset + 4
+    
+    def write_dat(fname, fdata):
+        with open(os.path.join(output_path, fname), 'wb') as f:
+            f.write(fdata)
     with open(pac_path, 'rb') as pac_file:
         for f in range(tbl_nof):
             name = str(f).zfill(4) + ".dat"
@@ -33,17 +37,21 @@ def unpack(pac_path, tbl_path, output_path):
             data = pac_file.read(size_list[val])
             #file_data_list.append(data)
 
-            file_master_list.append((name, data))
+            #file_master_list.append((name, data))
+            write_dat(name, data)
 
             print("file:", name, "offset:", hex(offset_list[val]), "size:", size_list[val])
-            val = val + 1
+            val = val + 1 # TODO: All this dynamic also seems to be unnecessary...
             #f_n = f_n + 1
     
-    for file in file_master_list:
-        with open(os.path.join(output_path, file[0]), 'wb') as f:
-            f.write(file[1])
     
-    return file_master_list
+        
+
+    #for file in file_master_list:
+    #    with open(os.path.join(output_path, file[0]), 'wb') as f:
+    #        f.write(file[1])
+    
+    #return file_master_list
 
 def _write_unpacked_PAC(output_path, file_master_list):
     # Check lenghts
@@ -173,7 +181,7 @@ def main():
         # Assumes TBL has the same name as PAC
         TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
         #file_list = unpack(args.input_path, TBL_path) 
-        unpack(args.input_path, TBL_path) 
+        unpack(args.input_path, TBL_path, args.output_path) 
         
         #_write_unpacked_PAC(args.output_path, file_list)
 
