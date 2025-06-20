@@ -4,7 +4,7 @@
 import argparse as argp
 import os
 
-def unpack(pac_path, tbl_path):
+def unpack(pac_path, tbl_path, output_path):
     with open(tbl_path, 'rb') as tbl_file:
         val = 0
         f_n = 0
@@ -13,6 +13,7 @@ def unpack(pac_path, tbl_path):
         size_list = []
         file_data_list = []
         file_name_list = []
+        file_master_list = []
 
         tbl_file.seek(0, 0)
         tbl_nof = int.from_bytes(tbl_file.read(4), byteorder = "little")
@@ -25,16 +26,38 @@ def unpack(pac_path, tbl_path):
             f_offset = f_offset + 4
     with open(pac_path, 'rb') as pac_file:
         for f in range(tbl_nof):
-            file_name_list.append(str(f).zfill(4) + ".dat")
+            name = str(f).zfill(4) + ".dat"
+            #file_name_list.append(name)
 
             pac_file.seek(offset_list[val])
             data = pac_file.read(size_list[val])
-            file_data_list.append(data)
+            #file_data_list.append(data)
 
-            print("file:", file_name_list[f], "offset:", hex(offset_list[val]), "size:", size_list[val])
+            file_master_list.append((name, data))
+
+            print("file:", name, "offset:", hex(offset_list[val]), "size:", size_list[val])
             val = val + 1
             #f_n = f_n + 1
-    return file_data_list, file_name_list
+    
+    for file in file_master_list:
+        with open(os.path.join(output_path, file[0]), 'wb') as f:
+            f.write(file[1])
+    
+    return file_master_list
+
+def _write_unpacked_PAC(output_path, file_master_list):
+    # Check lenghts
+    #if len(file_data_list) != len(file_name_list):
+    #    input('(_write_unpacked_PAC) - Length of name and data lists are not equal! Check this!')
+    
+    # Assemble master list with unified name and data
+    #file_master_list = []
+    #for i, filename in enumerate(file_data_list):
+    #    file_master_list.append((filename, file_data_list[i]))
+
+    for file in file_master_list:
+        with open(os.path.join(output_path, file[0]), 'wb') as f:
+            f.write(file[1])
 
 def rebuilding(dat_data_list):
     print("Building DATA.TBL")
@@ -61,6 +84,8 @@ def rebuilding(dat_data_list):
     final_PAC_data = b''.join(dat_data_list)
 
     return final_PAC_data, final_TBL_data
+
+
 
 ###
 
@@ -109,8 +134,15 @@ def argcheck(args, mode_options, path_types):
 
 def main():
     # Argument parsing
+
+    arg_mode_options = ['extract', 'repack']
+    arg_path_types = ['folder', 'file']
+    
+    
+
+
     parser = argp.ArgumentParser()
-    parser.add_argument("mode")
+    parser.add_argument("mode", help=f'options: {arg_mode_options}')
     parser.add_argument("input_path")
     parser.add_argument("output_path")
     try:
@@ -118,12 +150,14 @@ def main():
     except:
         print('Uncaught exception!')
         input('Press Enter to exit...')
+        #exit(1)
+        return
     print(args)
     
-    arg_mode_options = ['extract', 'rebuild']
-    arg_path_types = ['folder', 'file']
+
     argcheck_return = argcheck(args, arg_mode_options, arg_path_types)
-    
+
+
     if not argcheck_return:
         print('paths failed check!')
         input('Press Enter to exit...')
@@ -132,7 +166,28 @@ def main():
         print('paths are valid!')
     
     ## Apply args
-    #if args.mode
+    if args.mode == 'extract':
+        # Open file, extract data.
+        print(f'extracting... in:{args.input_path} to {args.output_path}')
+        # output_data = extract(data)
+        # Assumes TBL has the same name as PAC
+        TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
+        #file_list = unpack(args.input_path, TBL_path) 
+        unpack(args.input_path, TBL_path) 
+        
+        #_write_unpacked_PAC(args.output_path, file_list)
+
+        
+        # Save output_data
+        pass
+    elif args.mode == 'rebuild':
+        # Open folder, extract data.
+        # output_data = rebuild(data)
+        # Save output_data
+        pass
+    else:
+        print('Invalid mode entry!')
+        input('Press Enter to exit...')
 
 
 
