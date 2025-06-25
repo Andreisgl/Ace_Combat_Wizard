@@ -4,7 +4,7 @@
 import argparse as argp
 import os
 
-def unpack(pac_path, tbl_path, output_path):
+def unpack_pac(pac_path, tbl_path, output_path):
     val = 0
     f_n = 0
     f_offset = 8
@@ -40,10 +40,29 @@ def unpack(pac_path, tbl_path, output_path):
             print("file:", name, "offset:", hex(offset_list[val]), "size:", size_list[val])
             val = val + 1 # TODO: All this dynamic also seems to be unnecessary...
             #f_n = f_n + 1
+
+
+
+def repack_pac(input_path, output_path):
+    data_list = []
+    for file_name in os.listdir(input_path):
+        file_path = os.path.join(input_path, file_name)
+        with open(file_path, 'rb') as f:
+            data_list.append(f.read())
+            print("file:", file_name, "size:", f.tell())
     
+    out_pac_data, out_tbl_data = assemble_pac(data_list)
     
+    # Output
+    with open(output_path, 'wb') as fpac:
+        fpac.write(out_pac_data)
+    TBL_path = ((output_path).split('.')[0]) + '.TBL'
+    with open(TBL_path, 'wb') as ftbl:
+        ftbl.write(out_tbl_data)
     
-def rebuilding(dat_data_list):
+    #return data_list
+
+def assemble_pac(dat_data_list):
     print("Building DATA.TBL")
     tbl_data_list = []
     
@@ -98,6 +117,28 @@ def argcheck(args, mode_options, path_types):
 
         paths = ((args.input_path, input_shouldbedir), (args.output_path, output_shouldbedir))
         
+        input_t = (args.input_path, input_shouldbedir)
+        output_t = (args.output_path, output_shouldbedir)
+        
+        # Input
+        if args.mode == 'extract':
+            if not os.path.exists(input_t[0]):
+                print(f'Input path {input_t[0]} is not valid!')
+                invalid_path_flag = True
+                pass
+            if not os.path.exists(input_t[1]):
+                os.mkdir(input_t[1])
+        else:
+            if not os.path.exists(input_t[0]):
+                print(f'Input path {input_t[0]} is not valid!')
+                invalid_path_flag = True
+                pass
+            if not os.path.exists(input_t[1]):
+                os.mkdir(input_t[1])
+
+        
+
+
         for path in paths:
             if not os.path.exists(path[0]):
                 print(f'Path {path[0]} is not valid!')
@@ -154,13 +195,15 @@ def main():
         print(f'extracting... in:{args.input_path} to {args.output_path}')
         # Assumes TBL has the same name as PAC
         TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
-        unpack(args.input_path, TBL_path, args.output_path) 
+        unpack_pac(args.input_path, TBL_path, args.output_path) 
 
-    elif args.mode == 'rebuild':
+    elif args.mode == 'repack':
+        print(f'rebuilding... in:{args.input_path} to {args.output_path}')
         # Open folder, extract data.
         # output_data = rebuild(data)
         # Save output_data
-        pass
+        repack_pac(args.input_path, args.output_path)
+        
     else:
         print('Invalid mode entry!')
         input('Press Enter to exit...')
