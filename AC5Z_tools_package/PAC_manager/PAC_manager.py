@@ -117,33 +117,17 @@ def argcheck(args, mode_options, path_types):
 
         paths = ((args.input_path, input_shouldbedir), (args.output_path, output_shouldbedir))
         
-        input_t = (args.input_path, input_shouldbedir)
-        output_t = (args.output_path, output_shouldbedir)
-        
-        # Input
-        if args.mode == 'extract':
-            if not os.path.exists(input_t[0]):
-                print(f'Input path {input_t[0]} is not valid!')
-                invalid_path_flag = True
-                pass
-            if not os.path.exists(input_t[1]):
-                os.mkdir(input_t[1])
-        else:
-            if not os.path.exists(input_t[0]):
-                print(f'Input path {input_t[0]} is not valid!')
-                invalid_path_flag = True
-                pass
-            if not os.path.exists(input_t[1]):
-                os.mkdir(input_t[1])
-
-        
-
 
         for path in paths:
             if not os.path.exists(path[0]):
-                print(f'Path {path[0]} is not valid!')
-                invalid_path_flag = True
-                break
+                if path[1] and args.mode=='extract':
+                    os.makedirs(path[0])
+                elif (not path[1]) and args.mode=='repack':
+                    pass # Repack mode and output_file does not exist yet
+                else:
+                    print(f'Path {path[0]} is not valid!')
+                    invalid_path_flag = True
+                    break
             
             if not os.path.isdir(path[0]) == path[1]:
                 typestring = path_types[0]
