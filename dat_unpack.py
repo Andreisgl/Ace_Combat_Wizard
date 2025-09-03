@@ -8,50 +8,78 @@ def line_fill(position, line_length):
     aux = line_length - aux
     return aux
 
-in_dat = os.path.join('testfolder', 'out', '0251.dat')
 
-#print(os.listdir(in_dat))
 
-with open(in_dat, 'rb') as file:
-    # Read header
-    read = file.read(4)
-    number_of_files = int.from_bytes(read, byteorder = "little")
-    aux = (number_of_files + 1) * 4
-    header_length = aux + line_fill(aux, 16)
-    #
-    offset_list = [] # Contains non-zero header entries
-    zero_offset_list = [] # Contains index of header entries that are 0
-    for offset in range(number_of_files):
-        data = file.read(4)
-        data = int.from_bytes(data, byteorder = "little")
-        if data != 0:
-            offset_list.append(data)
-        else:
-            zero_offset_list.append(offset)
-    print(offset_list)
-    print(zero_offset_list)
+def ext_read(in_dat):
+    with open(in_dat, 'rb') as file:
+        # Read header
+        read = file.read(4)
+        number_of_files = int.from_bytes(read, byteorder = "little")
+        aux = (number_of_files + 1) * 4
+        header_length = aux + line_fill(aux, 16)
+        #
+        offset_list = [] # Contains non-zero header entries
+        zero_offset_list = [] # Contains index of header entries that are 0
+        for offset in range(number_of_files):
+            data = file.read(4)
+            data = int.from_bytes(data, byteorder = "little")
+            if data != 0:
+                offset_list.append(data)
+            else:
+                zero_offset_list.append(offset)
+        print(offset_list)
+        print(zero_offset_list)
 
-    # Read data from offsets
-    file_data_list = []
-    for i in range(len(offset_list)):
-        next_i = i+1
-        if next_i < len(offset_list): # If index is not the last:
-            size = offset_list[next_i] - offset_list[i]
-            data = file.read(size)
-        else: # If index is the last one, read to the end of the file
-            data = file.read()
-            
-        file_data_list.append(data)
-    # Add back the 0 indexes
-    for zo in zero_offset_list:
-        file_data_list.insert(zo, 0)
+        # Read data from offsets
+        file_data_list = []
+        for i in range(len(offset_list)):
+            next_i = i+1
+            if next_i < len(offset_list): # If index is not the last:
+                size = offset_list[next_i] - offset_list[i]
+                data = file.read(size)
+            else: # If index is the last one, read to the end of the file
+                data = file.read()
+                
+            file_data_list.append(data)
+        # Add back the 0 indexes
+        for zo in zero_offset_list:
+            file_data_list.insert(zo, 0)
+    return file_data_list
 
-    pass
+def ext_save(output_folder, data_list, name_list:list=[]):
+    '''Saves the extracted data to a dir.
+    name_list: allows non-empty files to be named'''
     
+    # Create destination folder if it does not exist
+    os.makedirs(name=output_folder, exist_ok=True)
+
+    # Deal with name list
+    def match_length(list1, list2):
+        aux_list1 = list1[:]
+        target_len = len(list2)
+        if len(aux_list1) < target_len:
+            aux_list1.extend([''] * (target_len - len(aux_list1)))
+        elif len(aux_list1) > target_len:
+            aux_list1 = aux_list1[:target_len]
+        return aux_list1
+    
+    name_list = match_length(name_list, data_list)
+    print(name_list)
+
+    for i, data in enumerate(data_list):
+        prefix = str(i).zfill(len(str(abs(i)))) # zfills index        
+        file_name = ''
+        if type(data) == int and data == 0:
+            file_name = prefix + '_.empty'
+        else:
+            file_name = prefix + '_' + 'TODO'
+            
 
 
 
 
+in_file = os.path.join('testfolder', 'out', '0251.dat')
 
-
-
+data_list = ext_read(in_file)
+o_folder = 'test_out_dat'
+ext_save(o_folder, data_list)
