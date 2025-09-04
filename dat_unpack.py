@@ -41,12 +41,13 @@ def ext_read(in_dat):
                 data = file.read()
                 
             file_data_list.append(data)
-        # Add back the 0 indexes
-        for zo in zero_offset_list:
-            file_data_list.insert(zo, 0)
-    return file_data_list
+        ## Add back the 0 indexes
+        #for zo in zero_offset_list:
+        #    file_data_list.insert(zo, 0)
 
-def ext_save(output_folder, data_list, name_list:list=[]):
+    return file_data_list, zero_offset_list
+
+def ext_save(output_folder, data_list, zero_offset_list, name_list:list=[]):
     '''Saves the extracted data to a dir.
     name_list: allows non-empty files to be named'''
     
@@ -64,15 +65,23 @@ def ext_save(output_folder, data_list, name_list:list=[]):
         return aux_list1
     
     name_list = match_length(name_list, data_list)
-    print(name_list)
+    #print(name_list)
+    data_name_list = []
+    for i, name in enumerate(name_list):
+        data_name_list.append((data_name_list[i], name))
+    
+    print(data_name_list)
+
+    # Add back the 0 indexes
+    for zo in zero_offset_list:
+        data_list.insert(zo, 'padding.ignore')
+
 
     for i, data in enumerate(data_list):
         prefix = str(i).zfill(len(str(abs(i)))) # zfills index        
-        file_name = ''
-        if type(data) == int and data == 0:
-            file_name = prefix + '_.empty'
-        else:
-            file_name = prefix + '_' + 'TODO'
+        file_name = data[1]
+        if not (type(data) == int and data == 0):
+            file_name = prefix + '_' + file_name + 'TODO'
             
 
 
@@ -80,6 +89,6 @@ def ext_save(output_folder, data_list, name_list:list=[]):
 
 in_file = os.path.join('testfolder', 'out', '0251.dat')
 
-data_list = ext_read(in_file)
+data_list, zero_off_list = ext_read(in_file)
 o_folder = 'test_out_dat'
-ext_save(o_folder, data_list)
+ext_save(o_folder, data_list, zero_off_list)
