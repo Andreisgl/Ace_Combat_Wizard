@@ -66,23 +66,40 @@ def ext_save(output_folder, data_list, zero_offset_list, name_list:list=[]):
     
     name_list = match_length(name_list, data_list)
     #print(name_list)
+    # Join data and name lists
     data_name_list = []
     for i, name in enumerate(name_list):
-        data_name_list.append((data_name_list[i], name))
+        data_name_list.append([data_list[i], name])
     
     print(data_name_list)
-
-    # Add back the 0 indexes
-    for zo in zero_offset_list:
-        data_list.insert(zo, 'padding.ignore')
+    print('\n--------------------------------\n')
 
 
-    for i, data in enumerate(data_list):
-        prefix = str(i).zfill(len(str(abs(i)))) # zfills index        
+    for i, data in enumerate(data_name_list):
+        prefix = str(i).zfill(len(str(abs(len(data_name_list)-1)))) # zfills index
+
+        file_type = data[0][:3] # get first 3 letters
+        if not file_type.isalnum():
+            file_type = "unk"
+        else:
+            file_type = file_type.decode()
+        
+        #else:
+        #    file_type = file_type.decode()
+        
         file_name = data[1]
-        if not (type(data) == int and data == 0):
-            file_name = prefix + '_' + file_name + 'TODO'
-            
+        file_name = prefix + '_' + file_type + '_' + file_name + '.subdat'
+        data_name_list[i][1] = file_name
+
+    for data in data_name_list:
+        file_path = os.path.join(output_folder, data[1])
+        with open(file_path, 'wb') as file:
+            file.write(data[0])
+
+    # Write zero_offset file
+    zof_file_path = os.path.join(output_folder, '_zof.zof')
+    with open(zof_file_path, 'w') as zof_file:
+        zof_file.writelines([str(x) for x in zero_offset_list])
 
 
 
@@ -92,3 +109,12 @@ in_file = os.path.join('testfolder', 'out', '0251.dat')
 data_list, zero_off_list = ext_read(in_file)
 o_folder = 'test_out_dat'
 ext_save(o_folder, data_list, zero_off_list)
+
+##
+
+rep_in_folder = o_folder
+rep_out_file = os.path.join('testfolder', 'repack_out', 'new_0251.dat')
+
+
+
+rep_read(rep_in_folder)
