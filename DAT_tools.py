@@ -112,9 +112,78 @@ ext_save(o_folder, data_list, zero_off_list)
 
 ##
 
+
+def rep_read(in_folder, out_file):
+    file_name_list = os.listdir(in_folder)
+    file_path_list = [os.path.join(in_folder, x) for x in file_name_list]
+    #number_of_files = len(file_name_list)
+    zero_offset_file = ''
+
+    zof_found = False
+    for i, f in enumerate(file_path_list):    
+        file, extension = os.path.splitext(f)
+        if extension == '.zof':
+            zof_found = True
+            zero_offset_file = f
+            
+            # Remove '.zof' from lists
+            file_path_list.pop(i)
+            file_name_list.pop(i)
+            break
+    
+    if not zof_found:
+        input('.zof file not found!!\nPress Enter to exit...')
+        exit(1)
+    
+    # Read '.zof' file
+    zero_offset_list = []
+    with open(zero_offset_file, 'r') as zof:
+        zero_offset_list = zof.readlines()[:]
+        zero_offset_list = [int(x) for x in zero_offset_list]
+     
+    header_contents = []
+
+    offset_acc = 0
+    for subdat in file_path_list:
+        header_contents.append(offset_acc)
+        size = os.path.getsize(subdat)
+        offset_acc += size
+
+    #
+    
+    header_length = ((len(header_contents) + len(zero_offset_list)) * 4) # Number of instances in header
+    header_length += line_fill(header_length, 16) # Pad header to fit in 16 byte lines
+
+    # Add header length to header contents:
+    header_contents = [x+header_length for x in header_contents]
+
+    # Add back the 0 indexes
+    for zo in zero_offset_list:
+        header_contents.insert(zo, 0)
+
+        
+    header_contents.insert(0, len(header_contents)) # Insert 'nof' as first number
+
+
+    # Write output .dat file
+    dir = os.path.dirname(out_file)
+    os.makedirs(dir, exist_ok=True)
+    with open(out_file, 'wb') as out_dat:
+        # Write header
+        for pos in header_contents:
+            data = pos.to_bytes(4, "little")
+            out_dat.write(data)
+        
+        # Write file data
+        for file in file_path_list:
+            with open(file, 'rb') as subdat:
+                out_dat.write(subdat.read())
+    pass
+
+
 rep_in_folder = o_folder
 rep_out_file = os.path.join('testfolder', 'repack_out', 'new_0251.dat')
 
 
 
-rep_read(rep_in_folder)
+rep_read(rep_in_folder, rep_out_file)

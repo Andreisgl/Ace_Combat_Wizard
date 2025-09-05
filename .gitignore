@@ -3,6 +3,7 @@
 *.TBL
 *.dat
 *.zof
+*.subdat
 testfile
 
 
