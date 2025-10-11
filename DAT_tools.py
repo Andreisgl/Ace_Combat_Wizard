@@ -1,5 +1,6 @@
 '''This is a rewrite of the DAT unpacker'''
 import os
+import argparse as argp
 
 def line_fill(position, line_length):
     '''This function returns the ammount of characters/bytes
@@ -104,11 +105,14 @@ def ext_save(output_folder, data_list, zero_offset_list, name_list:list=[]):
 
 
 
+'''
+# Unpack routine
 in_file = os.path.join('testfolder', 'out', '0251.dat')
 
 data_list, zero_off_list = ext_read(in_file)
 o_folder = 'test_out_dat'
 ext_save(o_folder, data_list, zero_off_list)
+'''
 
 ##
 
@@ -181,9 +185,120 @@ def rep_read(in_folder, out_file):
     pass
 
 
+'''
+# Repack routine
 rep_in_folder = o_folder
 rep_out_file = os.path.join('testfolder', 'repack_out', 'new_0251.dat')
 
-
-
 rep_read(rep_in_folder, rep_out_file)
+'''
+
+
+def argcheck(args, mode_options, path_types):
+    # Argument validation    
+    while True:
+        # Check mode
+        if not args.mode in mode_options:
+            print(f'Argument *mode* is invalid!')
+            print(f'Valid options: {mode_options}')
+            input('Press any key to exit')
+            break
+        print('mode is valid!')
+        
+        # Check paths
+        invalid_path_flag = False
+        #
+        input_shouldbedir = False
+        output_shouldbedir = False
+        if args.mode == 'extract':
+            input_shouldbedir = False
+            output_shouldbedir = True
+        else:
+            input_shouldbedir = True
+            output_shouldbedir = False
+
+        paths = ((args.input_path, input_shouldbedir), (args.output_path, output_shouldbedir))
+        
+
+        for path in paths:
+            if not os.path.exists(path[0]):
+                if path[1] and args.mode=='extract':
+                    os.makedirs(path[0])
+                elif (not path[1]) and args.mode=='repack':
+                    pass # Repack mode and output_file does not exist yet
+                else:
+                    print(f'Path {path[0]} is not valid!')
+                    invalid_path_flag = True
+                    break
+            
+            if not os.path.isdir(path[0]) == path[1]:
+                typestring = path_types[0]
+                if not path[1]:
+                    typestring = path_types[1]
+                print(f'Path {path[0]} must be a {typestring}')
+                invalid_path_flag = True
+            
+        if invalid_path_flag:
+            return False
+        
+        return True
+
+def main():
+    # Argument parsing
+
+    arg_mode_options = ['extract', 'repack']
+    arg_path_types = ['folder', 'file']
+    
+    
+
+
+    parser = argp.ArgumentParser()
+    parser.add_argument("mode", help=f'options: {arg_mode_options}')
+    parser.add_argument("input_path")
+    parser.add_argument("output_path")
+    try:
+        args = parser.parse_args()
+    except:
+        print('Uncaught exception!')
+        input('Press Enter to exit...')
+        #exit(1)
+        return
+    print(args)
+    
+
+    argcheck_return = argcheck(args, arg_mode_options, arg_path_types)
+
+
+    if not argcheck_return:
+        print('paths failed check!')
+        input('Press Enter to exit...')
+        return False
+    else:
+        print('paths are valid!')
+    
+    ## Apply args
+    if args.mode == 'extract':
+        print(f'extracting... in:{args.input_path} to {args.output_path}')
+        # Assumes TBL has the same name as PAC
+        TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
+        unpack_pac(args.input_path, TBL_path, args.output_path) 
+
+    elif args.mode == 'repack':
+        print(f'rebuilding... in:{args.input_path} to {args.output_path}')
+        # Open folder, extract data.
+        # output_data = rebuild(data)
+        # Save output_data
+        repack_pac(args.input_path, args.output_path)
+        
+    else:
+        print('Invalid mode entry!')
+        input('Press Enter to exit...')
+
+
+
+
+
+
+if __name__ == '__main__':
+    main()
+
