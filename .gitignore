@@ -5,6 +5,7 @@
 *.zof
 *.subdat
 testfile
+testfolder/
 
 
 # Standard Python ignores:
