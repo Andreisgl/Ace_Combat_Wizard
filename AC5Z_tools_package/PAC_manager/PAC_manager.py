@@ -1,201 +1,172 @@
 # This module is responsible for extracting and rebuilding .PAC files.
 # Code based on the "ACZ_PAC_TOOLS.2" by Death_the_d0g (deaththed0g @ Github, Death_the_d0g @ Twitter)
 
-import argparse as argp
+import argparse
 import os
+import sys
 
-def unpack_pac(pac_path, tbl_path, output_path):
-    val = 0
-    f_n = 0
-    f_offset = 8
+# --- UNPACKING LOGIC ---
+def unpack_pac(pac_path, tbl_path, output_path, names_file=None):
+    """
+    Extracts the contents of a .PAC file using a corresponding .TBL file.
+
+    :param pac_path: Path to the input DATA.PAC file.
+    :param tbl_path: Path to the input DATA.TBL file.
+    :param output_path: Directory where the extracted files will be saved.
+    :param names_file: (Optional) Path to a text file with the names for the output files.
+    """
+    print(f"UNPACK mode activated.")
+    print(f"  -> Input PAC: {pac_path}")
+    print(f"  -> Input TBL: {tbl_path}")
+    print(f"  -> Output directory: {output_path}")
+
+    if not os.path.isfile(pac_path):
+        print(f"Error: PAC file '{pac_path}' not found.")
+        sys.exit(1)
+    if not os.path.isfile(tbl_path):
+        print(f"Error: TBL file '{tbl_path}' not found.")
+        sys.exit(1)
+    
+    os.makedirs(output_path, exist_ok=True)
+
+    file_names = []
+    if names_file:
+        if not os.path.isfile(names_file):
+            print(f"Warning: Names file '{names_file}' not found. Using default numeric names.")
+        else:
+            print(f"  -> Using name map: {names_file}")
+            with open(names_file, 'r', encoding='utf-8') as f:
+                file_names = f.read().splitlines()
+            print(f"  -> {len(file_names)} lines loaded from name map.")
+
+    # Reading the TBL
     offset_list = []
     size_list = []
-    
     with open(tbl_path, 'rb') as tbl_file:
-        tbl_file.seek(0, 0)
-        tbl_nof = int.from_bytes(tbl_file.read(4), byteorder = "little")
-        for f in range(tbl_nof):
-            tbl_file.seek(f_offset, 0)
-            offset_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
-            f_offset = f_offset + 4 # TODO: These seem unnecessary...
-            tbl_file.seek(f_offset, 0) # TODO: These too...
-            size_list.append(int.from_bytes(tbl_file.read(4), byteorder = "little"))
-            f_offset = f_offset + 4
-    
-    def write_dat(fname, fdata):
-        with open(os.path.join(output_path, fname), 'wb') as f:
-            f.write(fdata)
+        tbl_nof = int.from_bytes(tbl_file.read(4), byteorder="little")
+        tbl_file.seek(8)
+        for _ in range(tbl_nof):
+            offset_list.append(int.from_bytes(tbl_file.read(4), byteorder="little"))
+            size_list.append(int.from_bytes(tbl_file.read(4), byteorder="little"))
+
+    # Determines the amount of zero-padding needed for file prefixes.
+    padding_width = len(str(tbl_nof - 1)) if tbl_nof > 0 else 1
+    print(f"Info: Total files: {tbl_nof}. Using a zero-padding of {padding_width} for prefixes.")
+
+    # Extracting from the PAC
     with open(pac_path, 'rb') as pac_file:
-        for f in range(tbl_nof):
-            name = str(f).zfill(4) + ".dat"
-            #file_name_list.append(name)
+        for i in range(tbl_nof):
+            base_name = ""
+            
+            if i < len(file_names):
+                potential_name = file_names[i].strip()
+                if potential_name:
+                    base_name = potential_name
+            
+            if not base_name:
+                # .dat only, as the prefix is already added by default.
+                base_name = ".dat"
+            
+            # Assemble final name with prefix
+            prefix = f"{i:0{padding_width}d}"
+            
+            # Join prefix and base name. Add '_' if name is not an extension.
+            separator = "_" if not base_name.startswith('.') else ''
+            final_name = f"{prefix}{separator}{base_name}"
 
-            pac_file.seek(offset_list[val])
-            data = pac_file.read(size_list[val])
-            #file_data_list.append(data)
+            offset = offset_list[i]
+            size = size_list[i]
+            
+            pac_file.seek(offset)
+            data = pac_file.read(size)
+            
+            output_file_path = os.path.join(output_path, final_name)
+            os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
 
-            #file_master_list.append((name, data))
-            write_dat(name, data)
+            with open(output_file_path, 'wb') as f_out:
+                f_out.write(data)
 
-            print("file:", name, "offset:", hex(offset_list[val]), "size:", size_list[val])
-            val = val + 1 # TODO: All this dynamic also seems to be unnecessary...
-            #f_n = f_n + 1
+            print(f"File (Index {i}): {final_name}, Offset: {hex(offset)}, Size: {size}")
 
+    print("\nExtraction completed successfully!")
 
-
+# --- REPACKING LOGIC ---
 def repack_pac(input_path, output_path):
+    print(f"REPACK mode activated.")
+    print(f"  -> Input directory: {input_path}")
+    print(f"  -> Output PAC: {output_path}")
+
+    if not os.path.isdir(input_path):
+        print(f"Error: Input directory '{input_path}' not found.")
+        sys.exit(1)
+
     data_list = []
-    for file_name in os.listdir(input_path):
+    
+    file_names = sorted(os.listdir(input_path))
+    
+    for file_name in file_names:
         file_path = os.path.join(input_path, file_name)
-        with open(file_path, 'rb') as f:
-            data_list.append(f.read())
-            print("file:", file_name, "size:", f.tell())
+        if os.path.isfile(file_path):
+            with open(file_path, 'rb') as f:
+                data = f.read()
+                data_list.append(data)
+                print(f"Adding file: {file_name}, Size: {len(data)}")
     
     out_pac_data, out_tbl_data = assemble_pac(data_list)
     
-    # Output
     with open(output_path, 'wb') as fpac:
         fpac.write(out_pac_data)
-    TBL_path = ((output_path).split('.')[0]) + '.TBL'
-    with open(TBL_path, 'wb') as ftbl:
+    
+    tbl_path = os.path.splitext(output_path)[0] + '.TBL'
+    with open(tbl_path, 'wb') as ftbl:
         ftbl.write(out_tbl_data)
     
-    #return data_list
+    print(f"\nRepack completed! Files generated:\n  -> {output_path}\n  -> {tbl_path}")
 
 def assemble_pac(dat_data_list):
-    print("Building DATA.TBL")
-    tbl_data_list = []
-    
-    # Add header
-    true_nof = len(dat_data_list)
-    pad = 0
-    true_nof_hex = true_nof.to_bytes(4, "little")
-    pad_hex = pad.to_bytes(4, "little")
-    tbl_data_list.append(true_nof_hex)
-    tbl_data_list.append(pad_hex)
-    # Rest of the data
+    print("\nBuilding DATA.TBL...")
+    tbl_entries = []
     offset = 0
-    for file in dat_data_list:
-        # TBL:
-        size = len(file)
-        tbl_data_list.append(offset.to_bytes(4, "little"))
-        tbl_data_list.append(size.to_bytes(4, "little"))
-        offset = offset + size
-    final_TBL_data = b''.join(tbl_data_list)    
+    for file_data in dat_data_list:
+        size = len(file_data)
+        tbl_entries.append(offset.to_bytes(4, "little"))
+        tbl_entries.append(size.to_bytes(4, "little"))
+        offset += size
+    
+    header = len(dat_data_list).to_bytes(4, "little") + (0).to_bytes(4, "little")
+    final_tbl_data = header + b''.join(tbl_entries)
 
-    print("Building DATA.PAC")
-    final_PAC_data = b''.join(dat_data_list)
+    print("Building DATA.PAC...")
+    final_pac_data = b''.join(dat_data_list)
 
-    return final_PAC_data, final_TBL_data
+    return final_pac_data, final_tbl_data
 
-
-
-###
-
-def argcheck(args, mode_options, path_types):
-    # Argument validation    
-    while True:
-        # Check mode
-        if not args.mode in mode_options:
-            print(f'Argument *mode* is invalid!')
-            print(f'Valid options: {mode_options}')
-            input('Press any key to exit')
-            break
-        print('mode is valid!')
-        
-        # Check paths
-        invalid_path_flag = False
-        #
-        input_shouldbedir = False
-        output_shouldbedir = False
-        if args.mode == 'extract':
-            input_shouldbedir = False
-            output_shouldbedir = True
-        else:
-            input_shouldbedir = True
-            output_shouldbedir = False
-
-        paths = ((args.input_path, input_shouldbedir), (args.output_path, output_shouldbedir))
-        
-
-        for path in paths:
-            if not os.path.exists(path[0]):
-                if path[1] and args.mode=='extract':
-                    os.makedirs(path[0])
-                elif (not path[1]) and args.mode=='repack':
-                    pass # Repack mode and output_file does not exist yet
-                else:
-                    print(f'Path {path[0]} is not valid!')
-                    invalid_path_flag = True
-                    break
-            
-            if not os.path.isdir(path[0]) == path[1]:
-                typestring = path_types[0]
-                if not path[1]:
-                    typestring = path_types[1]
-                print(f'Path {path[0]} must be a {typestring}')
-                invalid_path_flag = True
-            
-        if invalid_path_flag:
-            return False
-        
-        return True
-
+# --- ENTRY POINT AND ARGUMENT PARSER ---
 def main():
-    # Argument parsing
-
-    arg_mode_options = ['extract', 'repack']
-    arg_path_types = ['folder', 'file']
+    parser = argparse.ArgumentParser(
+        description="A tool to extract and rebuild Ace Combat Zero PAC files.",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     
-    
+    subparsers = parser.add_subparsers(dest='mode', required=True, help='Operating mode')
 
+    parser_unpack = subparsers.add_parser('unpack', help='Extract a .PAC file.')
+    parser_unpack.add_argument('input_pac', help='Path to the input .PAC file (e.g., DATA.PAC).')
+    parser_unpack.add_argument('output_dir', help='Output directory for the extracted files.')
+    parser_unpack.add_argument('--names', dest='names_file', default=None,
+                               help='(Optional) Path to the .csv/.txt file with the list of names for the output files.')
 
-    parser = argp.ArgumentParser()
-    parser.add_argument("mode", help=f'options: {arg_mode_options}')
-    parser.add_argument("input_path")
-    parser.add_argument("output_path")
-    try:
-        args = parser.parse_args()
-    except:
-        print('Uncaught exception!')
-        input('Press Enter to exit...')
-        #exit(1)
-        return
-    print(args)
-    
+    parser_repack = subparsers.add_parser('repack', help='Rebuild a .PAC file from a directory.')
+    parser_repack.add_argument('input_dir', help='Input directory containing the files.')
+    parser_repack.add_argument('output_pac', help='Path for the output .PAC file (e.g., DATA_MOD.PAC).')
 
-    argcheck_return = argcheck(args, arg_mode_options, arg_path_types)
+    args = parser.parse_args()
 
-
-    if not argcheck_return:
-        print('paths failed check!')
-        input('Press Enter to exit...')
-        return False
-    else:
-        print('paths are valid!')
-    
-    ## Apply args
-    if args.mode == 'extract':
-        print(f'extracting... in:{args.input_path} to {args.output_path}')
-        # Assumes TBL has the same name as PAC
-        TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
-        unpack_pac(args.input_path, TBL_path, args.output_path) 
-
+    if args.mode == 'unpack':
+        tbl_path = os.path.splitext(args.input_pac)[0] + '.TBL'
+        unpack_pac(args.input_pac, tbl_path, args.output_dir, args.names_file)
     elif args.mode == 'repack':
-        print(f'rebuilding... in:{args.input_path} to {args.output_path}')
-        # Open folder, extract data.
-        # output_data = rebuild(data)
-        # Save output_data
-        repack_pac(args.input_path, args.output_path)
-        
-    else:
-        print('Invalid mode entry!')
-        input('Press Enter to exit...')
-
-
-
-
-
+        repack_pac(args.input_dir, args.output_pac)
 
 if __name__ == '__main__':
     main()
