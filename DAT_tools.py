@@ -1,304 +1,184 @@
-'''This is a rewrite of the DAT unpacker'''
+# This is a rewrite of the DAT unpacker
 import os
-import argparse as argp
+import argparse
+import sys
 
 def line_fill(position, line_length):
     '''This function returns the ammount of characters/bytes
     necessary to fill up the rest of the current line.'''
     aux = position % line_length
-    aux = line_length - aux
-    return aux
+    return (line_length - aux) % line_length
 
+def unpack_dat(input_file, output_folder, names_file=None):
+    '''Orchestrates the extraction of a .DAT file, reading its data,
+    saving the sub-files with proper names, and creating a _zof.zof file.'''
 
+    print(f"Unpacking {input_file}...")
 
-def ext_read(in_dat):
-    with open(in_dat, 'rb') as file:
-        # Read header
-        read = file.read(4)
-        number_of_files = int.from_bytes(read, byteorder = "little")
-        aux = (number_of_files + 1) * 4
-        header_length = aux + line_fill(aux, 16)
-        #
-        offset_list = [] # Contains non-zero header entries
-        zero_offset_list = [] # Contains index of header entries that are 0
-        for offset in range(number_of_files):
-            data = file.read(4)
-            data = int.from_bytes(data, byteorder = "little")
-            if data != 0:
-                offset_list.append(data)
-            else:
-                zero_offset_list.append(offset)
-        print(offset_list)
-        print(zero_offset_list)
+    file_data_list = []
+    zero_offset_list = []
 
-        # Read data from offsets
-        file_data_list = []
-        for i in range(len(offset_list)):
-            next_i = i+1
-            if next_i < len(offset_list): # If index is not the last:
-                size = offset_list[next_i] - offset_list[i]
+    try:
+        with open(input_file, 'rb') as file:
+            # Read the raw data and null offset list from the .DAT
+            read = file.read(4)
+            if not read:
+                print(f"Error: Input file '{input_file}' is empty.")
+                sys.exit(1)
+            
+            number_of_files = int.from_bytes(read, byteorder="little")
+            
+            offset_list = []
+            for offset_index in range(number_of_files):
+                data = file.read(4)
+                data_int = int.from_bytes(data, byteorder="little")
+                if data_int != 0:
+                    offset_list.append(data_int)
+                else:
+                    zero_offset_list.append(offset_index)
+
+            # Read sub-file data
+            # Add the total file size as the final offset to calculate the last sub-file's size
+            file.seek(0, os.SEEK_END)
+            offset_list.append(file.tell())
+
+            for i in range(len(offset_list) - 1):
+                start_offset = offset_list[i]
+                end_offset = offset_list[i+1]
+                size = end_offset - start_offset
+                file.seek(start_offset)
                 data = file.read(size)
-            else: # If index is the last one, read to the end of the file
-                data = file.read()
-                
-            file_data_list.append(data)
-        ## Add back the 0 indexes
-        #for zo in zero_offset_list:
-        #    file_data_list.insert(zo, 0)
+                file_data_list.append(data)
 
-    return file_data_list, zero_offset_list
+    except FileNotFoundError:
+        print(f"Error: Input file not found at '{input_file}'")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An error occurred during file reading: {e}")
+        sys.exit(1)
 
-def ext_save(output_folder, data_list, zero_offset_list, name_list:list=[]):
-    '''Saves the extracted data to a dir.
-    name_list: allows non-empty files to be named'''
+    # Save the extracted data and the _zof.zof file
+    print(f"Found {len(file_data_list)} sub-files and {len(zero_offset_list)} zero-offset entries.")
     
-    # Create destination folder if it does not exist
-    os.makedirs(name=output_folder, exist_ok=True)
-
-    # Deal with name list
-    def match_length(list1, list2):
-        aux_list1 = list1[:]
-        target_len = len(list2)
-        if len(aux_list1) < target_len:
-            aux_list1.extend([''] * (target_len - len(aux_list1)))
-        elif len(aux_list1) > target_len:
-            aux_list1 = aux_list1[:target_len]
-        return aux_list1
-    
-    name_list = match_length(name_list, data_list)
-    #print(name_list)
-    # Join data and name lists
-    data_name_list = []
-    for i, name in enumerate(name_list):
-        data_name_list.append([data_list[i], name])
-    
-    print(data_name_list)
-    print('\n--------------------------------\n')
-
-
-    for i, data in enumerate(data_name_list):
-        prefix = str(i).zfill(len(str(abs(len(data_name_list)-1)))) # zfills index
-
-        file_type = data[0][:3] # get first 3 letters
-        if not file_type.isalnum():
-            file_type = "unk"
+    custom_names = []
+    if names_file:
+        if os.path.isfile(names_file):
+            with open(names_file, 'r', encoding='utf-8') as f:
+                custom_names = f.read().splitlines()
         else:
-            file_type = file_type.decode()
-        
-        #else:
-        #    file_type = file_type.decode()
-        
-        file_name = data[1]
-        file_name = prefix + '_' + file_type + '_' + file_name + '.subdat'
-        data_name_list[i][1] = file_name
+            print(f"Warning: Names file '{names_file}' not found. Using default names.")
 
-    for data in data_name_list:
-        file_path = os.path.join(output_folder, data[1])
-        with open(file_path, 'wb') as file:
-            file.write(data[0])
+    os.makedirs(output_folder, exist_ok=True)
 
-    # Write zero_offset file
+    total_subfiles = len(file_data_list)
+    padding_width = len(str(total_subfiles - 1)) if total_subfiles > 0 else 1
+
+    for i, file_data in enumerate(file_data_list):
+        base_name = ""
+        
+        if i < len(custom_names):
+            potential_name = custom_names[i].strip()
+            if potential_name:
+                base_name = potential_name
+        
+        if not base_name:
+            ext_bytes = file_data[:3]
+            try:
+                if ext_bytes.isalnum():
+                    base_name = f".{ext_bytes.decode('ascii')}"
+                else:
+                    base_name = ".unk"
+            except UnicodeDecodeError:
+                base_name = ".unk"
+
+        prefix = f"{i:0{padding_width}d}"
+        separator = "_" if not base_name.startswith('.') else ''
+        final_name = f"{prefix}{separator}{base_name}"
+        
+        file_path = os.path.join(output_folder, final_name)
+        print(f"  -> Saving file (Index {i}): {final_name}")
+        with open(file_path, 'wb') as f:
+            f.write(file_data)
+
     zof_file_path = os.path.join(output_folder, '_zof.zof')
     with open(zof_file_path, 'w') as zof_file:
-        zof_file.writelines([str(x) for x in zero_offset_list])
-
-
-
-
-'''
-# Unpack routine
-in_file = os.path.join('testfolder', 'out', '0251.dat')
-
-data_list, zero_off_list = ext_read(in_file)
-o_folder = 'test_out_dat'
-ext_save(o_folder, data_list, zero_off_list)
-'''
-
-##
-
-
-def rep_read(in_folder, out_file):
-    file_name_list = os.listdir(in_folder)
-    file_path_list = [os.path.join(in_folder, x) for x in file_name_list]
-    #number_of_files = len(file_name_list)
-    zero_offset_file = ''
-
-    zof_found = False
-    for i, f in enumerate(file_path_list):    
-        file, extension = os.path.splitext(f)
-        if extension == '.zof':
-            zof_found = True
-            zero_offset_file = f
-            
-            # Remove '.zof' from lists
-            file_path_list.pop(i)
-            file_name_list.pop(i)
-            break
+        zof_file.write('\n'.join(map(str, zero_offset_list)))
+    print(f"  -> Zero Offset File saved to: {zof_file_path}")
     
-    if not zof_found:
-        input('.zof file not found!!\nPress Enter to exit...')
-        exit(1)
+    print("\nUnpack completed successfully!")
+
+def repack_dat(in_folder, out_file):
+    '''Rebuilds a .DAT file from a directory of sub-files and a _zof.zof file.'''
+    print(f"Repacking {in_folder}...")
     
-    # Read '.zof' file
-    zero_offset_list = []
-    with open(zero_offset_file, 'r') as zof:
-        zero_offset_list = zof.readlines()[:]
-        zero_offset_list = [int(x) for x in zero_offset_list]
-     
+    zof_file_path = os.path.join(in_folder, '_zof.zof')
+    if not os.path.isfile(zof_file_path):
+        print(f"Error: _zof.zof file not found in '{in_folder}'!")
+        sys.exit(1)
+
+    with open(zof_file_path, 'r') as zof:
+        content = zof.read().strip()
+        zero_offset_list = [int(x) for x in content.splitlines() if x.strip()] if content else []
+
+    subdat_paths = sorted([
+        os.path.join(in_folder, f)
+        for f in os.listdir(in_folder)
+        if not f.endswith('.zof') and os.path.isfile(os.path.join(in_folder, f))
+    ])
+
     header_contents = []
-
     offset_acc = 0
-    for subdat in file_path_list:
+    for subdat_path in subdat_paths:
         header_contents.append(offset_acc)
-        size = os.path.getsize(subdat)
+        size = os.path.getsize(subdat_path)
         offset_acc += size
-
-    #
     
-    header_length = ((len(header_contents) + len(zero_offset_list)) * 4) # Number of instances in header
-    header_length += line_fill(header_length, 16) # Pad header to fit in 16 byte lines
+    total_header_entries = len(header_contents) + len(zero_offset_list)
+    header_length = total_header_entries * 4
+    header_length += line_fill(header_length, 16)
 
-    # Add header length to header contents:
-    header_contents = [x+header_length for x in header_contents]
+    header_contents = [x + header_length for x in header_contents]
 
-    # Add back the 0 indexes
     for zo in zero_offset_list:
         header_contents.insert(zo, 0)
-
         
-    header_contents.insert(0, len(header_contents)) # Insert 'nof' as first number
+    header_contents.insert(0, total_header_entries)
 
-
-    # Write output .dat file
-    dir = os.path.dirname(out_file)
-    os.makedirs(dir, exist_ok=True)
+    os.makedirs(os.path.dirname(out_file), exist_ok=True)
     with open(out_file, 'wb') as out_dat:
-        # Write header
         for pos in header_contents:
-            data = pos.to_bytes(4, "little")
-            out_dat.write(data)
+            out_dat.write(pos.to_bytes(4, "little"))
         
-        # Write file data
-        for file in file_path_list:
-            with open(file, 'rb') as subdat:
+        for file_path in subdat_paths:
+            with open(file_path, 'rb') as subdat:
                 out_dat.write(subdat.read())
-    pass
-
-
-'''
-# Repack routine
-rep_in_folder = o_folder
-rep_out_file = os.path.join('testfolder', 'repack_out', 'new_0251.dat')
-
-rep_read(rep_in_folder, rep_out_file)
-'''
-
-
-def argcheck(args, mode_options, path_types):
-    # Argument validation    
-    while True:
-        # Check mode
-        if not args.mode in mode_options:
-            print(f'Argument *mode* is invalid!')
-            print(f'Valid options: {mode_options}')
-            input('Press any key to exit')
-            break
-        print('mode is valid!')
-        
-        # Check paths
-        invalid_path_flag = False
-        #
-        input_shouldbedir = False
-        output_shouldbedir = False
-        if args.mode == 'extract':
-            input_shouldbedir = False
-            output_shouldbedir = True
-        else:
-            input_shouldbedir = True
-            output_shouldbedir = False
-
-        paths = ((args.input_path, input_shouldbedir), (args.output_path, output_shouldbedir))
-        
-
-        for path in paths:
-            if not os.path.exists(path[0]):
-                if path[1] and args.mode=='extract':
-                    os.makedirs(path[0])
-                elif (not path[1]) and args.mode=='repack':
-                    pass # Repack mode and output_file does not exist yet
-                else:
-                    print(f'Path {path[0]} is not valid!')
-                    invalid_path_flag = True
-                    break
-            
-            if not os.path.isdir(path[0]) == path[1]:
-                typestring = path_types[0]
-                if not path[1]:
-                    typestring = path_types[1]
-                print(f'Path {path[0]} must be a {typestring}')
-                invalid_path_flag = True
-            
-        if invalid_path_flag:
-            return False
-        
-        return True
+    
+    print(f"\nRepack completed successfully! Output: {out_file}")
 
 def main():
-    # Argument parsing
-
-    arg_mode_options = ['extract', 'repack']
-    arg_path_types = ['folder', 'file']
+    parser = argparse.ArgumentParser(
+        description="Tool to extract and rebuild Ace Combat Zero .DAT files.",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     
-    
+    subparsers = parser.add_subparsers(dest='mode', required=True, help='Operating mode')
 
+    parser_unpack = subparsers.add_parser('unpack', help='Extract a .DAT file.')
+    parser_unpack.add_argument('input_dat', help='Path to the input .DAT file.')
+    parser_unpack.add_argument('output_dir', help='Output directory for the extracted sub-files.')
+    parser_unpack.add_argument('--names', dest='names_file', default=None,
+                               help='(Optional) Path to a text file with the list of names for the output files.')
 
-    parser = argp.ArgumentParser()
-    parser.add_argument("mode", help=f'options: {arg_mode_options}')
-    parser.add_argument("input_path")
-    parser.add_argument("output_path")
-    try:
-        args = parser.parse_args()
-    except:
-        print('Uncaught exception!')
-        input('Press Enter to exit...')
-        #exit(1)
-        return
-    print(args)
-    
+    parser_repack = subparsers.add_parser('repack', help='Rebuild a .DAT file from a directory.')
+    parser_repack.add_argument('input_dir', help='Input directory containing the sub-files (and _zof.zof).')
+    parser_repack.add_argument('output_dat', help='Path for the output .DAT file.')
 
-    argcheck_return = argcheck(args, arg_mode_options, arg_path_types)
+    args = parser.parse_args()
 
-
-    if not argcheck_return:
-        print('paths failed check!')
-        input('Press Enter to exit...')
-        return False
-    else:
-        print('paths are valid!')
-    
-    ## Apply args
-    if args.mode == 'extract':
-        print(f'extracting... in:{args.input_path} to {args.output_path}')
-        # Assumes TBL has the same name as PAC
-        TBL_path = ((args.input_path).split('.')[0]) + '.TBL'
-        unpack_pac(args.input_path, TBL_path, args.output_path) 
-
+    if args.mode == 'unpack':
+        unpack_dat(args.input_dat, args.output_dir, args.names_file)
     elif args.mode == 'repack':
-        print(f'rebuilding... in:{args.input_path} to {args.output_path}')
-        # Open folder, extract data.
-        # output_data = rebuild(data)
-        # Save output_data
-        repack_pac(args.input_path, args.output_path)
-        
-    else:
-        print('Invalid mode entry!')
-        input('Press Enter to exit...')
-
-
-
-
-
+        repack_dat(args.input_dir, args.output_dat)
 
 if __name__ == '__main__':
     main()
-
