@@ -1,0 +1,188 @@
+ AIRCRAFT GAMEPLAY MODEL FILE   AIRCRAFT HANGAR MODEL FILE               AIRCRAFT ID                     COLOR
+           0498.DAT                      0720.DAT                        J35J Draken                   Standard
+           0499.DAT                      0721.DAT                          Gripen C                    Standard
+           0500.DAT                      0722.DAT                          Typhoon                     Standard
+           0501.DAT                      0723.DAT                       Tornado GR. 4                  Standard
+           0502.DAT                      0724.DAT                      F-4E II Phantom                 Standard
+           0503.DAT                      0725.DAT                    F-15C Eagle -CIPHER-              Standard
+           0504.DAT                      0726.DAT                     F-15 Strike Eagle                Standard
+           0505.DAT                      0727.DAT                         F-15 S/MTD                   Standard
+           0506.DAT                      0728.DAT                       F/A-18C Hornet                 Standard
+           0507.DAT                      0729.DAT                           EA-18G                     Standard
+           0508.DAT                      0730.DAT                   F-16C Fighting Falcon              Standard
+           0509.DAT                      0731.DAT                          F-16 XL                     Standard
+           0510.DAT                      0732.DAT                      F-117A Nighthawk                Standard
+           0511.DAT                      0733.DAT                       F/A-22A Raptor                 Standard
+           0512.DAT                      0734.DAT                           F-35C                      Standard
+           0513.DAT                      0735.DAT                       F-5E Tiger II                  Standard
+           0514.DAT                      0736.DAT                      F-20A Tigershark                Standard
+           0515.DAT                      0737.DAT                           X-29A                      Standard
+           0516.DAT                      0738.DAT                     F-14D Super Tomcat               Standard
+           0517.DAT                      0739.DAT                   YF-23A Black Widow II              Standard
+           0518.DAT                      0740.DAT                       EA-6B Prowler                  Standard
+           0519.DAT                      0741.DAT                    A-10A Thunderbolt II              Standard
+           0520.DAT                      0742.DAT                        Mirage 2000D                  Standard
+           0521.DAT                      0743.DAT                          Rafale M                    Standard
+           0522.DAT                      0744.DAT                       Su-27 Flanker                  Standard
+           0523.DAT                      0745.DAT                    Su-32 Super Flanker               Standard
+           0524.DAT                      0746.DAT                      Su-37 Terminator                Standard
+           0525.DAT                      0747.DAT                        Su-47 Berkut                  Standard
+           0526.DAT                      0748.DAT                     MiG-21bis Fishbed                Standard
+           0527.DAT                      0749.DAT                      MiG-29A Fulcrum                 Standard
+           0528.DAT                      0750.DAT                      MiG-31 Foxhound                 Standard
+           0529.DAT                      0751.DAT                            F-1                       Standard
+           0530.DAT                      0752.DAT                            F-2A                      Standard
+           0531.DAT                      0753.DAT                        X-02 Wyvern                   Standard
+           0532.DAT                      0754.DAT                       ADF-01 Falken                  Standard
+           0533.DAT                      0755.DAT                       ADFX-01 Morgan                 Standard
+
+           0534.DAT                      0756.DAT                        J35J Draken                   Mercenary
+           0535.DAT                      0757.DAT                          Gripen C                    Mercenary
+           0536.DAT                      0758.DAT                          Typhoon                     Mercenary
+           0537.DAT                      0759.DAT                       Tornado GR. 4                  Mercenary
+           0538.DAT                      0760.DAT                      F-4E II Phantom                 Mercenary
+           0539.DAT                      0761.DAT                        F-15C Eagle                   Mercenary
+           0540.DAT                      0762.DAT                     F-15 Strike Eagle                Mercenary
+           0541.DAT                      0763.DAT                         F-15 S/MTD                   Mercenary
+           0542.DAT                      0764.DAT                       F/A-18C Hornet                 Mercenary
+           0543.DAT                      0765.DAT                           EA-18G                     Mercenary
+           0544.DAT                      0766.DAT                   F-16C Fighting Falcon              Mercenary
+           0545.DAT                      0767.DAT                          F-16 XL                     Mercenary
+           0546.DAT                      0768.DAT                      F-117A Nighthawk                Mercenary
+           0547.DAT                      0769.DAT                       F/A-22A Raptor                 Mercenary
+           0548.DAT                      0770.DAT                           F-35C                      Mercenary
+           0549.DAT                      0771.DAT                       F-5E Tiger II                  Mercenary
+           0550.DAT                      0772.DAT                      F-20A Tigershark                Mercenary
+           0551.DAT                      0773.DAT                           X-29A                      Mercenary
+           0552.DAT                      0774.DAT                     F-14D Super Tomcat               Mercenary
+           0553.DAT                      0775.DAT                   YF-23A Black Widow II              Mercenary
+           0554.DAT                      0776.DAT                       EA-6B Prowler                  Mercenary
+           0555.DAT                      0777.DAT                    A-10A Thunderbolt II              Mercenary
+           0556.DAT                      0778.DAT                        Mirage 2000D                  Mercenary
+           0557.DAT                      0779.DAT                          Rafale M                    Mercenary
+           0558.DAT                      0780.DAT                       Su-27 Flanker                  Mercenary
+           0559.DAT                      0781.DAT                    Su-32 Super Flanker               Mercenary
+           0560.DAT                      0782.DAT                 Su-37 Terminator -YELLOW-            Mercenary
+           0561.DAT                      0783.DAT                        Su-47 Berkut                  Mercenary
+           0562.DAT                      0784.DAT                     MiG-21bis Fishbed                Mercenary
+           0563.DAT                      0785.DAT                      MiG-29A Fulcrum                 Mercenary
+           0564.DAT                      0786.DAT                      MiG-31 Foxhound                 Mercenary
+           0565.DAT                      0787.DAT                            F-1                       Mercenary
+           0566.DAT                      0788.DAT                            F-2A                      Mercenary
+           0567.DAT                      0789.DAT                        X-02 Wyvern                   Mercenary
+           0568.DAT                      0790.DAT                       ADF-01 Falken                  Mercenary
+           0569.DAT                      0791.DAT                       ADFX-01 Morgan                 Mercenary
+
+           0570.DAT                      0792.DAT                        J35J Draken                    Soldier
+           0571.DAT                      0793.DAT                          Gripen C                     Soldier
+           0572.DAT                      0794.DAT                          Typhoon                      Soldier
+           0573.DAT                      0795.DAT                       Tornado GR. 4                   Soldier
+           0574.DAT                      0796.DAT                      F-4E II Phantom                  Soldier
+           0575.DAT                      0797.DAT                        F-15C Eagle                    Soldier
+           0576.DAT                      0798.DAT                     F-15 Strike Eagle                 Soldier
+           0577.DAT                      0799.DAT                         F-15 S/MTD                    Soldier
+           0578.DAT                      0800.DAT                       F/A-18C Hornet                  Soldier
+           0579.DAT                      0801.DAT                           EA-18G                      Soldier
+           0580.DAT                      0802.DAT                   F-16C Fighting Falcon               Soldier
+           0581.DAT                      0803.DAT                          F-16 XL                      Soldier
+           0582.DAT                      0804.DAT                      F-117A Nighthawk                 Soldier
+           0583.DAT                      0805.DAT                  F/A-22A Raptor -MOBIUS-              Soldier
+           0584.DAT                      0806.DAT                           F-35C                       Soldier
+           0585.DAT                      0807.DAT                       F-5E Tiger II                   Soldier
+           0586.DAT                      0808.DAT                      F-20A Tigershark                 Soldier
+           0587.DAT                      0809.DAT                           X-29A                       Soldier
+           0588.DAT                      0810.DAT                F-14D Super Tomcat -RAZGRIZ-           Soldier
+           0589.DAT                      0811.DAT                   YF-23A Black Widow II               Soldier
+           0590.DAT                      0812.DAT                       EA-6B Prowler                   Soldier
+           0591.DAT                      0813.DAT                    A-10A Thunderbolt II               Soldier
+           0592.DAT                      0814.DAT                        Mirage 2000D                   Soldier
+           0593.DAT                      0815.DAT                          Rafale M                     Soldier
+           0594.DAT                      0816.DAT                       Su-27 Flanker                   Soldier
+           0595.DAT                      0817.DAT                    Su-32 Super Flanker                Soldier
+           0596.DAT                      0818.DAT                      Su-37 Terminator                 Soldier
+           0597.DAT                      0819.DAT                        Su-47 Berkut                   Soldier
+           0598.DAT                      0820.DAT                     MiG-21bis Fishbed                 Soldier
+           0599.DAT                      0821.DAT                      MiG-29A Fulcrum                  Soldier
+           0600.DAT                      0822.DAT                      MiG-31 Foxhound                  Soldier
+           0601.DAT                      0823.DAT                            F-1                        Soldier
+           0602.DAT                      0824.DAT                            F-2A                       Soldier
+           0603.DAT                      0825.DAT                        X-02 Wyvern                    Soldier
+           0604.DAT                      0826.DAT                       ADF-01 Falken                   Soldier
+           0605.DAT                      0827.DAT                       ADFX-01 Morgan                  Soldier
+
+           0606.DAT                      0828.DAT                    J35J Draken -ESPADA-               Special
+           0607.DAT                      0829.DAT                     Gripen C -INDIGO-                 Special
+           0608.DAT                      0830.DAT                       Typhoon -ROT-                   Special
+           0610.DAT                      0832.DAT                  F-4E II Phantom -SILBER-             Special
+           0613.DAT                      0835.DAT                   F-15 S/MTD -SORCERER-               Special
+           0614.DAT                      0836.DAT                   F/A-18C Hornet -GRUN-               Special
+           0616.DAT                      0838.DAT               F-16C Fighting Falcon -SILBER           Special
+           0617.DAT                      0839.DAT                      F-16 XL -WIZARD-                 Special
+           0624.DAT                      0846.DAT                F-14D Super Tomcat -SCHNEE-            Special
+           0625.DAT                      0847.DAT               YF-23A Black Widow II -WIZARD           Special
+           0629.DAT                      0851.DAT                     Rafale M -ESPADA-                 Special
+           0632.DAT                      0854.DAT                  Su-37 Terminator -GELB-              Special
+           0633.DAT                      0855.DAT                    Su-47 Berkut -GAULT-               Special
+           0636.DAT                      0858.DAT                 MiG-31 Foxhound -SCHWARZE-            Special
+           0641.DAT                      0863.DAT                   ADFX-01 Morgan -PIXY-               Special
+           0609.DAT                      0867.DAT                       Tornado GR. 4                   Special
+           0611.DAT                      0869.DAT                        F-15C Eagle                    Special
+           0612.DAT                      0870.DAT                     F-15 Strike Eagle                 Special
+           0615.DAT                      0873.DAT                           EA-18G                      Special
+           0618.DAT                      0876.DAT                      F-117A Nighthawk                 Special
+           0619.DAT                      0877.DAT                       F/A-22A Raptor                  Special
+           0620.DAT                      0878.DAT                           F-35C                       Special
+           0621.DAT                      0879.DAT                       F-5E Tiger II                   Special
+           0622.DAT                      0880.DAT                      F-20A Tigershark                 Special
+           0623.DAT                      0881.DAT                           X-29A                       Special
+           0626.DAT                      0884.DAT                       EA-6B Prowler                   Special
+           0627.DAT                      0885.DAT                    A-10A Thunderbolt II               Special
+           0628.DAT                      0886.DAT                        Mirage 2000D                   Special
+           0630.DAT                      0888.DAT                       Su-27 Flanker                   Special
+           0631.DAT                      0889.DAT                    Su-32 Super Flanker                Special
+           0634.DAT                      0892.DAT                     MiG-21bis Fishbed                 Special
+           0635.DAT                      0893.DAT                      MiG-29A Fulcrum                  Special
+           0637.DAT                      0895.DAT                            F-1                        Special
+           0638.DAT                      0896.DAT                            F-2A                       Special
+           0639.DAT                      0897.DAT                        X-02 Wyvern                    Special
+           0640.DAT                      0898.DAT                       ADF-01 Falken                   Special
+
+           0642.DAT                      0900.DAT                        J35J Draken                    Knight
+           0643.DAT                      0901.DAT                          Gripen C                     Knight
+           0644.DAT                      0902.DAT                          Typhoon                      Knight
+           0645.DAT                      0903.DAT                       Tornado GR. 4                   Knight
+           0646.DAT                      0904.DAT                      F-4E II Phantom                  Knight
+           0647.DAT                      0905.DAT                        F-15C Eagle                    Knight
+           0648.DAT                      0906.DAT                     F-15 Strike Eagle                 Knight
+           0649.DAT                      0907.DAT                         F-15 S/MTD                    Knight
+           0650.DAT                      0908.DAT                       F/A-18C Hornet                  Knight
+           0651.DAT                      0909.DAT                           EA-18G                      Knight
+           0652.DAT                      0910.DAT                   F-16C Fighting Falcon               Knight
+           0653.DAT                      0911.DAT                          F-16 XL                      Knight
+           0654.DAT                      0912.DAT                      F-117A Nighthawk                 Knight
+           0655.DAT                      0913.DAT                       F/A-22A Raptor                  Knight
+           0656.DAT                      0914.DAT                           F-35C                       Knight
+           0657.DAT                      0915.DAT                       F-5E Tiger II                   Knight
+           0658.DAT                      0916.DAT                      F-20A Tigershark                 Knight
+           0659.DAT                      0917.DAT                           X-29A                       Knight
+           0660.DAT                      0918.DAT                     F-14D Super Tomcat                Knight
+           0661.DAT                      0919.DAT                   YF-23A Black Widow II               Knight
+           0662.DAT                      0920.DAT                       EA-6B Prowler                   Knight
+           0663.DAT                      0921.DAT                    A-10A Thunderbolt II               Knight
+           0664.DAT                      0922.DAT                        Mirage 2000D                   Knight
+           0665.DAT                      0923.DAT                          Rafale M                     Knight
+           0666.DAT                      0924.DAT                       Su-27 Flanker                   Knight
+           0667.DAT                      0925.DAT                    Su-32 Super Flanker                Knight
+           0668.DAT                      0926.DAT                      Su-37 Terminator                 Knight
+           0669.DAT                      0927.DAT                        Su-47 Berkut                   Knight
+           0670.DAT                      0928.DAT                     MiG-21bis Fishbed                 Knight
+           0671.DAT                      0929.DAT                      MiG-29A Fulcrum                  Knight
+           0672.DAT                      0930.DAT                      MiG-31 Foxhound                  Knight
+           0673.DAT                      0931.DAT                            F-1                        Knight
+           0674.DAT                      0932.DAT                            F-2A                       Knight
+           0675.DAT                      0933.DAT                        X-02 Wyvern                    Knight
+           0676.DAT                      0934.DAT                       ADF-01 Falken                   Knight
+           0677.DAT                      0935.DAT                       ADFX-01 Morgan                  Knight
+
+           0683.DAT                         ---                          F15C -PIXY-                    Special
+           0688.DAT                         ---                   F-16C Fighting Falcon -PJ-            Special
