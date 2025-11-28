@@ -1,0 +1,3 @@
+file,type,name_map,preset
+DATA.PAC,file,DATA.PAC.namemap,DATA.PAC.preset
+DATA.TBL,file,-,
