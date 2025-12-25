@@ -48,6 +48,26 @@ def get_tbl_offset_table(tbl_path:str) -> list:
             size_list.append(int.from_bytes(tbl_file.read(4), byteorder="little"))
     return offset_list
 
+def get_dat_offset_table(dat_path:str): #### not done
+    offset_list = []
+    zero_offset_list = []
+    with open(dat_path, 'rb') as file:
+        # Read the raw data and null offset list from the .DAT
+        read = file.read(4)            
+        number_of_files = int.from_bytes(read, byteorder="little")
+        
+        for offset_index in range(number_of_files):
+            data = file.read(4)
+            data_int = int.from_bytes(data, byteorder="little")
+            
+            if data_int != 0:
+                offset_list.append(data_int)
+            else:
+                zero_offset_list.append(offset_index)
+        
+        return offset_list, zero_offset_list
+
+            
 
 def main():
     tbl_path = 'DATA.TBL'
