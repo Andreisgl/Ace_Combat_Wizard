@@ -113,13 +113,17 @@ def get_dat_offset_table(dat_obj:Container, file:DataReference): #### not done
     zero_offset_list = []
     #with open(dat_path, 'rb') as file:
 
-    file.seek(dat_obj.offset)
+    #file.seek(dat_obj.offset)
+    curr_offset = dat_obj.offset
     # Read the raw data and null offset list from the .DAT
-    read = file.read(4)            
+    #read = file.read(4)            
+    read = file.get_data(curr_offset, 4)
     number_of_files = int.from_bytes(read, byteorder="little")
     
     for offset_index in range(number_of_files):
-        data = file.read(4)
+        curr_offset += 4
+        #data = file.read(4)
+        data = file.get_data(curr_offset, 4)
         data_int = int.from_bytes(data, byteorder="little")
         
         if data_int != 0:
