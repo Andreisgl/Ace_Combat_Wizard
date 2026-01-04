@@ -80,7 +80,7 @@ class Container(Asset):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.offset_table = []
         self.sizes_list:list = [] # TODO: Check if this is used
-        self.children = []
+        self.children = dict()
        
     def init_offset_table(self, offset_table:list):
         self.offset_table = offset_table[:]
@@ -93,19 +93,37 @@ class Container(Asset):
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-            name = f'{str(i).zfill( len(str(len(ref_table))) )}'
-            container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
-            self.children.append(container)
+    def generate_children(self):
+        '''Generates all children of the container'''
+        for i, offset in enumerate(self.offset_table):
+            name = f'{str(i).zfill( len(str(len(self.offset_table))))}'
+            asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i)
+            #self.children.append(asset)
+            self.children[i] = asset
     
+    def generate_child(self, index:int, name:str, asset_class:type[Asset]):
+        '''Creates or overwrites a child asset.'''
+        if index < 0 or index >= len(self.children):
+            raise ValueError(f'Invalid index position: {index}/{len(self.children)}')
+        
+        offset = self.offset_table[index]
+        size = self.sizes_list[index]
+
+        new_asset = asset_class(name=name, size=size, offset=offset, data_ref=self.data_ref, index=index)
+        new_asset_entry = {index: new_asset}
+
+        self.children[index] = new_asset_entry  
+
     def __repr__(self):
         return f'CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
 class PacFile(Container):
+    # TODO: Consider passing DATA.TBL data ref to this class on init.
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
-        self.offset_table = []
-        self.sizes_list:list = []
-        self.children = []
+        #self.offset_table = []
+        #self.sizes_list:list = []
+        #self.children = []
        
     def init_offset_table(self, offset_table:list):
         self.offset_table = offset_table[:]
@@ -117,10 +135,8 @@ class PacFile(Container):
                 break
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
-
-            name = f'{str(i).zfill( len(str(len(ref_table))) ) }.dat'
-            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
-            self.children.append(container)
+        
+        self.generate_children()
     
     def __repr__(self):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
@@ -131,8 +147,13 @@ class DatFile(Container):
         self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = ''
+        self.sizes_list = []
+
+        self.init_offset_table()
+        self.generate_children()
+
     
-    def init_offset_table(self): #### not done
+    def init_offset_table(self): #### TODO: Generate sizes_list
         offset_list = []
         zero_offset_list = []
         file = self.data_ref
@@ -160,24 +181,36 @@ class DatFile(Container):
         self.zero_offset_list = zero_offset_list
         #return offset_list, zero_offset_list
 
-    def generate_children(self):
+        ###
+
         #self.offset_table = offset_table[:]
         ref_table = self.offset_table[:]
         ref_table.append(self.size)
 
+    
         for i, offset in enumerate(ref_table):
             if i == len(ref_table)-1:
                 break
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-            name = f'{str(i).zfill( len(str(len(ref_table))) )}.asset' # TODO: use len(table) for zfill
-            container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
-            self.children.append(container)
+    #def generate_children(self):
+    #        name = f'{str(i).zfill( len(str(len(ref_table))) )}.asset' # TODO: use len(table) for zfill
+    #        container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
+    #        self.children.append(container)
     
     def __repr__(self):
         return f'DAT_CONTAINER | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
 
+class DatMission(DatFile):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
+        self.zero_offset_list = []
+        #self.generate_offset_table()
+        self.dat_type:str = 'mission'
+
+    def __repr__(self):
+        return f'MISSION_DAT | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
 
 
 def get_tbl_offset_table(tbl_path:str) -> list:
@@ -226,23 +259,30 @@ def main():
         '255': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'K'},
     }
 
-    
+    DAT_CLASS_LOOKUP_TABLE = {
+        'mission': DatMission
+    }
+
     for dat_index in DAT_ASSET_LIST:
-        dat:DatFile
-        dat = DATA_PAC.children[int(dat_index)]
+        raw_asset:Asset
+        raw_asset = DATA_PAC.children[int(dat_index)]
         entry = DAT_ASSET_LIST[dat_index]
         
-        new_type = entry['dat_type']
-        dat.dat_type = new_type
-        new_name = f'{new_type}_{entry['name']}'
-        dat.name = new_name
+        type = entry['dat_type']
+        new_name = f'{type}_{entry['name']}'
+        #size = raw_asset.size
+        #offset = raw_asset.offset
+        #data_ref = raw_asset.data_ref
+
+        #dat = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=int(dat_index))
         
+        DATA_PAC.generate_child(int(dat_index), new_name, DatFile)
 
-        dat.init_offset_table()
-        dat.generate_children()
-        print(dat)
+        print(DATA_PAC.children[int(dat_index)])
 
-        aux_dat = DATA_PAC.children[251]
+        #aux_dat = DATA_PAC.children[251]
+
+        #dat.generate_child(index=0, name='', asset_class=Container)
 
     
     pass
