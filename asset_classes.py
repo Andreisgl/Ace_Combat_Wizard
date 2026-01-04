@@ -170,7 +170,7 @@ class DatFile(Container):
             self.sizes_list.append(aux_size)
 
             name = f'{str(i).zfill( len(str(len(ref_table))) )}.asset' # TODO: use len(table) for zfill
-            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
+            container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
             self.children.append(container)
     
     def __repr__(self):
