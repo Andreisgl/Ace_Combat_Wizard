@@ -98,8 +98,6 @@ class Container(Asset):
     def __repr__(self):
         return f'CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
-
-
 class PacFile(Container):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
@@ -124,16 +122,15 @@ class PacFile(Container):
     
     def __repr__(self):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
-    
-
 
 class DatFile(Container):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.zero_offset_list = []
         #self.generate_offset_table()
+        self.dat_type:str = ''
     
-    def generate_offset_table(self): #### not done
+    def init_offset_table(self): #### not done
         offset_list = []
         zero_offset_list = []
         file = self.data_ref
@@ -177,7 +174,7 @@ class DatFile(Container):
             self.children.append(container)
     
     def __repr__(self):
-        return f'DAT_CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
+        return f'DAT_CONTAINER | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
 
 
 
@@ -218,7 +215,30 @@ def main():
     DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0)
     DATA_PAC.init_offset_table(tbl_offset_table)
 
-    aux_dat = DATA_PAC.children[251]
+    
+    DAT_ASSET_LIST = {
+        '251': {'dat_type': 'mission', 'name': 'Glacial Skies', 'ace_style': 'all'},
+        '252': {'dat_type': 'mission', 'name': 'Annex', 'ace_style': 'all'},
+        '253': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'M'},
+        '254': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'S'},
+        '255': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'K'},
+    }
+
+    
+    for dat_index in DAT_ASSET_LIST:
+        dat:DatFile
+        dat = DATA_PAC.children[int(dat_index)]
+        entry = DAT_ASSET_LIST[dat_index]
+        
+        new_type = entry['dat_type']
+        dat.dat_type = new_type
+        new_name = f'{new_type}_{entry['name']}'
+        dat.name = new_name
+        
+
+        dat.init_offset_table()
+        dat.generate_children()
+        print(dat)
 
     
     pass
