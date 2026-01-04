@@ -122,7 +122,7 @@ class PacFile(Container):
             self.children.append(container)
     
     def __repr__(self):
-        return f'PAC | {self.name} - size={self.size} - offset={self.offset}'
+        return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
     
 
 
@@ -130,6 +130,7 @@ class DatFile(Container):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
         self.zero_offset_list = []
+        self.get_dat_offset_table()
     
     def get_dat_offset_table(self): #### not done
         offset_list = []
@@ -160,7 +161,7 @@ class DatFile(Container):
         #return offset_list, zero_offset_list
     
     def __repr__(self):
-        return f'DAT | {self.name} - size={self.size} - offset={self.offset}'
+        return f'DAT_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
 
 def get_tbl_offset_table(tbl_path:str) -> list:
     # Returns the offset table and sizes from a .TBL file
@@ -198,12 +199,6 @@ def main():
     
     DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF)
     DATA_PAC.init_offset_table(tbl_offset_table)
-
-    #for dat in DATA_PAC.children:
-    #dat:Container
-    dat = DATA_PAC.children[251]
-    dat.get_dat_offset_table(file=DATA_PAC_REF)
-
 
 
     pass
