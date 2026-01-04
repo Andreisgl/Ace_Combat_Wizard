@@ -8,58 +8,60 @@ class DataReference():
         self.size = len(raw_data)
 
         self._cursor:int = 0
-    
-    def read(self, size) -> bytes:
-        remaining_length = self.get_remaining_length()
-        if remaining_length == 0:
-            return b''
-        elif remaining_length < 0:
-            return b''
         
-        if size > remaining_length:
-            self._cursor += remaining_length
-            return self.get_data(offset=self._cursor, length=remaining_length)
+    def read(self, size: int | None = None) -> bytes:
+        if self._cursor >= self.size:
+            return b''
+
+        if size is None or size < 0:
+            start = self._cursor
+            self._cursor = self.size
+            return self._raw_data[start:self.size]
+
+        if size == 0:
+            return b''
+
+        start = self._cursor
+        end = min(self._cursor + size, self.size)
+        self._cursor = end
+        return self._raw_data[start:end]
+
+        
+    def tell(self) -> int:
+        return self._cursor
+
+    def seek(self, pos: int, whence: int = 0) -> int:
+        if whence == 0:      # absolute
+            new_pos = pos
+        elif whence == 1:    # relative
+            new_pos = self._cursor + pos
+        elif whence == 2:    # from end
+            new_pos = self.size + pos
         else:
-            self._cursor += size
-            return self.get_data(offset=self._cursor, length=size)
-        
-    def tell(self):
-        return self._cursor
-    
-    def seek(self, pos:int):
-        if not (0 < pos < self.size):
-            return self._cursor
-        
-        self._cursor = pos
+            raise ValueError("invalid whence")
+
+        if new_pos < 0:
+            raise ValueError("negative seek position")
+
+        self._cursor = new_pos
         return self._cursor
 
-    def get_remaining_length(self):
-        result = self.size - self._cursor
-        if result < 0:
-            self._cursor = self.size-1
-            return 0
-        return result
+    def get_remaining_length(self):        
+        return max(0, self.size - self._cursor)
 
-    def get_data(self, offset:int, length:int) -> bytes:
-        start_address = offset
-        end_address_exclusive = start_address + length
-        output_data = b''
+    def get_data(self, offset: int, length: int) -> bytes:
+        if length <= 0:
+            return b''
 
-        if start_address >= end_address_exclusive:
+        if offset < 0:
             return b''
-        
-        if start_address > self.size-1:
+
+        if offset >= self.size:
             return b''
-        if end_address_exclusive > self.size-1:
-            return b''
-        #
-        if start_address < 0:
-            return b''
-        if end_address_exclusive <= 0:
-            return b''
-        
-        output_data = self._raw_data[start_address:end_address_exclusive]
-        return output_data
+
+        end = offset + length
+        return self._raw_data[offset:end]
+
 
 
 class Asset():
@@ -136,17 +138,17 @@ class DatFile(Container):
         file = self.data_ref
         #with open(dat_path, 'rb') as file:
 
-        #file.seek(dat_obj.offset)
-        curr_offset = self.offset
+        file.seek(self.offset)
+        #curr_offset = self.offset
         # Read the raw data and null offset list from the .DAT
-        #read = file.read(4)            
-        read = file.get_data(curr_offset, 4)
+        read = file.read(4)            
+        #read = file.get_data(curr_offset, 4)
         number_of_files = int.from_bytes(read, byteorder="little")
         
         for offset_index in range(number_of_files):
-            curr_offset += 4
-            #data = file.read(4)
-            data = file.get_data(curr_offset, 4)
+            #curr_offset += 4
+            data = file.read(4)
+            #data = file.get_data(curr_offset, 4)
             data_int = int.from_bytes(data, byteorder="little")
             
             if data_int != 0:
@@ -239,6 +241,8 @@ def main():
         dat.init_offset_table()
         dat.generate_children()
         print(dat)
+
+        aux_dat = DATA_PAC.children[251]
 
     
     pass
