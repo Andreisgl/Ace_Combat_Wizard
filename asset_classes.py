@@ -63,17 +63,18 @@ class DataReference():
 
 
 class Asset():
-    def __init__(self, name:str, size:int, offset:int):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
         self.name = name
         self.size = size
         self.offset = offset # Offset from its father container.
+        self.data_ref = data_ref
         
     def __repr__(self):
         return f'ASSET | {self.name} - size={self.size} - offset={self.offset}'
 
 class Container(Asset):
-    def __init__(self, name:str, size:int, offset:int):
-        super().__init__(name=name, size=size, offset=offset)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
         self.offset_table = []
         self.sizes_list:list = []
         self.children = []
@@ -89,12 +90,77 @@ class Container(Asset):
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-            name = f'{str(i).zfill(4)}.dat'
-            container = Asset(name=name, offset=offset, size=aux_size)
+            name = f'{str(i).zfill(len(str(i)))}'
+            container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
             self.children.append(container)
     
     def __repr__(self):
         return f'CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
+
+
+
+class PacFile(Container):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
+        self.offset_table = []
+        self.sizes_list:list = []
+        self.children = []
+       
+    def init_offset_table(self, offset_table:list):
+        self.offset_table = offset_table[:]
+        ref_table = self.offset_table[:]
+        ref_table.append(self.size)
+
+        for i, offset in enumerate(ref_table):
+            if i == len(ref_table)-1:
+                break
+            aux_size = ref_table[i+1] - ref_table[i]
+            self.sizes_list.append(aux_size)
+
+            name = f'{str(i).zfill(len(str(i)))}.dat'
+            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
+            self.children.append(container)
+    
+    def __repr__(self):
+        return f'PAC | {self.name} - size={self.size} - offset={self.offset}'
+    
+
+
+class DatFile(Container):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
+        self.zero_offset_list = []
+    
+    def get_dat_offset_table(self): #### not done
+        offset_list = []
+        zero_offset_list = []
+        file = self.data_ref
+        #with open(dat_path, 'rb') as file:
+
+        #file.seek(dat_obj.offset)
+        curr_offset = self.offset
+        # Read the raw data and null offset list from the .DAT
+        #read = file.read(4)            
+        read = file.get_data(curr_offset, 4)
+        number_of_files = int.from_bytes(read, byteorder="little")
+        
+        for offset_index in range(number_of_files):
+            curr_offset += 4
+            #data = file.read(4)
+            data = file.get_data(curr_offset, 4)
+            data_int = int.from_bytes(data, byteorder="little")
+            
+            if data_int != 0:
+                offset_list.append(data_int)
+            else:
+                zero_offset_list.append(offset_index)
+        
+        self.offset_table = offset_list
+        self.zero_offset_list = zero_offset_list
+        #return offset_list, zero_offset_list
+    
+    def __repr__(self):
+        return f'DAT | {self.name} - size={self.size} - offset={self.offset}'
 
 def get_tbl_offset_table(tbl_path:str) -> list:
     # Returns the offset table and sizes from a .TBL file
@@ -108,30 +174,7 @@ def get_tbl_offset_table(tbl_path:str) -> list:
             size_list.append(int.from_bytes(tbl_file.read(4), byteorder="little"))
     return offset_list
 
-def get_dat_offset_table(dat_obj:Container, file:DataReference): #### not done
-    offset_list = []
-    zero_offset_list = []
-    #with open(dat_path, 'rb') as file:
 
-    #file.seek(dat_obj.offset)
-    curr_offset = dat_obj.offset
-    # Read the raw data and null offset list from the .DAT
-    #read = file.read(4)            
-    read = file.get_data(curr_offset, 4)
-    number_of_files = int.from_bytes(read, byteorder="little")
-    
-    for offset_index in range(number_of_files):
-        curr_offset += 4
-        #data = file.read(4)
-        data = file.get_data(curr_offset, 4)
-        data_int = int.from_bytes(data, byteorder="little")
-        
-        if data_int != 0:
-            offset_list.append(data_int)
-        else:
-            zero_offset_list.append(offset_index)
-        
-    return offset_list, zero_offset_list
 
 
 
@@ -153,13 +196,13 @@ def main():
 
     DATA_PAC_REF = DataReference(name='datapac_ref', raw_data=raw_datapac_data)
     
-    DATA_PAC = Container(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0)
+    DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF)
     DATA_PAC.init_offset_table(tbl_offset_table)
 
     #for dat in DATA_PAC.children:
     #dat:Container
     dat = DATA_PAC.children[251]
-    result = get_dat_offset_table(dat_obj=dat, file=DATA_PAC_REF)
+    dat.get_dat_offset_table(file=DATA_PAC_REF)
 
 
 
