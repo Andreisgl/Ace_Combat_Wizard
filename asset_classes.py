@@ -63,18 +63,19 @@ class DataReference():
 
 
 class Asset():
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
         self.name = name
         self.size = size
         self.offset = offset # Offset from its father container.
+        self.index = index # Offset from its father container.
         self.data_ref = data_ref
         
     def __repr__(self):
-        return f'ASSET | {self.name} - size={self.size} - offset={self.offset}'
+        return f'ASSET | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
 class Container(Asset):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.offset_table = []
         self.sizes_list:list = [] # TODO: Check if this is used
         self.children = []
@@ -91,17 +92,17 @@ class Container(Asset):
             self.sizes_list.append(aux_size)
 
             name = f'{str(i).zfill( len(str(len(ref_table))) )}'
-            container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
+            container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
             self.children.append(container)
     
     def __repr__(self):
-        return f'CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
+        return f'CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
 
 
 class PacFile(Container):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.offset_table = []
         self.sizes_list:list = []
         self.children = []
@@ -118,7 +119,7 @@ class PacFile(Container):
             self.sizes_list.append(aux_size)
 
             name = f'{str(i).zfill( len(str(len(ref_table))) ) }.dat'
-            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
+            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
             self.children.append(container)
     
     def __repr__(self):
@@ -127,10 +128,10 @@ class PacFile(Container):
 
 
 class DatFile(Container):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.zero_offset_list = []
-        self.generate_offset_table()
+        #self.generate_offset_table()
     
     def generate_offset_table(self): #### not done
         offset_list = []
@@ -172,11 +173,11 @@ class DatFile(Container):
             self.sizes_list.append(aux_size)
 
             name = f'{str(i).zfill( len(str(len(ref_table))) )}.asset' # TODO: use len(table) for zfill
-            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
+            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref, index=i)
             self.children.append(container)
     
     def __repr__(self):
-        return f'DAT_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
+        return f'DAT_CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
 
 
@@ -214,7 +215,7 @@ def main():
 
     DATA_PAC_REF = DataReference(name='datapac_ref', raw_data=raw_datapac_data)
     
-    DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF)
+    DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0)
     DATA_PAC.init_offset_table(tbl_offset_table)
 
     aux_dat = DATA_PAC.children[251]
