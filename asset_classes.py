@@ -76,7 +76,7 @@ class Container(Asset):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
         self.offset_table = []
-        self.sizes_list:list = []
+        self.sizes_list:list = [] # TODO: Check if this is used
         self.children = []
        
     def init_offset_table(self, offset_table:list):
@@ -90,7 +90,7 @@ class Container(Asset):
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-            name = f'{str(i).zfill(len(str(i)))}'
+            name = f'{str(i).zfill( len(str(len(ref_table))) )}'
             container = Asset(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
             self.children.append(container)
     
@@ -117,7 +117,7 @@ class PacFile(Container):
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-            name = f'{str(i).zfill(len(str(i)))}.dat'
+            name = f'{str(i).zfill( len(str(len(ref_table))) ) }.dat'
             container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
             self.children.append(container)
     
@@ -130,9 +130,9 @@ class DatFile(Container):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref)
         self.zero_offset_list = []
-        self.get_dat_offset_table()
+        self.generate_offset_table()
     
-    def get_dat_offset_table(self): #### not done
+    def generate_offset_table(self): #### not done
         offset_list = []
         zero_offset_list = []
         file = self.data_ref
@@ -159,9 +159,26 @@ class DatFile(Container):
         self.offset_table = offset_list
         self.zero_offset_list = zero_offset_list
         #return offset_list, zero_offset_list
+
+    def generate_children(self):
+        #self.offset_table = offset_table[:]
+        ref_table = self.offset_table[:]
+        ref_table.append(self.size)
+
+        for i, offset in enumerate(ref_table):
+            if i == len(ref_table)-1:
+                break
+            aux_size = ref_table[i+1] - ref_table[i]
+            self.sizes_list.append(aux_size)
+
+            name = f'{str(i).zfill( len(str(len(ref_table))) )}.asset' # TODO: use len(table) for zfill
+            container = DatFile(name=name, offset=offset, size=aux_size, data_ref=self.data_ref)
+            self.children.append(container)
     
     def __repr__(self):
         return f'DAT_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
+
+
 
 def get_tbl_offset_table(tbl_path:str) -> list:
     # Returns the offset table and sizes from a .TBL file
@@ -200,7 +217,9 @@ def main():
     DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF)
     DATA_PAC.init_offset_table(tbl_offset_table)
 
+    aux_dat = DATA_PAC.children[251]
 
+    
     pass
 
 
