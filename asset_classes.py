@@ -101,16 +101,31 @@ class Container(Asset):
             #self.children.append(asset)
             self.children[i] = asset
     
-    def generate_child(self, index:int, name:str, asset_class:type[Asset]):
+    def generate_child(self,
+                       index:int,
+                       #name:str,
+                       #asset_class:type[Asset],
+                       obj:Asset):
+        
         '''Creates or overwrites a child asset.'''
         if index < 0 or index >= len(self.children):
             raise ValueError(f'Invalid index position: {index}/{len(self.children)}')
-        
+
         offset = self.offset_table[index]
         size = self.sizes_list[index]
 
-        new_asset = asset_class(name=name, size=size, offset=offset, data_ref=self.data_ref, index=index)
-        new_asset_entry = {index: new_asset}
+        #new_asset = asset_class(name=name, size=size, offset=offset, data_ref=self.data_ref, index=index)
+
+        if isinstance(obj, Asset):
+            obj.offset = offset
+            obj.size = size
+            obj.index = index
+            obj.data_ref = self.data_ref
+        if isinstance(obj, Container):
+            obj.init_offset_table()
+            obj.generate_children()
+
+        new_asset_entry = {index: obj}
 
         self.children[index] = new_asset_entry  
 
@@ -142,15 +157,18 @@ class PacFile(Container):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
 
 class DatFile(Container):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+    ''' 'deferred_children' means that the children won't be created right on instace creation.
+        This means that they will only be created manually.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, deferred_children:bool=False):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = ''
         self.sizes_list = []
 
-        self.init_offset_table()
-        self.generate_children()
+        if not deferred_children:
+            self.init_offset_table()
+            self.generate_children()
 
     
     def init_offset_table(self): #### TODO: Generate sizes_list
@@ -203,11 +221,12 @@ class DatFile(Container):
         return f'DAT_CONTAINER | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
 
 class DatMission(DatFile):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, ace_style:str=''):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
         self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = 'mission'
+        self.ace_style = ace_style
 
     def __repr__(self):
         return f'MISSION_DAT | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
@@ -285,9 +304,9 @@ def main():
         '281': {'dat_type': 'mission', 'name': 'The Gauntlet', 'ace_style': 'all'}
     }
 
-    DAT_CLASS_LOOKUP_TABLE:dict[str, type[Asset]] = {
-        'mission': DatMission
-    }
+    #DAT_CLASS_LOOKUP_TABLE:dict[str, type[Asset]] = {
+    #    'mission': DatMission
+    #}
 
     #def get_dat_class_from_type(dat_type:str) -> Asset:
     #    out_class:Asset
@@ -298,16 +317,26 @@ def main():
         raw_asset:Asset
         raw_asset = DATA_PAC.children[int(dat_index)]
         entry = DAT_ASSET_LIST[dat_index]
+        new_child = None
         
         dat_type = entry['dat_type']
         new_name = f'{dat_type}_{entry['name']}'
 
         # Find out the subclass for the subasset
-        child_class:type[Asset]
-        child_class = DAT_CLASS_LOOKUP_TABLE[dat_type]
+        #child_class:type[Asset]
+        #child_class = DAT_CLASS_LOOKUP_TABLE[dat_type]
+        
+        if entry['dat_type'] == 'mission':
+            ace_style = entry['ace_style']
+            new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=DATA_PAC.data_ref, index=int(dat_index), ace_style=ace_style)
+            DATA_PAC.generate_child(index=int(dat_index), obj=new_child)
+        #elif .... other classes...
+
         
 
-        DATA_PAC.generate_child(int(dat_index), new_name, child_class)
+
+        #DATA_PAC.generate_child(int(dat_index), new_name, child_class)
+        #DATA_PAC.generate_child(int(dat_index), new_name, child_class)
 
         print(DATA_PAC.children[int(dat_index)])
 
