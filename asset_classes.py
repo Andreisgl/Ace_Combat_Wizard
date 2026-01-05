@@ -259,30 +259,31 @@ def main():
         '255': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'K'},
     }
 
-    DAT_CLASS_LOOKUP_TABLE = {
+    DAT_CLASS_LOOKUP_TABLE:dict[str, type[Asset]] = {
         'mission': DatMission
     }
+
+    #def get_dat_class_from_type(dat_type:str) -> Asset:
+    #    out_class:Asset
+    #    out_class = DAT_CLASS_LOOKUP_TABLE[dat_type]
+    #    return out_class
 
     for dat_index in DAT_ASSET_LIST:
         raw_asset:Asset
         raw_asset = DATA_PAC.children[int(dat_index)]
         entry = DAT_ASSET_LIST[dat_index]
         
-        type = entry['dat_type']
-        new_name = f'{type}_{entry['name']}'
-        #size = raw_asset.size
-        #offset = raw_asset.offset
-        #data_ref = raw_asset.data_ref
+        dat_type = entry['dat_type']
+        new_name = f'{dat_type}_{entry['name']}'
 
-        #dat = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=int(dat_index))
+        # Find out the subclass for the subasset
+        child_class:type[Asset]
+        child_class = DAT_CLASS_LOOKUP_TABLE[dat_type]
         
-        DATA_PAC.generate_child(int(dat_index), new_name, DatFile)
+
+        DATA_PAC.generate_child(int(dat_index), new_name, child_class)
 
         print(DATA_PAC.children[int(dat_index)])
-
-        #aux_dat = DATA_PAC.children[251]
-
-        #dat.generate_child(index=0, name='', asset_class=Container)
 
     
     pass
