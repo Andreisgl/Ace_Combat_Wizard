@@ -158,7 +158,6 @@ class Container(Asset):
         return f'CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
 class PacFile(Container):
-    # TODO: Consider passing DATA.TBL data ref to this class on init.
     # TODO: Consider renaming this to 'DataPacAsset', as there are other
     #   .PAC files with different behaviors.
     def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int):
@@ -321,14 +320,6 @@ def main():
         '281': {'dat_type': 'mission', 'name': 'The Gauntlet', 'ace_style': 'all'}
     }
 
-    #DAT_CLASS_LOOKUP_TABLE:dict[str, type[Asset]] = {
-    #    'mission': DatMission
-    #}
-
-    #def get_dat_class_from_type(dat_type:str) -> Asset:
-    #    out_class:Asset
-    #    out_class = DAT_CLASS_LOOKUP_TABLE[dat_type]
-    #    return out_class
 
     for dat_index in DAT_ASSET_LIST:
         raw_asset:Asset
@@ -338,10 +329,6 @@ def main():
         
         dat_type = entry['dat_type']
         new_name = f'{dat_type}_{entry['name']}'
-
-        # Find out the subclass for the subasset
-        #child_class:type[Asset]
-        #child_class = DAT_CLASS_LOOKUP_TABLE[dat_type]
         
         if entry['dat_type'] == 'mission':
             ace_style = entry['ace_style']
