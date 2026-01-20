@@ -157,7 +157,7 @@ class Container(Asset):
     def __repr__(self):
         return f'CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
 
-class PacFile(Container):
+class DataPacAsset(Container):
     # TODO: Consider renaming this to 'DataPacAsset', as there are other
     #   .PAC files with different behaviors.
     def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int):
@@ -282,7 +282,7 @@ def main():
     DATA_TBL_REF = DataRefTbl(name='datatbl_ref', raw_data=raw_datatbl_data)
     DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=DATA_TBL_REF)
 
-    DATA_PAC = PacFile(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0)
+    DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0)
     #DATA_PAC.init_offset_table()
 
     
