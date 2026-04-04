@@ -33,6 +33,7 @@ class Project():
             data = ''
             with open(self._flag_file_path, 'r') as flag_file:
                 data = json.load(flag_file)
+            self.project_name = data['project_name']
         else: # Create ACW flag file and write the project's name to it.
             self.project_name = name
             data = {'project_name': self.project_name}
