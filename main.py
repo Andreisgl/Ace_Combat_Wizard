@@ -62,11 +62,11 @@ class ACZProject(Project):
         with open(tbl_path, 'rb') as file:
             raw_datatbl_data = file.read()
             
-        self.DATA_TBL_REF = DataRefTbl(name='datatbl_ref', raw_data=raw_datatbl_data)
-        self.DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=self.DATA_TBL_REF)
+        self._DATA_TBL_REF = DataRefTbl(name='datatbl_ref', raw_data=raw_datatbl_data)
+        self._DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=self._DATA_TBL_REF)
 
         # Asset creation:
-        self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self.DATA_PAC_REF, index=0)
+        self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0)
 
         self.DAT_ASSET_LIST = {
             '251': {'dat_type': 'mission', 'name': 'Glacial Skies', 'ace_style': 'all'},
@@ -117,15 +117,7 @@ class ACZProject(Project):
                 new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), ace_style=ace_style, deferred_children=True)
                 self.DATA_PAC.generate_child(index=int(dat_index), obj=new_child) # TODO: Consider making this line for all asset types
             #elif .... other classes...
-
             
-
-
-            #DATA_PAC.generate_child(int(dat_index), new_name, child_class)
-            #DATA_PAC.generate_child(int(dat_index), new_name, child_class)
-
-            print(self.DATA_PAC.children[int(dat_index)])
-
         pass
         
 
