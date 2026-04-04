@@ -44,7 +44,10 @@ class Project():
         if len(os.listdir(self._source_folder)) <= 0:
             print('No game files!') # Source is empty
         
-        
+class ACZProject(Project):
+    '''Extends class 'Project for ACZ-specific projects.'''
+    def __init__(self, project_folder_path:str, name:str=''):
+        super().__init__(project_folder_path=project_folder_path, name=name)
 
         
        
@@ -62,7 +65,14 @@ def main():
     os.makedirs(projects_folder, exist_ok=True)
 
     project_path = os.path.join(projects_folder, 'testproj')
-    current_project = Project(project_folder_path=project_path, name='test_proj')
+    current_project = ACZProject(project_folder_path=project_path, name='test_proj')
+
+
+
+
+
+
+
     pass
 
 if __name__ == '__main__':
