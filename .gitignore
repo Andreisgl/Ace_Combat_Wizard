@@ -6,6 +6,7 @@
 *.subdat
 testfile
 testfolder/
+projects/
 
 
 # Standard Python ignores:
