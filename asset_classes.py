@@ -47,10 +47,13 @@ class DataReference():
         self._cursor = new_pos
         return self._cursor
 
-    def get_remaining_length(self):        
+    def get_remaining_length(self):
+        # TODO: Apparently unused. cerify that.
         return max(0, self.size - self._cursor)
 
     def get_data(self, offset: int, length: int) -> bytes:
+        # TODO: make length optional. When not used, returns remaining data.
+        # TODO: Clamp 'end' value to remaining size. Consider using self.get_remaining_length
         if length <= 0:
             return b''
 
