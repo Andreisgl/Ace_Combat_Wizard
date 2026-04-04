@@ -2,7 +2,8 @@
 import os
 
 class DataReference():
-    ''' This class hold the actual data '''
+    ''' This class hold the actual data.
+    It is the representation of a file's raw data. '''
     # TODO: Consider passing the file's path instead of copying raw data.
     # It will save memory, make the process less verbose and mayber help with other optimizations.
     def __init__(self, name:str, raw_data:bytes):
