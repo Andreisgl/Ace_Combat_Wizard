@@ -4,6 +4,7 @@
 *.dat
 *.zof
 *.subdat
+*.unk
 testfile
 testfolder/
 projects/
