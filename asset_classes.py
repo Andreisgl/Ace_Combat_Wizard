@@ -99,19 +99,23 @@ class DataRefPac(DataReference):
 
 
 class Asset():
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
+    def __init__(self, name:str, size:int, offset:int,
+                 #ref_offset:int,
+                 data_ref:DataReference, index:int, father):
         self.name = name
         self.size = size
-        self.offset = offset # Offset from its father container.
-        self.index = index # Offset from its father container.
+        self.father = None
+        self.offset_father = offset # Offset from its father container.
+        self.index_father = index # Offset from its father container.
+        #self.offset_ref = ref_offset # Offset from data ref
         self.data_ref = data_ref
         
     def __repr__(self):
-        return f'ASSET | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
+        return f'ASSET | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 class Container(Asset):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.offset_table = []
         self.sizes_list:list = []
         self.children = dict()
@@ -133,7 +137,7 @@ class Container(Asset):
         '''Generates all children of the container'''
         for i, offset in enumerate(self.offset_table):
             name = f'{str(i).zfill( len(str(len(self.offset_table))))}'
-            asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i)
+            asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
             #self.children.append(asset)
             self.children[i] = asset
     
@@ -146,9 +150,9 @@ class Container(Asset):
         size = self.sizes_list[index]
 
         if isinstance(obj, Asset):
-            obj.offset = offset
+            obj.offset_father = offset
             obj.size = size
-            obj.index = index
+            obj.index_father = index
             obj.data_ref = self.data_ref
         if isinstance(obj, Container):
             obj.init_offset_table()
@@ -159,13 +163,13 @@ class Container(Asset):
         self.children[index] = new_asset_entry  
 
     def __repr__(self):
-        return f'CONTAINER | ({self.index})_{self.name} - size={self.size} - offset={self.offset}'
+        return f'CONTAINER | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 class DataPacAsset(Container):
     # TODO: Consider renaming this to 'DataPacAsset', as there are other
     #   .PAC files with different behaviors.
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.data_ref = data_ref # Not redundant. Receive specific DataRef class
         self.offset_table = data_ref.get_offset_table()
         self.init_offset_table()
@@ -190,13 +194,13 @@ class DataPacAsset(Container):
         self.generate_children()
     
     def __repr__(self):
-        return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset}'
+        return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset_father}'
 
 class DatFile(Container):
     ''' 'deferred_children' means that the children won't be created right on instace creation.
         This means that they will only be created manually.'''
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, deferred_children:bool=False):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, deferred_children:bool=False):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.zero_offset_list = []
         self.dat_type:str = ''
         self.sizes_list = []
@@ -217,7 +221,7 @@ class DatFile(Container):
         file = self.data_ref
         #with open(dat_path, 'rb') as file:
 
-        file.seek(self.offset)
+        file.seek(self.offset_father)
         #curr_offset = self.offset
         # Read the raw data and null offset list from the .DAT
         read = file.read(4)            
@@ -253,18 +257,18 @@ class DatFile(Container):
             self.sizes_list.append(aux_size)
     
     def __repr__(self):
-        return f'DAT_CONTAINER | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
+        return f'DAT_CONTAINER | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatMission(DatFile):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, ace_style:str='', deferred_children:bool=False):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, deferred_children=deferred_children)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, ace_style:str='', deferred_children:bool=False):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, deferred_children=deferred_children)
         self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = 'mission'
         self.ace_style = ace_style
 
     def __repr__(self):
-        return f'MISSION_DAT | ({self.index})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset}'
+        return f'MISSION_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 
 
@@ -286,7 +290,7 @@ def main():
     DATA_TBL_REF = DataRefTbl(name='datatbl_ref', raw_data=raw_datatbl_data)
     DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=DATA_TBL_REF)
 
-    DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0)
+    DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0, father=None)
     #DATA_PAC.init_offset_table()
 
     
@@ -336,7 +340,7 @@ def main():
         
         if entry['dat_type'] == 'mission':
             ace_style = entry['ace_style']
-            new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=DATA_PAC.data_ref, index=int(dat_index), ace_style=ace_style, deferred_children=True)
+            new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=DATA_PAC.data_ref, index=int(dat_index), father=DATA_PAC, ace_style=ace_style, deferred_children=True)
             DATA_PAC.generate_child(index=int(dat_index), obj=new_child)
         #elif .... other classes...
 
