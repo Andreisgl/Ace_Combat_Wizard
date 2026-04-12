@@ -224,10 +224,10 @@ class Asset():
                  data_ref:DataReference, index:int, father:Asset):
         self.name = name
         self.size = size
-        self.father = None
+        self.father:Asset = father
         self.offset_father = offset # Offset from its father container.
         self.index_father = index # Offset from its father container.
-        #self.offset_ref = ref_offset # Offset from data ref
+        self.offset_ref = self.offset_father + father.offset_father # Offset from data ref
         self.data_ref = data_ref
         
     def __repr__(self):
