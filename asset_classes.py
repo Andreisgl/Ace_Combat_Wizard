@@ -154,7 +154,7 @@ class Container(Asset):
             obj.init_offset_table()
             obj.generate_children()
 
-        new_asset_entry = {index: obj}
+        new_asset_entry = obj
 
         self.children[index] = new_asset_entry  
 
