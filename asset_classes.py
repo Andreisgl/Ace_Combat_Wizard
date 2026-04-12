@@ -42,8 +42,6 @@ class ACZProject(Project):
     '''Extends class 'Project for ACZ-specific projects.'''
     def __init__(self, project_folder_path:str, name:str=''):
         super().__init__(project_folder_path=project_folder_path, name=name)
-        #
-        self.ROOT_ASSET = RootAsset(father=self)
         
         # References setup:
         tbl_path = os.path.join(self._source_folder, 'DATA.TBL')
@@ -61,7 +59,7 @@ class ACZProject(Project):
         self._DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=self._DATA_TBL_REF)
 
         # Asset creation:
-        self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self.ROOT_ASSET)
+        self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self)
 
         self.DAT_ASSET_LIST = {
             '251': {'dat_type': 'mission', 'name': 'Glacial Skies', 'ace_style': 'all'},
@@ -221,31 +219,24 @@ class DataRefPac(DataReference):
 class Asset():
     def __init__(self, name:str, size:int, offset:int,
                  #ref_offset:int,
-                 data_ref:DataReference, index:int, father:Asset):
+                 data_ref:DataReference, index:int, father):
         self.name = name
         self.size = size
         self.father:Asset = father
         self.offset_father = offset # Offset from its father container.
         self.index_father = index # Offset from its father container.
-        self.offset_ref = self.offset_father + father.offset_father # Offset from data ref
+        if isinstance(self.father, Asset):
+            self.offset_ref = self.offset_father + father.offset_father # Offset from data ref
+        elif isinstance(self.father, Project):
+            self.offset_ref = self.offset_father
         self.data_ref = data_ref
         
     def __repr__(self):
         return f'ASSET | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
-class RootAsset(Asset):
-    def __init__(self, father:Project):
-        self.father:Project = father
-        self.name = f'root_{self.father.project_name}'
-        self.size = 0
-        self.offset_father = 0
-        self.index_father = 0
-        #self.offset_ref = 0
-        self.data_ref = 0
-
 
 class Container(Asset):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father:Asset):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.offset_table = []
         self.sizes_list:list = []
