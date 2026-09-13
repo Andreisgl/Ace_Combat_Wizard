@@ -237,6 +237,10 @@ class Asset():
             return self.offset_father + self.father.offset_ref
         return self.offset_father
 
+    def get_raw_data(self) -> bytes:
+        '''Returns this asset's own raw bytes, read from its data reference.'''
+        return self.data_ref.get_data(self.offset_ref, self.size)
+
     def __repr__(self):
         return f'ASSET | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
