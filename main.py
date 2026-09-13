@@ -29,26 +29,28 @@ def main():
     project_path = os.path.join(projects_folder, 'testproj')
     current_project = ACZProject(project_folder_path=project_path, name='test_proj')
 
+    pass
 
-    # export: TODO: Transfer this functionality to the Asset class so exporting assets is less verbose
-    e_path = '251datexport'
-    #origin:DataPacAsset = current_project.DATA_PAC.children[251]
-    #origin_offset = origin.offset_father
-    for index, asset in enumerate(current_project.DATA_PAC.children[251].children.values()):
-        asset:Asset
-        offset = asset.offset_ref # Offset from dataref
-        size = asset.size
-        data = asset.data_ref.get_data(offset=offset, length=size)
 
-        file_path = os.path.join(e_path, f'{index}.unk')
-        with open(file_path, 'wb') as file:
-            file.write(data)
-
-    def extract_asset(asset:Asset):
-        offset = asset.offset_ref # Offset from dataref
-        size = asset.size
-        data = asset.data_ref.get_data(offset=offset, length=size)
-        return data
+    ## export: TODO: Transfer this functionality to the Asset class so exporting assets is less verbose
+    #e_path = '251datexport'
+    ##origin:DataPacAsset = current_project.DATA_PAC.children[251]
+    ##origin_offset = origin.offset_father
+    #for index, asset in enumerate(current_project.DATA_PAC.children[251].children.values()):
+    #    asset:Asset
+    #    offset = asset.offset_ref # Offset from dataref
+    #    size = asset.size
+    #    data = asset.data_ref.get_data(offset=offset, length=size)
+#
+    #    file_path = os.path.join(e_path, f'{index}.unk')
+    #    with open(file_path, 'wb') as file:
+    #        file.write(data)
+#
+    #def extract_asset(asset:Asset):
+    #    offset = asset.offset_ref # Offset from dataref
+    #    size = asset.size
+    #    data = asset.data_ref.get_data(offset=offset, length=size)
+    #    return data
 
     pass
 
