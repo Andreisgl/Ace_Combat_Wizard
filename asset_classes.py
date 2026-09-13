@@ -225,12 +225,18 @@ class Asset():
         self.father:Asset = father
         self.offset_father = offset # Offset from its father container.
         self.index_father = index # Offset from its father container.
-        if isinstance(self.father, Asset):
-            self.offset_ref = self.offset_father + father.offset_father # Offset from data ref
-        elif isinstance(self.father, Project):
-            self.offset_ref = self.offset_father
         self.data_ref = data_ref
-        
+
+    @property
+    def offset_ref(self) -> int:
+        '''Absolute offset from the root data reference. Computed live from the
+        current offset_father/father chain (rather than cached at __init__ time)
+        so it stays correct if offset_father is patched later, e.g. by
+        Container.generate_child().'''
+        if isinstance(self.father, Asset):
+            return self.offset_father + self.father.offset_ref
+        return self.offset_father
+
     def __repr__(self):
         return f'ASSET | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
