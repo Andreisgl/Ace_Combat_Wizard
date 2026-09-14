@@ -76,7 +76,9 @@ class AssetPanel(QWidget):
         layout.addLayout(mode_row)
         layout.addWidget(self.visualizer_combo)
         layout.addLayout(self._metadata_form)
-        layout.addLayout(self._viz_container)
+        # Stretch 1: the viz area claims all leftover vertical space in the
+        # panel, instead of shrinking to its content's natural size.
+        layout.addLayout(self._viz_container, 1)
 
         self._show_placeholder('No asset selected')
 

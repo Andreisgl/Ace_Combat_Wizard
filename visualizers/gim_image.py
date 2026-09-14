@@ -36,7 +36,7 @@ from dataclasses import dataclass
 
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
-from PySide6.QtWidgets import QLabel, QWidget
+from PySide6.QtWidgets import QLabel, QSizePolicy, QWidget
 
 from asset_classes import Asset, GIM
 from visualizers.base import Visualizer
@@ -175,6 +175,9 @@ class _ImageLabel(QLabel):
         self._source_pixmap = pixmap
         self.setAlignment(Qt.AlignCenter)
         self.setMinimumSize(1, 1)  # allow shrinking below the image's own size
+        # Without Expanding, the label sizes to the pixmap's natural dimensions
+        # instead of claiming the space its container actually has available.
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.setPixmap(pixmap)
 
     def resizeEvent(self, event):
