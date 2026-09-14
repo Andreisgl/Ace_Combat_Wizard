@@ -436,6 +436,17 @@ class DatMission(DatFile):
     def __repr__(self):
         return f'MISSION_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
+class DatStage(DatFile):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, ace_style:str=''):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.zero_offset_list = []
+        #self.generate_offset_table()
+        self.dat_type:str = 'stage'
+        self.ace_style = ace_style
+
+    def __repr__(self):
+        return f'STAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
 class GIM(Asset):
     'A GIM image file'
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
