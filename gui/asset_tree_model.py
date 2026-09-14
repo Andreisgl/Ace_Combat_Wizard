@@ -14,7 +14,6 @@ class AssetTreeModel(QAbstractItemModel):
     def __init__(self, root_asset: Container, parent=None):
         super().__init__(parent)
         self._root = root_asset
-        self._fetched_ids: set[int] = set()
 
     def index(self, row, column, parent=QModelIndex()):
         if not parent.isValid():
@@ -55,38 +54,6 @@ class AssetTreeModel(QAbstractItemModel):
 
     def columnCount(self, parent=QModelIndex()):
         return len(COLUMNS)
-
-    def hasChildren(self, parent=QModelIndex()):
-        if not parent.isValid():
-            return True
-
-        asset = parent.internalPointer()
-        if not isinstance(asset, Container):
-            return False
-        if asset.children:
-            return True
-        return id(asset) not in self._fetched_ids
-
-    def canFetchMore(self, parent):
-        if not parent.isValid():
-            return False
-
-        asset = parent.internalPointer()
-        if not isinstance(asset, Container):
-            return False
-        return not asset.children and id(asset) not in self._fetched_ids
-
-    def fetchMore(self, parent):
-        asset = parent.internalPointer()
-        asset.init_offset_table()
-
-        count = len(asset.offset_table)
-        if count > 0:
-            self.beginInsertRows(parent, 0, count - 1)
-        asset.generate_children()
-        self._fetched_ids.add(id(asset))
-        if count > 0:
-            self.endInsertRows()
 
     def data(self, index, role=Qt.DisplayRole):
         if not index.isValid() or role != Qt.DisplayRole:
