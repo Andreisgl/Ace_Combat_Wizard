@@ -95,7 +95,7 @@ class ACZProject(Project):
             '281': {'dat_type': 'mission', 'name': 'The Gauntlet', 'ace_style': 'all'}
         }
 
-        #
+        # Overwrite generic "Asset" children for typed dats (like missions and aircraft)
         for dat_index in self.DAT_ASSET_LIST:
             raw_asset:Asset
             raw_asset = self.DATA_PAC.children[int(dat_index)]
@@ -105,7 +105,7 @@ class ACZProject(Project):
             dat_type = entry['dat_type']
             new_name = f'{dat_type}_{entry['name']}'
             
-            if entry['dat_type'] == 'mission':
+            if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
                 ace_style = entry['ace_style']
                 if ace_style != 'all':
                     new_name = f'{dat_type}_{entry['name']}_{ace_style}'
