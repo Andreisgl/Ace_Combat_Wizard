@@ -107,6 +107,9 @@ class ACZProject(Project):
             
             if entry['dat_type'] == 'mission':
                 ace_style = entry['ace_style']
+                if ace_style != 'all':
+                    new_name = f'{dat_type}_{entry['name']}_{ace_style}'
+
                 new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), father=self.DATA_PAC, ace_style=ace_style, deferred_children=True)
                 self.DATA_PAC.generate_child(index=int(dat_index), obj=new_child) # TODO: Consider making this line for all asset types
             #elif .... other classes...
