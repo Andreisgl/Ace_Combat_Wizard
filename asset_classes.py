@@ -115,21 +115,39 @@ class ACZProject(Project):
             #elif .... other classes...
         
 
+
+        def auto_apply_type(asset:Asset):
+            ''' Autodetects an untyped asset's type and replaces it with the correct type.
+            This is for assets that were not typed using a lookup table.
+            asset: Asset to be replaced'''
+            data = asset.get_raw_data()
+            father = asset.father
+            data_ref = asset.data_ref
+            prefix = data[:3]
+            key = asset.index_father
+
+            #print(f'input index: {key} - Asset index: {asset.index_father}')
+            #print(prefix)
+
+            if prefix == b'GIM':
+                print('is GIM!')
+                new_asset = GIM(name=f'{key}.GIM', size=asset.size, offset=asset.offset_father, data_ref=data_ref, index=int(key), father=father)
+                father.generate_child(index=int(key), obj=new_asset)
+            elif prefix == b'P3D':
+                print('is P3D!')
+                new_asset = P3D(name=f'{key}.P3D', size=asset.size, offset=asset.offset_father, data_ref=data_ref, index=int(key), father=father)
+                father.generate_child(index=int(key), obj=new_asset)
+
         # Check for file types inside .dats
+        print('Analysing typed .dats')
         for dat_key, dat in self.DATA_PAC.children.items():
-            if type(dat) is DatMission:
+            if type(dat) is Asset: # Check if loose .dats have a file type.
+                auto_apply_type(asset=dat)
+            if type(dat) is DatMission: # Check for untyped files inside a .dat
                 for subdat_key, subdat in dat.children.items():
                     if type(subdat) is Asset:
-                        data = subdat.get_raw_data()
-                        prefix = data[:3]
-                        #print(prefix)
-                        if prefix == b'GIM':
-                            print('is GIM!')
-                            new_subdat = GIM(name=f'{subdat_key}.GIM', size=subdat.size, offset=subdat.offset_father, data_ref=self.DATA_PAC.data_ref, index=int(subdat_key), father=dat)
-                            dat.generate_child(index=int(subdat_key), obj=new_subdat)
-                        elif prefix == b'P3D':
-                            new_subdat = P3D(name=f'{subdat_key}.P3D', size=subdat.size, offset=subdat.offset_father, data_ref=self.DATA_PAC.data_ref, index=int(subdat_key), father=dat)
-                            dat.generate_child(index=int(subdat_key), obj=new_subdat)
+                        auto_apply_type(asset=subdat)
+                        
 
         pass
         
