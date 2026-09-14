@@ -7,10 +7,12 @@ PROGRAM_STRUCUTRE.MD these are meant to be independent modules, not
 data-model methods.'''
 from asset_classes import Asset
 from visualizers.base import Visualizer
+from visualizers.gim_image import GIM_IMAGE
 from visualizers.raw_hex import RAW_DATA
 
 ALL_VISUALIZERS: list[Visualizer] = [
     RAW_DATA,
+    GIM_IMAGE,
 ]
 
 
