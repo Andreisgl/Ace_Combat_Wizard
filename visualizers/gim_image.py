@@ -43,7 +43,6 @@ GIM_SIGNATURE = b'GIM\x00'
 HEADER_SIZE = 32  # through width/height fields
 PADDING_AFTER_PIXELS = 12
 UNKNOWN_FIELD_SIZE = 4  # position/length only - see module docstring
-DISPLAY_SCALE = 4  # the source images are small; scale up so detail is checkable
 
 
 def _rescale_ps2_alpha(value: int) -> int:
@@ -132,6 +131,26 @@ def decode_gim(data: bytes) -> tuple[int, int, bytes]:
     return width, height, bytes(rgba)
 
 
+class _ImageLabel(QLabel):
+    '''A QLabel that keeps its pixmap scaled to fit the label's current size,
+    preserving aspect ratio (so it never crops) and using nearest-neighbor
+    scaling so pixel edges stay crisp instead of blurring.'''
+
+    def __init__(self, pixmap: QPixmap, parent=None):
+        super().__init__(parent)
+        self._source_pixmap = pixmap
+        self.setAlignment(Qt.AlignCenter)
+        self.setMinimumSize(1, 1)  # allow shrinking below the image's own size
+        self.setPixmap(pixmap)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        if self._source_pixmap.isNull():
+            return
+        scaled = self._source_pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.FastTransformation)
+        self.setPixmap(scaled)
+
+
 def _build_gim_widget(asset: Asset) -> QWidget:
     data = asset.get_raw_data()
     try:
@@ -140,14 +159,7 @@ def _build_gim_widget(asset: Asset) -> QWidget:
         return QLabel(f"Can't display this GIM image:\n{exc}")
 
     image = QImage(rgba, width, height, width * 4, QImage.Format_RGBA8888).copy()
-    pixmap = QPixmap.fromImage(image)
-    # FastTransformation (nearest-neighbor) keeps pixel edges crisp instead of
-    # blurring them, so individual pixels stay inspectable at the larger size.
-    pixmap = pixmap.scaled(width * DISPLAY_SCALE, height * DISPLAY_SCALE, Qt.KeepAspectRatio, Qt.FastTransformation)
-
-    label = QLabel()
-    label.setPixmap(pixmap)
-    return label
+    return _ImageLabel(QPixmap.fromImage(image))
 
 
 GIM_IMAGE = Visualizer(
