@@ -110,7 +110,7 @@ class ACZProject(Project):
                 if ace_style != 'all':
                     new_name = f'{dat_type}_{entry['name']}_{ace_style}'
 
-                new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), father=self.DATA_PAC, ace_style=ace_style, deferred_children=True)
+                new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), father=self.DATA_PAC, ace_style=ace_style)
                 self.DATA_PAC.generate_child(index=int(dat_index), obj=new_child) # TODO: Consider making this line for all asset types
             #elif .... other classes...
             
@@ -332,19 +332,16 @@ class DataPacAsset(Container):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset_father}'
 
 class DatFile(Container):
-    ''' 'deferred_children' means that the children won't be created right on instace creation.
-        This means that they will only be created manually.'''
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, deferred_children:bool=False):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.zero_offset_list = []
         self.dat_type:str = ''
         self.sizes_list = []
 
-        if not deferred_children:
-            self.init_offset_table()
-            self.generate_children()
+        self.init_offset_table()
+        self.generate_children()
 
-    
+
     def set_offset_table(self, offset_table: list):
         '''This method does nothing. It receives an unused param
             to comply with the Liskov Substitution Principle'''
@@ -395,8 +392,8 @@ class DatFile(Container):
         return f'DAT_CONTAINER | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatMission(DatFile):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, ace_style:str='', deferred_children:bool=False):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, deferred_children=deferred_children)
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, ace_style:str=''):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = 'mission'
