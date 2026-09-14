@@ -113,7 +113,24 @@ class ACZProject(Project):
                 new_child = DatMission(name=new_name, size=raw_asset.size, offset=raw_asset.offset_father, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), father=self.DATA_PAC, ace_style=ace_style)
                 self.DATA_PAC.generate_child(index=int(dat_index), obj=new_child) # TODO: Consider making this line for all asset types
             #elif .... other classes...
-            
+        
+
+        # Check for file types inside .dats
+        for dat_key, dat in self.DATA_PAC.children.items():
+            if type(dat) is DatMission:
+                for subdat_key, subdat in dat.children.items():
+                    if type(subdat) is Asset:
+                        data = subdat.get_raw_data()
+                        prefix = data[:3]
+                        #print(prefix)
+                        if prefix == b'GIM':
+                            print('is GIM!')
+                            new_subdat = GIM(name=f'{subdat_key}.GIM', size=subdat.size, offset=subdat.offset_father, data_ref=self.DATA_PAC.data_ref, index=int(subdat_key), father=dat)
+                            dat.generate_child(index=int(subdat_key), obj=new_subdat)
+                        elif prefix == b'P3D':
+                            new_subdat = P3D(name=f'{subdat_key}.P3D', size=subdat.size, offset=subdat.offset_father, data_ref=self.DATA_PAC.data_ref, index=int(subdat_key), father=dat)
+                            dat.generate_child(index=int(subdat_key), obj=new_subdat)
+
         pass
         
 
@@ -401,7 +418,21 @@ class DatMission(DatFile):
     def __repr__(self):
         return f'MISSION_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
+class GIM(Asset):
+    'A GIM image file'
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 
+    def __repr__(self):
+            return f'GIM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
+
+class P3D(Asset):
+    'IIRC, a P3D is a 3D object.'
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+
+    def __repr__(self):
+            return f'P3D | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 
 
