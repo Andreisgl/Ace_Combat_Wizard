@@ -32,6 +32,8 @@ INDEX4 packs two pixel indices per byte; which nibble is the "first"
 (leftmost) pixel isn't confirmed from any reference - low-nibble-first is
 assumed below as the more common convention. If an INDEX4 image renders
 with pixels swapped in pairs, that assumption is what to flip.'''
+from dataclasses import dataclass
+
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import QLabel, QWidget
@@ -84,10 +86,41 @@ class GimDecodeError(ValueError):
 _KNOWN_FORMATS = ((256, False), (16, True))
 
 
-def decode_gim(data: bytes) -> tuple[int, int, bytes]:
-    '''Parses a GIM INDEX8 or INDEX4 file and returns (width, height, rgba_bytes),
-    where rgba_bytes is width*height*4 bytes, palette-resolved, RGBA8888,
-    row-major as stored in the file.'''
+@dataclass
+class GimFormat:
+    '''Header-derived layout of a GIM file, without its pixel/palette bytes -
+    cheap to compute, so metadata display doesn't need a full pixel decode.'''
+    width: int
+    height: int
+    palette_entries: int
+    packed: bool  # True = INDEX4 (2 pixels/byte), False = INDEX8 (1 pixel/byte)
+
+    @property
+    def bits_per_pixel(self) -> int:
+        return 4 if self.packed else 8
+
+    @property
+    def pixel_start(self) -> int:
+        return HEADER_SIZE
+
+    @property
+    def pixel_end(self) -> int:
+        pixel_count = self.width * self.height
+        packed_size = (pixel_count + 1) // 2 if self.packed else pixel_count
+        return self.pixel_start + packed_size
+
+    @property
+    def palette_start(self) -> int:
+        return self.pixel_end + PADDING_AFTER_PIXELS + UNKNOWN_FIELD_SIZE
+
+    @property
+    def palette_end(self) -> int:
+        return self.palette_start + self.palette_entries * 4
+
+
+def detect_gim_format(data: bytes) -> GimFormat:
+    '''Parses just the header and determines which known layout (INDEX8 or
+    INDEX4) the file matches, by exact total-size arithmetic.'''
     if len(data) < HEADER_SIZE:
         raise GimDecodeError(f'File too short for a GIM header ({len(data)} bytes)')
 
@@ -99,27 +132,28 @@ def decode_gim(data: bytes) -> tuple[int, int, bytes]:
     if width <= 0 or height <= 0:
         raise GimDecodeError(f'Invalid dimensions: {width}x{height}')
 
-    pixel_count = width * height
-    pixel_start = HEADER_SIZE
-
     for palette_entries, packed in _KNOWN_FORMATS:
-        packed_size = (pixel_count + 1) // 2 if packed else pixel_count
-        pixel_end = pixel_start + packed_size
-        palette_start = pixel_end + PADDING_AFTER_PIXELS + UNKNOWN_FIELD_SIZE
-        palette_end = palette_start + palette_entries * 4
-        if palette_end == len(data):
-            break
-    else:
-        raise GimDecodeError(
-            f'Size mismatch: header claims {width}x{height}, but that matches neither a known '
-            f'INDEX8 nor INDEX4 layout for the actual file size {len(data)}'
-        )
+        fmt = GimFormat(width, height, palette_entries, packed)
+        if fmt.palette_end == len(data):
+            return fmt
 
-    packed_index_data = data[pixel_start:pixel_end]
-    index_data = _unpack_nibbles(packed_index_data, pixel_count) if packed else packed_index_data
+    raise GimDecodeError(
+        f'Size mismatch: header claims {width}x{height}, but that matches neither a known '
+        f'INDEX8 nor INDEX4 layout for the actual file size {len(data)}'
+    )
 
-    palette = bytearray(data[palette_start:palette_end])
-    if palette_entries == 256:
+
+def decode_gim(data: bytes) -> tuple[int, int, bytes]:
+    '''Parses a GIM INDEX8 or INDEX4 file and returns (width, height, rgba_bytes),
+    where rgba_bytes is width*height*4 bytes, palette-resolved, RGBA8888,
+    row-major as stored in the file.'''
+    fmt = detect_gim_format(data)
+
+    packed_index_data = data[fmt.pixel_start:fmt.pixel_end]
+    index_data = _unpack_nibbles(packed_index_data, fmt.width * fmt.height) if fmt.packed else packed_index_data
+
+    palette = bytearray(data[fmt.palette_start:fmt.palette_end])
+    if fmt.palette_entries == 256:
         palette = bytearray(_deinterleave_csm1_palette(bytes(palette)))
     for i in range(3, len(palette), 4):
         palette[i] = _rescale_ps2_alpha(palette[i])
@@ -128,7 +162,7 @@ def decode_gim(data: bytes) -> tuple[int, int, bytes]:
     for i, index in enumerate(index_data):
         rgba[i * 4:i * 4 + 4] = palette[index * 4:index * 4 + 4]
 
-    return width, height, bytes(rgba)
+    return fmt.width, fmt.height, bytes(rgba)
 
 
 class _ImageLabel(QLabel):

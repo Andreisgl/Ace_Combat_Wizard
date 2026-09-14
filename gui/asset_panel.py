@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
     QButtonGroup,
     QComboBox,
     QFileDialog,
+    QFormLayout,
     QHBoxLayout,
     QLabel,
     QPushButton,
@@ -13,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from asset_classes import Asset
+from metadata import get_metadata_fields
 from visualizers import get_available_visualizers
 
 MODE_AUTO = 'auto'
@@ -65,12 +67,15 @@ class AssetPanel(QWidget):
         self.visualizer_combo = QComboBox()
         self.visualizer_combo.currentIndexChanged.connect(self._render_current)
 
+        self._metadata_form = QFormLayout()
+
         self._viz_container = QVBoxLayout()
 
         layout = QVBoxLayout(self)
         layout.addLayout(button_row)
         layout.addLayout(mode_row)
         layout.addWidget(self.visualizer_combo)
+        layout.addLayout(self._metadata_form)
         layout.addLayout(self._viz_container)
 
         self._show_placeholder('No asset selected')
@@ -85,6 +90,7 @@ class AssetPanel(QWidget):
     def set_asset(self, asset: Asset | None):
         self._current_asset = asset
         self.export_button.setEnabled(asset is not None)
+        self._update_metadata(asset)
 
         self.visualizer_combo.blockSignals(True)
         self.visualizer_combo.clear()
@@ -99,6 +105,20 @@ class AssetPanel(QWidget):
             self._show_placeholder('No asset selected')
         else:
             self._select_visualizer()
+
+    def _update_metadata(self, asset: Asset | None):
+        '''Metadata is per-asset-type, not per-viz-mode, so it's refreshed once
+        here rather than alongside visualizer selection/rendering.'''
+        while self._metadata_form.rowCount():
+            self._metadata_form.removeRow(0)
+
+        if asset is None:
+            return
+
+        for label, value in get_metadata_fields(asset):
+            value_label = QLabel(value)
+            value_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+            self._metadata_form.addRow(f'{label}:', value_label)
 
     def _select_visualizer(self):
         '''Picks which visualizer to show for the current asset: the forced
