@@ -1,9 +1,13 @@
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QKeySequence
 from PySide6.QtWidgets import (
+    QButtonGroup,
     QComboBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QRadioButton,
     QVBoxLayout,
     QWidget,
 )
@@ -11,16 +15,31 @@ from PySide6.QtWidgets import (
 from asset_classes import Asset
 from visualizers import get_available_visualizers
 
+MODE_AUTO = 'auto'
+
+# (hotkey, digit label, display label, visualizer id to force).
+# "3D" has no matching visualizer yet, so forcing it always falls back to
+# the auto/default choice below - exactly the desired "not implemented yet"
+# behavior, with no special-casing needed.
+_MODE_OPTIONS = (
+    (Qt.Key_1, '1', 'Auto', MODE_AUTO),
+    (Qt.Key_2, '2', 'Raw Data', 'raw_data'),
+    (Qt.Key_3, '3', 'Image', 'gim_image'),
+    (Qt.Key_4, '4', '3D', 'model_3d'),
+)
+
 
 class AssetPanel(QWidget):
-    '''Right-hand panel: project/export actions, and a pluggable visualization
-    area for whichever asset is currently selected in the tree.'''
+    '''Right-hand panel: project/export actions, a forced-visualization-mode
+    selector, and a pluggable visualization area for whichever asset is
+    currently selected in the tree.'''
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self._current_asset: Asset | None = None
         self._visualizers = []
         self._viz_widget: QWidget | None = None
+        self._mode = MODE_AUTO
 
         self.open_project_button = QPushButton('Open Project')
         # Not wired to a handler yet - project picking isn't implemented.
@@ -33,6 +52,16 @@ class AssetPanel(QWidget):
         button_row.addWidget(self.open_project_button)
         button_row.addWidget(self.export_button)
 
+        mode_row = QHBoxLayout()
+        self._mode_group = QButtonGroup(self)
+        for key, digit, label, mode_id in _MODE_OPTIONS:
+            radio = QRadioButton(f'{label} ({digit})')
+            radio.setShortcut(QKeySequence(key))
+            radio.setChecked(mode_id == MODE_AUTO)
+            radio.toggled.connect(lambda checked, m=mode_id: self._on_mode_toggled(checked, m))
+            self._mode_group.addButton(radio)
+            mode_row.addWidget(radio)
+
         self.visualizer_combo = QComboBox()
         self.visualizer_combo.currentIndexChanged.connect(self._render_current)
 
@@ -40,10 +69,18 @@ class AssetPanel(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addLayout(button_row)
+        layout.addLayout(mode_row)
         layout.addWidget(self.visualizer_combo)
         layout.addLayout(self._viz_container)
 
         self._show_placeholder('No asset selected')
+
+    def _on_mode_toggled(self, checked: bool, mode_id: str):
+        if not checked:
+            return
+        self._mode = mode_id
+        if self._current_asset is not None:
+            self._select_visualizer()
 
     def set_asset(self, asset: Asset | None):
         self._current_asset = asset
@@ -61,7 +98,26 @@ class AssetPanel(QWidget):
         if asset is None:
             self._show_placeholder('No asset selected')
         else:
-            self._render_current()
+            self._select_visualizer()
+
+    def _select_visualizer(self):
+        '''Picks which visualizer to show for the current asset: the forced
+        mode (radio buttons) if it applies to this asset, otherwise the
+        type's default (first applicable in registry order, i.e. "auto").'''
+        if not self._visualizers:
+            return
+
+        index = 0
+        if self._mode != MODE_AUTO:
+            for i, visualizer in enumerate(self._visualizers):
+                if visualizer.id == self._mode:
+                    index = i
+                    break
+
+        self.visualizer_combo.blockSignals(True)
+        self.visualizer_combo.setCurrentIndex(index)
+        self.visualizer_combo.blockSignals(False)
+        self._render_current()
 
     def _render_current(self):
         if self._current_asset is None or not self._visualizers:
