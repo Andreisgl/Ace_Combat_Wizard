@@ -110,7 +110,7 @@ class ACZProject(Project):
                 if ace_style != 'all':
                     new_name = f'{dat_type}_{entry['name']}_{ace_style}'
 
-                new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), father=self.DATA_PAC, ace_style=ace_style)
+                new_child = DatMission(name=new_name, size=raw_asset.size, offset=raw_asset.offset_father, data_ref=self.DATA_PAC.data_ref, index=int(dat_index), father=self.DATA_PAC, ace_style=ace_style)
                 self.DATA_PAC.generate_child(index=int(dat_index), obj=new_child) # TODO: Consider making this line for all asset types
             #elif .... other classes...
             
@@ -289,9 +289,8 @@ class Container(Asset):
             obj.size = size
             obj.index_father = index
             obj.data_ref = self.data_ref
-        if isinstance(obj, Container):
-            obj.init_offset_table()
-            obj.generate_children()
+        # Containers are expected to already be fully initialized (offset_table/children)
+        # by their own __init__, since they're constructed with their real offset/size upfront.
 
         new_asset_entry = obj
 
