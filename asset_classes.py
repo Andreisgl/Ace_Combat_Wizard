@@ -434,10 +434,11 @@ class DataPacAsset(Container):
 
             if asset_type == 'mission_dat': # Overwrite raw assets as mission assets
                 new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif asset_type == 'mission_stage': # Overwrite raw assets as stage assets
+            elif asset_type == 'stage_dat': # Overwrite raw assets as stage assets
                 new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
 
-            self.generate_child(index=int(dat_index), obj=new_child)
+            if new_child != None:
+                self.generate_child(index=int(dat_index), obj=new_child)
         pass
 
 
