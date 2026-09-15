@@ -5,11 +5,13 @@ applicable provider wins. GENERIC (applies to everything) is listed last so
 type-specific providers take priority wherever they apply.'''
 from asset_classes import Asset
 from metadata.base import MetadataProvider
+from metadata.container_metadata import CONTAINER_METADATA
 from metadata.generic import GENERIC
 from metadata.gim_metadata import GIM_METADATA
 
 ALL_METADATA_PROVIDERS: list[MetadataProvider] = [
     GIM_METADATA,
+    CONTAINER_METADATA,
     GENERIC,
 ]
 
