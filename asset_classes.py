@@ -61,71 +61,71 @@ class ACZProject(Project):
         
 
         self.ACZ_DAT_ASSET_LIST = {
-            '3': {'dat_type': 'stage', 'name': 'Glacial Skies', 'ace_style': ''},
-            '4': {'dat_type': 'stage', 'name': 'Annex', 'ace_style': ''},
-            '5': {'dat_type': 'stage', 'name': 'The Round Table', 'ace_style': 'M'},
-            '6': {'dat_type': 'stage', 'name': 'The Round Table', 'ace_style': 'S'},
-            '7': {'dat_type': 'stage', 'name': 'The Round Table', 'ace_style': 'K'},
-            '8': {'dat_type': 'stage', 'name': 'Juggernaut', 'ace_style': 'M'},
-            '9': {'dat_type': 'stage', 'name': 'Juggernaut', 'ace_style': 'S'},
-            '10': {'dat_type': 'stage', 'name': 'Juggernaut', 'ace_style': 'K'},
-            '11': {'dat_type': 'stage', 'name': 'Flicker of Hope', 'ace_style': ''},
-            '12': {'dat_type': 'stage', 'name': 'Diapason', 'ace_style': ''},
-            '13': {'dat_type': 'stage', 'name': 'Bastion', 'ace_style': ''},
-            '14': {'dat_type': 'stage', 'name': 'Merlon', 'ace_style': 'M'},
-            '15': {'dat_type': 'stage', 'name': 'Merlon', 'ace_style': 'S'},
-            '16': {'dat_type': 'stage', 'name': 'Merlon', 'ace_style': 'K'},
-            '17': {'dat_type': 'stage', 'name': 'Sword of Annihilation', 'ace_style': ''},
-            '18': {'dat_type': 'stage', 'name': 'Mayhem', 'ace_style': 'M'},
-            '19': {'dat_type': 'stage', 'name': 'Mayhem', 'ace_style': 'S'},
-            '20': {'dat_type': 'stage', 'name': 'Mayhem', 'ace_style': 'K'},
-            '21': {'dat_type': 'stage', 'name': 'The Inferno', 'ace_style': ''},
-            '22': {'dat_type': 'stage', 'name': 'The Stage of the Apocalypse', 'ace_style': ''},
-            '23': {'dat_type': 'stage', 'name': 'Lying in Deceit', 'ace_style': ''},
-            '24': {'dat_type': 'stage', 'name': 'The Final Overture', 'ace_style': 'M'},
-            '25': {'dat_type': 'stage', 'name': 'The Final Overture', 'ace_style': 'S'},
-            '26': {'dat_type': 'stage', 'name': 'The Final Overture', 'ace_style': 'K'},
-            '27': {'dat_type': 'stage', 'name': 'The Talon of Ruin', 'ace_style': ''},
-            '28': {'dat_type': 'stage', 'name': 'The Demon of the Round Table', 'ace_style': 'M'},
-            '29': {'dat_type': 'stage', 'name': 'The Demon of the Round Table', 'ace_style': 'S'},
-            '30': {'dat_type': 'stage', 'name': 'The Demon of the Round Table', 'ace_style': 'K'},
-            '31': {'dat_type': 'stage', 'name': 'The Valley of Kings', 'ace_style': ''},
-            '32': {'dat_type': 'stage', 'name': 'ZERO', 'ace_style': ''},
-            '33': {'dat_type': 'stage', 'name': 'The Gauntlet', 'ace_style': ''},
+            '3': {'type': 'stage_dat', 'name': 'Glacial Skies', 'ace_style': ''},
+            '4': {'type': 'stage_dat', 'name': 'Annex', 'ace_style': ''},
+            '5': {'type': 'stage_dat', 'name': 'The Round Table', 'ace_style': 'M'},
+            '6': {'type': 'stage_dat', 'name': 'The Round Table', 'ace_style': 'S'},
+            '7': {'type': 'stage_dat', 'name': 'The Round Table', 'ace_style': 'K'},
+            '8': {'type': 'stage_dat', 'name': 'Juggernaut', 'ace_style': 'M'},
+            '9': {'type': 'stage_dat', 'name': 'Juggernaut', 'ace_style': 'S'},
+            '10': {'type': 'stage_dat', 'name': 'Juggernaut', 'ace_style': 'K'},
+            '11': {'type': 'stage_dat', 'name': 'Flicker of Hope', 'ace_style': ''},
+            '12': {'type': 'stage_dat', 'name': 'Diapason', 'ace_style': ''},
+            '13': {'type': 'stage_dat', 'name': 'Bastion', 'ace_style': ''},
+            '14': {'type': 'stage_dat', 'name': 'Merlon', 'ace_style': 'M'},
+            '15': {'type': 'stage_dat', 'name': 'Merlon', 'ace_style': 'S'},
+            '16': {'type': 'stage_dat', 'name': 'Merlon', 'ace_style': 'K'},
+            '17': {'type': 'stage_dat', 'name': 'Sword of Annihilation', 'ace_style': ''},
+            '18': {'type': 'stage_dat', 'name': 'Mayhem', 'ace_style': 'M'},
+            '19': {'type': 'stage_dat', 'name': 'Mayhem', 'ace_style': 'S'},
+            '20': {'type': 'stage_dat', 'name': 'Mayhem', 'ace_style': 'K'},
+            '21': {'type': 'stage_dat', 'name': 'The Inferno', 'ace_style': ''},
+            '22': {'type': 'stage_dat', 'name': 'The Stage of the Apocalypse', 'ace_style': ''},
+            '23': {'type': 'stage_dat', 'name': 'Lying in Deceit', 'ace_style': ''},
+            '24': {'type': 'stage_dat', 'name': 'The Final Overture', 'ace_style': 'M'},
+            '25': {'type': 'stage_dat', 'name': 'The Final Overture', 'ace_style': 'S'},
+            '26': {'type': 'stage_dat', 'name': 'The Final Overture', 'ace_style': 'K'},
+            '27': {'type': 'stage_dat', 'name': 'The Talon of Ruin', 'ace_style': ''},
+            '28': {'type': 'stage_dat', 'name': 'The Demon of the Round Table', 'ace_style': 'M'},
+            '29': {'type': 'stage_dat', 'name': 'The Demon of the Round Table', 'ace_style': 'S'},
+            '30': {'type': 'stage_dat', 'name': 'The Demon of the Round Table', 'ace_style': 'K'},
+            '31': {'type': 'stage_dat', 'name': 'The Valley of Kings', 'ace_style': ''},
+            '32': {'type': 'stage_dat', 'name': 'ZERO', 'ace_style': ''},
+            '33': {'type': 'stage_dat', 'name': 'The Gauntlet', 'ace_style': ''},
             #
-            '43': {'dat_type': 'stage', 'name': 'Valais Air Force Base', 'ace_style': ''},
+            '43': {'type': 'stage_dat', 'name': 'Valais Air Force Base', 'ace_style': ''},
             #
-            '251': {'dat_type': 'mission', 'name': 'Glacial Skies', 'ace_style': ''},
-            '252': {'dat_type': 'mission', 'name': 'Annex', 'ace_style': ''},
-            '253': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'M'},
-            '254': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'S'},
-            '255': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'K'},
-            '256': {'dat_type': 'mission', 'name': 'Juggernaut', 'ace_style': 'M'},
-            '257': {'dat_type': 'mission', 'name': 'Juggernaut', 'ace_style': 'S'},
-            '258': {'dat_type': 'mission', 'name': 'Juggernaut', 'ace_style': 'K'},
-            '259': {'dat_type': 'mission', 'name': 'Flicker of Hope', 'ace_style': ''},
-            '260': {'dat_type': 'mission', 'name': 'Diapason', 'ace_style': ''},
-            '261': {'dat_type': 'mission', 'name': 'Bastion', 'ace_style': ''},
-            '262': {'dat_type': 'mission', 'name': 'Merlon', 'ace_style': 'M'},
-            '263': {'dat_type': 'mission', 'name': 'Merlon', 'ace_style': 'S'},
-            '264': {'dat_type': 'mission', 'name': 'Merlon', 'ace_style': 'K'},
-            '265': {'dat_type': 'mission', 'name': 'Sword of Annihilation', 'ace_style': ''},
-            '266': {'dat_type': 'mission', 'name': 'Mayhem', 'ace_style': 'M'},
-            '267': {'dat_type': 'mission', 'name': 'Mayhem', 'ace_style': 'S'},
-            '268': {'dat_type': 'mission', 'name': 'Mayhem', 'ace_style': 'K'},
-            '269': {'dat_type': 'mission', 'name': 'The Inferno', 'ace_style': ''},
-            '270': {'dat_type': 'mission', 'name': 'The Stage of the Apocalypse', 'ace_style': ''},
-            '271': {'dat_type': 'mission', 'name': 'Lying in Deceit', 'ace_style': ''},
-            '272': {'dat_type': 'mission', 'name': 'The Final Overture', 'ace_style': 'M'},
-            '273': {'dat_type': 'mission', 'name': 'The Final Overture', 'ace_style': 'S'},
-            '274': {'dat_type': 'mission', 'name': 'The Final Overture', 'ace_style': 'K'},
-            '275': {'dat_type': 'mission', 'name': 'The Talon of Ruin', 'ace_style': ''},
-            '276': {'dat_type': 'mission', 'name': 'The Demon of the Round Table', 'ace_style': 'M'},
-            '277': {'dat_type': 'mission', 'name': 'The Demon of the Round Table', 'ace_style': 'S'},
-            '278': {'dat_type': 'mission', 'name': 'The Demon of the Round Table', 'ace_style': 'K'},
-            '279': {'dat_type': 'mission', 'name': 'The Valley of Kings', 'ace_style': ''},
-            '280': {'dat_type': 'mission', 'name': 'ZERO', 'ace_style': ''},
-            '281': {'dat_type': 'mission', 'name': 'The Gauntlet', 'ace_style': ''}
+            '251': {'type': 'mission_dat', 'name': 'Glacial Skies', 'ace_style': ''},
+            '252': {'type': 'mission_dat', 'name': 'Annex', 'ace_style': ''},
+            '253': {'type': 'mission_dat', 'name': 'The Round Table', 'ace_style': 'M'},
+            '254': {'type': 'mission_dat', 'name': 'The Round Table', 'ace_style': 'S'},
+            '255': {'type': 'mission_dat', 'name': 'The Round Table', 'ace_style': 'K'},
+            '256': {'type': 'mission_dat', 'name': 'Juggernaut', 'ace_style': 'M'},
+            '257': {'type': 'mission_dat', 'name': 'Juggernaut', 'ace_style': 'S'},
+            '258': {'type': 'mission_dat', 'name': 'Juggernaut', 'ace_style': 'K'},
+            '259': {'type': 'mission_dat', 'name': 'Flicker of Hope', 'ace_style': ''},
+            '260': {'type': 'mission_dat', 'name': 'Diapason', 'ace_style': ''},
+            '261': {'type': 'mission_dat', 'name': 'Bastion', 'ace_style': ''},
+            '262': {'type': 'mission_dat', 'name': 'Merlon', 'ace_style': 'M'},
+            '263': {'type': 'mission_dat', 'name': 'Merlon', 'ace_style': 'S'},
+            '264': {'type': 'mission_dat', 'name': 'Merlon', 'ace_style': 'K'},
+            '265': {'type': 'mission_dat', 'name': 'Sword of Annihilation', 'ace_style': ''},
+            '266': {'type': 'mission_dat', 'name': 'Mayhem', 'ace_style': 'M'},
+            '267': {'type': 'mission_dat', 'name': 'Mayhem', 'ace_style': 'S'},
+            '268': {'type': 'mission_dat', 'name': 'Mayhem', 'ace_style': 'K'},
+            '269': {'type': 'mission_dat', 'name': 'The Inferno', 'ace_style': ''},
+            '270': {'type': 'mission_dat', 'name': 'The Stage of the Apocalypse', 'ace_style': ''},
+            '271': {'type': 'mission_dat', 'name': 'Lying in Deceit', 'ace_style': ''},
+            '272': {'type': 'mission_dat', 'name': 'The Final Overture', 'ace_style': 'M'},
+            '273': {'type': 'mission_dat', 'name': 'The Final Overture', 'ace_style': 'S'},
+            '274': {'type': 'mission_dat', 'name': 'The Final Overture', 'ace_style': 'K'},
+            '275': {'type': 'mission_dat', 'name': 'The Talon of Ruin', 'ace_style': ''},
+            '276': {'type': 'mission_dat', 'name': 'The Demon of the Round Table', 'ace_style': 'M'},
+            '277': {'type': 'mission_dat', 'name': 'The Demon of the Round Table', 'ace_style': 'S'},
+            '278': {'type': 'mission_dat', 'name': 'The Demon of the Round Table', 'ace_style': 'K'},
+            '279': {'type': 'mission_dat', 'name': 'The Valley of Kings', 'ace_style': ''},
+            '280': {'type': 'mission_dat', 'name': 'ZERO', 'ace_style': ''},
+            '281': {'type': 'mission_dat', 'name': 'The Gauntlet', 'ace_style': ''}
         }
 
         # Asset creation:
@@ -135,38 +135,39 @@ class ACZProject(Project):
         
         pass
 
-        def auto_apply_type(asset:Asset):
-            ''' Autodetects an untyped asset's type and replaces it with the correct type.
-            This is for assets that were not typed using a lookup table.
-            asset: Asset to be replaced'''
-            data = asset.get_raw_data()
-            father = asset.father
-            data_ref = asset.data_ref
-            prefix = data[:3]
-            key = asset.index_father
+        if False:
+            def auto_apply_type(asset:Asset):
+                ''' Autodetects an untyped asset's type and replaces it with the correct type.
+                This is for assets that were not typed using a lookup table.
+                asset: Asset to be replaced'''
+                data = asset.get_raw_data()
+                father = asset.father
+                data_ref = asset.data_ref
+                prefix = data[:3]
+                key = asset.index_father
 
-            #print(f'input index: {key} - Asset index: {asset.index_father}')
-            #print(prefix)
+                #print(f'input index: {key} - Asset index: {asset.index_father}')
+                #print(prefix)
 
-            if prefix == b'GIM':
-                print('is GIM!')
-                new_asset = GIM(name=f'{key}.GIM', size=asset.size, offset=asset.offset_father, data_ref=data_ref, index=int(key), father=father)
-                father.generate_child(index=int(key), obj=new_asset)
-            elif prefix == b'P3D':
-                print('is P3D!')
-                new_asset = P3D(name=f'{key}.P3D', size=asset.size, offset=asset.offset_father, data_ref=data_ref, index=int(key), father=father)
-                father.generate_child(index=int(key), obj=new_asset)
+                if prefix == b'GIM':
+                    print('is GIM!')
+                    new_asset = GIM(name=f'{key}.GIM', size=asset.size, offset=asset.offset_father, data_ref=data_ref, index=int(key), father=father)
+                    father.generate_child(index=int(key), obj=new_asset)
+                elif prefix == b'P3D':
+                    print('is P3D!')
+                    new_asset = P3D(name=f'{key}.P3D', size=asset.size, offset=asset.offset_father, data_ref=data_ref, index=int(key), father=father)
+                    father.generate_child(index=int(key), obj=new_asset)
 
-        # Check for file types inside .dats
-        print('Analysing typed .dats')
-        for dat_key, dat in self.DATA_PAC.children.items():
-            if type(dat) is Asset: # Check if loose .dats have a file type.
-                auto_apply_type(asset=dat)
-            #if type(dat) is DatMission:
-            if isinstance(dat, Container): # Check for untyped files inside the .dats
-                for subdat_key, subdat in dat.children.items():
-                    if type(subdat) is Asset:
-                        auto_apply_type(asset=subdat)
+            # Check for file types inside .dats
+            print('Analysing typed .dats')
+            for dat_key, dat in self.DATA_PAC.children.items():
+                if type(dat) is Asset: # Check if loose .dats have a file type.
+                    auto_apply_type(asset=dat)
+                #if type(dat) is DatMission:
+                if isinstance(dat, Container): # Check for untyped files inside the .dats
+                    for subdat_key, subdat in dat.children.items():
+                        if type(subdat) is Asset:
+                            auto_apply_type(asset=subdat)
                         
 
         pass
@@ -415,8 +416,8 @@ class DataPacAsset(Container):
             entry:dict = self.asset_table[dat_index]
             new_child = None
             
-            dat_type = entry['dat_type']
-            new_name = f'{dat_type}_{entry['name']}'
+            asset_type = entry['type']
+            new_name = f'{asset_type}_{entry['name']}'
 
             #name=new_name
             size=raw_asset.size
@@ -431,9 +432,9 @@ class DataPacAsset(Container):
             if ace_style != '':
                 new_name += f'_{ace_style}'
 
-            if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
+            if asset_type == 'mission_dat': # Overwrite raw assets as mission assets
                 new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
+            elif asset_type == 'mission_stage': # Overwrite raw assets as stage assets
                 new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
 
             self.generate_child(index=int(dat_index), obj=new_child)
@@ -517,8 +518,8 @@ class DatFile(Container):
             self.sizes_list.insert(0, aux_size)
             prev_offset = offset
 
-    def generate_children(self):
-        '''Generates all children of the dat file'''
+    def generate_generic_children(self):
+        '''Generates generic children'''
         #sizes_index = 0 # index used for for 'sizes_list'
         ref_list = self.header[1:]
         for i, offset in enumerate(ref_list):
@@ -530,6 +531,43 @@ class DatFile(Container):
             self.children[i] = asset
             #sizes_index += 1
 
+    def generate_children(self):
+        '''Generates children based on asset table'''
+        self.generate_generic_children() # Generate generic assets
+        if self.asset_table == None:
+            return # If no asset list, stop here.
+        
+        # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
+        for dat_index in self.asset_table:
+            raw_asset:Asset
+            raw_asset = self.children[int(dat_index)]
+            entry:dict = self.asset_table[dat_index]
+            new_child = None
+            
+            dat_type = entry['dat_type']
+            new_name = f'{dat_type}_{entry['name']}'
+
+            #name=new_name
+            size=raw_asset.size
+            offset=raw_asset.offset_father
+            data_ref=self.data_ref
+            index=int(dat_index)
+            father=self
+
+            #ace_style = entry['ace_style']
+            ace_style = entry.get('ace_style', '')
+
+            if ace_style != '':
+                new_name += f'_{ace_style}'
+
+            if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
+                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+            elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
+                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+
+            self.generate_child(index=int(dat_index), obj=new_child)
+        pass
+    
     def generate_child(self, index:int, obj:Asset):
         '''Creates or overwrites a child asset.
         TODO: Consider only inputting the 'obj' and let this method figure out the index'''
