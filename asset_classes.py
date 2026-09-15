@@ -58,10 +58,9 @@ class ACZProject(Project):
         self._DATA_TBL_REF = DataRefTbl(name='datatbl_ref', raw_data=raw_datatbl_data)
         self._DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=self._DATA_TBL_REF)
 
-        # Asset creation:
-        self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self)
+        
 
-        self.DAT_ASSET_LIST = {
+        self.ACZ_DAT_ASSET_LIST = {
             '3': {'dat_type': 'stage', 'name': 'Glacial Skies', 'ace_style': ''},
             '4': {'dat_type': 'stage', 'name': 'Annex', 'ace_style': ''},
             '5': {'dat_type': 'stage', 'name': 'The Round Table', 'ace_style': 'M'},
@@ -129,37 +128,12 @@ class ACZProject(Project):
             '281': {'dat_type': 'mission', 'name': 'The Gauntlet', 'ace_style': ''}
         }
 
-        # Overwrite generic "Asset" children for typed dats in the lookup table (like missions and aircraft)
-        for dat_index in self.DAT_ASSET_LIST:
-            raw_asset:Asset
-            raw_asset = self.DATA_PAC.children[int(dat_index)]
-            entry:dict = self.DAT_ASSET_LIST[dat_index]
-            new_child = None
-            
-            dat_type = entry['dat_type']
-            new_name = f'{dat_type}_{entry['name']}'
-
-            #name=new_name
-            size=raw_asset.size
-            offset=raw_asset.offset_father
-            data_ref=self.DATA_PAC.data_ref
-            index=int(dat_index)
-            father=self.DATA_PAC
-
-            #ace_style = entry['ace_style']
-            ace_style = entry.get('ace_style', '')
-
-            if ace_style != '':
-                new_name += f'_{ace_style}'
-
-            if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
-                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
-                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-
-            self.DATA_PAC.generate_child(index=int(dat_index), obj=new_child)
+        # Asset creation:
+        self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self, asset_list=self.ACZ_DAT_ASSET_LIST)
         
-
+        
+        
+        pass
 
         def auto_apply_type(asset:Asset):
             ''' Autodetects an untyped asset's type and replaces it with the correct type.
@@ -329,7 +303,8 @@ class Asset():
         return f'ASSET | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 
-class Container(Asset):
+class Container(Asset): # Abstract
+    '''A simple container that has generic children based on a offset table'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.offset_table = []
@@ -358,8 +333,10 @@ class Container(Asset):
             self.children[i] = asset
     
     def generate_child(self, index:int, obj:Asset):
-        '''Creates or overwrites a child asset.
-        TODO: Consider only inputting the 'obj' and let this method figure out the index'''
+        '''Creates or overwrites a child asset.'''
+        # TODO: Consider only inputting the 'obj' and let this method figure out the index
+        # TODO: Maybe this method will be obsolete when all containers handle
+        #   their asset lists internally
         if index < 0 or index >= len(self.children):
             raise ValueError(f'Invalid index position: {index}/{len(self.children)}')
 
@@ -381,14 +358,40 @@ class Container(Asset):
     def __repr__(self):
         return f'CONTAINER | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
-class DataPacAsset(Container):
+class ListedContainer(Container): # Abstract
+    '''A container that supports an assetlist to name and type its contents'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int, father, asset_list:dict=None):
+            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            self.asset_list:dict = asset_list
+
+    def generate_generic_children(self):
+        '''Generate generic "Asset" children.'''
+        # Repurpose the simple generic child generation in this new signature
+        super().generate_children()
+
+    def generate_children(self):
+        '''Generates all children of the PAC file'''
+        self.generate_generic_children() # Generate generic assets
+        if self.asset_list == None:
+            return # If no asset list, stop here.
+        else:
+            pass
+            # Custom per-type child generation logic here.
+            # This is an abstract class, so it does not need logic
+
+        
+
+class DataPacAsset(ListedContainer):
     # TODO: Consider renaming this to 'DataPacAsset', as there are other
     #   .PAC files with different behaviors.
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int, father):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int, father, asset_list:dict=None):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.data_ref = data_ref # Not redundant. Receive specific DataRef class
-        self.offset_table = data_ref.get_offset_table()
+        self.offset_table = data_ref.get_offset_table() # TODO: Get table from 'self.data_ref', not 'data_ref'
+        
         self.init_offset_table()
+        self.generate_children()
+        pass
     
     def set_offset_table(self, offset_table: list):
         '''This method does nothing. It receives an unused param
@@ -397,7 +400,7 @@ class DataPacAsset(Container):
     
     def init_offset_table(self):
         #self.offset_table = offset_table[:]
-        self.offset_table = self.data_ref.get_offset_table()
+        self.offset_table = self.data_ref.get_offset_table() # TODO: Consider deleting. This line seems redundant
         ref_table = self.offset_table[:]
         ref_table.append(self.size)
 
@@ -406,13 +409,52 @@ class DataPacAsset(Container):
                 break
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
-        
-        self.generate_children()
-    
+
+    def generate_children(self):
+        '''Generates all children of the PAC file'''
+        super().generate_generic_children() # Generate generic assets
+        if self.asset_list == None:
+            return # If no asset list, stop here.
+            
+
+        # Overwrite generic "Asset" children for typed dats in the lookup table (like missions and aircraft)
+        for dat_index in self.asset_list:
+            raw_asset:Asset
+            raw_asset = self.children[int(dat_index)]
+            entry:dict = self.asset_list[dat_index]
+            new_child = None
+            
+            dat_type = entry['dat_type']
+            new_name = f'{dat_type}_{entry['name']}'
+
+            #name=new_name
+            size=raw_asset.size
+            offset=raw_asset.offset_father
+            data_ref=self.data_ref
+            index=int(dat_index)
+            father=self
+
+            #ace_style = entry['ace_style']
+            ace_style = entry.get('ace_style', '')
+
+            if ace_style != '':
+                new_name += f'_{ace_style}'
+
+            if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
+                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+            elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
+                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+
+            self.generate_child(index=int(dat_index), obj=new_child)
+        pass
+
+
+
+
     def __repr__(self):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset_father}'
 
-class DatFile(Container):
+class DatFile(ListedContainer):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.header:list = []
@@ -541,6 +583,19 @@ class DatStage(DatFile):
         #self.generate_offset_table()
         self.dat_type:str = 'stage'
         self.ace_style = ace_style
+
+    def generate_children(self):
+        '''Generates all children of the stage dat file'''
+        #sizes_index = 0 # index used for for 'sizes_list'
+        ref_list = self.header[1:]
+        for i, offset in enumerate(ref_list):
+            if offset == 0: # If offset is an empty entry skip it. Its offset will be skipped and indexes of the subfiles will be correct.
+                continue
+            name = f'{str(i).zfill( len(str(len(ref_list))))}'
+            asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
+            #self.children.append(asset)
+            self.children[i] = asset
+            #sizes_index += 1
 
     def __repr__(self):
         return f'STAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
