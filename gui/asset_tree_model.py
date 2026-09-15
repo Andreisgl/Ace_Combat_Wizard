@@ -25,10 +25,13 @@ class AssetTreeModel(QAbstractItemModel):
         if not isinstance(parent_asset, Container):
             return QModelIndex()
 
-        child = parent_asset.children.get(row)
-        if child is None:
+        # Positional (insertion-order) lookup, not a dict-key lookup: children
+        # dicts aren't always keyed 0..N-1 contiguously - e.g. DatFile skips
+        # empty header slots, so keys can have gaps (0, 2, 3, ...).
+        siblings = list(parent_asset.children.values())
+        if row < 0 or row >= len(siblings):
             return QModelIndex()
-        return self.createIndex(row, column, child)
+        return self.createIndex(row, column, siblings[row])
 
     def parent(self, index):
         if not index.isValid():
@@ -41,7 +44,16 @@ class AssetTreeModel(QAbstractItemModel):
         parent_asset = asset.father
         if parent_asset is self._root:
             return self.createIndex(0, 0, self._root)
-        return self.createIndex(parent_asset.index_father, 0, parent_asset)
+        return self.createIndex(self._row_of(parent_asset), 0, parent_asset)
+
+    def _row_of(self, asset) -> int:
+        '''Positional row of `asset` among its father's children (insertion
+        order) - see the note in index() about why this isn't index_father.'''
+        father = asset.father
+        if not isinstance(father, Container):
+            return 0
+        siblings = list(father.children.values())
+        return siblings.index(asset) if asset in siblings else 0
 
     def rowCount(self, parent=QModelIndex()):
         if not parent.isValid():

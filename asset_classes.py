@@ -424,7 +424,7 @@ class DatFile(Container):
         self.generate_children()
 
 
-    def set_offset_table(self, offset_table: list):
+    def set_offset_table(self, offset_table:list):
         '''This method does nothing. It receives an unused param
             to comply with the Liskov Substitution Principle'''
         pass
@@ -463,16 +463,63 @@ class DatFile(Container):
         ###
 
         #self.offset_table = offset_table[:]
-        ref_table = self.offset_table[:]
+        ref_table = self.header[1:]
         ref_table.append(self.size)
 
     
-        for i, offset in enumerate(ref_table):
-            if i == len(ref_table)-1:
-                break
-            aux_size = ref_table[i+1] - ref_table[i]
-            self.sizes_list.append(aux_size)
+        #for i, offset in enumerate(ref_table):
+        #    if i == len(ref_table)-1:
+        #        break
+        #    aux_size = ref_table[i+1] - ref_table[i]
+        #    self.sizes_list.append(aux_size)
+        prev_offset = -1
+        for offset in reversed(ref_table):
+            if prev_offset == -1:
+                prev_offset = offset
+                continue
+            if offset == 0:
+                self.sizes_list.insert(0, 0)
+                continue
+            aux_size = prev_offset - offset
+            self.sizes_list.insert(0, aux_size)
+            prev_offset = offset
+
+    def generate_children(self):
+        '''Generates all children of the dat file'''
+        #sizes_index = 0 # index used for for 'sizes_list'
+        ref_list = self.header[1:]
+        for i, offset in enumerate(ref_list):
+            if offset == 0: # If offset is an empty entry skip it. Its offset will be skipped and indexes of the subfiles will be correct.
+                continue
+            name = f'{str(i).zfill( len(str(len(ref_list))))}'
+            asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
+            #self.children.append(asset)
+            self.children[i] = asset
+            #sizes_index += 1
+
+    def generate_child(self, index:int, obj:Asset):
+            '''Creates or overwrites a child asset.
+            TODO: Consider only inputting the 'obj' and let this method figure out the index'''
+            #if index < 0 or index >= len(self.children):
+            #    raise ValueError(f'Invalid index position: {index}/{len(self.children)}')
     
+            #offset = self.offset_table[index]
+            offset = (self.header[1:])[index]
+            size = self.sizes_list[index]
+    
+            if isinstance(obj, Asset):
+                obj.offset_father = offset
+                obj.size = size
+                obj.index_father = index
+                obj.data_ref = self.data_ref
+            # Containers are expected to already be fully initialized (offset_table/children)
+            # by their own __init__, since they're constructed with their real offset/size upfront.
+    
+            new_asset_entry = obj
+    
+            self.children[index] = new_asset_entry  
+
+
     def __repr__(self):
         return f'DAT_CONTAINER | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 

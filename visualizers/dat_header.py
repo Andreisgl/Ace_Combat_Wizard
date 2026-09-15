@@ -17,12 +17,15 @@ from visualizers.base import Visualizer
 def format_dat_header(dat_file: DatFile) -> str:
     '''Formats dat_file.header (raw per-slot values, in original order, 0 =
     empty slot) as one readable row per slot, with the computed size
-    (from sizes_list/offset_table) alongside each populated slot.'''
+    (from sizes_list) alongside each populated slot.'''
     if not dat_file.header:
         return 'No header data parsed for this asset.'
 
     number_of_files, slots = dat_file.header[0], dat_file.header[1:]
-    size_by_offset = dict(zip(dat_file.offset_table, dat_file.sizes_list))
+    # sizes_list is indexed by original slot position (same as `slots` here,
+    # with a 0 placeholder at empty slots) - index it positionally with `i`,
+    # not by offset value (offset_table is a separate, compacted list that
+    # skips empty slots entirely, so it doesn't line up with sizes_list).
 
     lines = [
         f'dat_type: {dat_file.dat_type or "(unspecified)"}',
@@ -34,7 +37,7 @@ def format_dat_header(dat_file: DatFile) -> str:
         if value == 0:
             lines.append(f'{i:>6}  {"(empty)":>12}')
         else:
-            size = size_by_offset.get(value, '?')
+            size = dat_file.sizes_list[i] if i < len(dat_file.sizes_list) else '?'
             lines.append(f'{i:>6}  {value:>12}  {size:>10}')
 
     return '\n'.join(lines)
