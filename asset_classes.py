@@ -304,12 +304,14 @@ class Asset():
 
 
 class Container(Asset): # Abstract
-    '''A simple container that has generic children based on a offset table'''
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+    '''A simple container that has generic children based on a offset table
+    and a hook for asset tables for future classes'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, asset_list:dict):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.offset_table = []
         self.sizes_list:list = []
         self.children = dict()
+        self.asset_table:dict = asset_list
     
     def set_offset_table(self, offset_table:list):
         self.offset_table = offset_table[:]
@@ -324,7 +326,7 @@ class Container(Asset): # Abstract
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-    def generate_children(self):
+    def generate_generic_children(self):
         '''Generates all children of the container'''
         for i, offset in enumerate(self.offset_table):
             name = f'{str(i).zfill( len(str(len(self.offset_table))))}'
@@ -355,37 +357,27 @@ class Container(Asset): # Abstract
 
         self.children[index] = new_asset_entry  
 
-    def __repr__(self):
-        return f'CONTAINER | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
-
-class ListedContainer(Container): # Abstract
-    '''A container that supports an assetlist to name and type its contents'''
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int, father, asset_list:dict=None):
-            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            self.asset_list:dict = asset_list
-
-    def generate_generic_children(self):
-        '''Generate generic "Asset" children.'''
-        # Repurpose the simple generic child generation in this new signature
-        super().generate_children()
-
     def generate_children(self):
-        '''Generates all children of the PAC file'''
+        '''Generates all children with custom logic'''
         self.generate_generic_children() # Generate generic assets
-        if self.asset_list == None:
+        if self.asset_table == None:
             return # If no asset list, stop here.
         else:
             pass
             # Custom per-type child generation logic here.
-            # This is an abstract class, so it does not need logic
+            # This is an abstract class, so it does not need its logic
+            
+    def __repr__(self):
+        return f'CONTAINER | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
+
 
         
 
-class DataPacAsset(ListedContainer):
+class DataPacAsset(Container):
     # TODO: Consider renaming this to 'DataPacAsset', as there are other
     #   .PAC files with different behaviors.
     def __init__(self, name:str, size:int, offset:int, data_ref:DataRefPac, index:int, father, asset_list:dict=None):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, asset_list=asset_list)
         self.data_ref = data_ref # Not redundant. Receive specific DataRef class
         self.offset_table = data_ref.get_offset_table() # TODO: Get table from 'self.data_ref', not 'data_ref'
         
@@ -412,16 +404,15 @@ class DataPacAsset(ListedContainer):
 
     def generate_children(self):
         '''Generates all children of the PAC file'''
-        super().generate_generic_children() # Generate generic assets
-        if self.asset_list == None:
+        self.generate_generic_children() # Generate generic assets
+        if self.asset_table == None:
             return # If no asset list, stop here.
-            
-
-        # Overwrite generic "Asset" children for typed dats in the lookup table (like missions and aircraft)
-        for dat_index in self.asset_list:
+        
+        # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
+        for dat_index in self.asset_table:
             raw_asset:Asset
             raw_asset = self.children[int(dat_index)]
-            entry:dict = self.asset_list[dat_index]
+            entry:dict = self.asset_table[dat_index]
             new_child = None
             
             dat_type = entry['dat_type']
@@ -454,9 +445,9 @@ class DataPacAsset(ListedContainer):
     def __repr__(self):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset_father}'
 
-class DatFile(ListedContainer):
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
-        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+class DatFile(Container):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, asset_list:dict=None):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, asset_list=asset_list)
         self.header:list = []
         self.zero_offset_list = []
         self.dat_type:str = ''
@@ -540,26 +531,26 @@ class DatFile(ListedContainer):
             #sizes_index += 1
 
     def generate_child(self, index:int, obj:Asset):
-            '''Creates or overwrites a child asset.
-            TODO: Consider only inputting the 'obj' and let this method figure out the index'''
-            #if index < 0 or index >= len(self.children):
-            #    raise ValueError(f'Invalid index position: {index}/{len(self.children)}')
-    
-            #offset = self.offset_table[index]
-            offset = (self.header[1:])[index]
-            size = self.sizes_list[index]
-    
-            if isinstance(obj, Asset):
-                obj.offset_father = offset
-                obj.size = size
-                obj.index_father = index
-                obj.data_ref = self.data_ref
-            # Containers are expected to already be fully initialized (offset_table/children)
-            # by their own __init__, since they're constructed with their real offset/size upfront.
-    
-            new_asset_entry = obj
-    
-            self.children[index] = new_asset_entry  
+        '''Creates or overwrites a child asset.
+        TODO: Consider only inputting the 'obj' and let this method figure out the index'''
+        #if index < 0 or index >= len(self.children):
+        #    raise ValueError(f'Invalid index position: {index}/{len(self.children)}')
+
+        #offset = self.offset_table[index]
+        offset = (self.header[1:])[index]
+        size = self.sizes_list[index]
+
+        if isinstance(obj, Asset):
+            obj.offset_father = offset
+            obj.size = size
+            obj.index_father = index
+            obj.data_ref = self.data_ref
+        # Containers are expected to already be fully initialized (offset_table/children)
+        # by their own __init__, since they're constructed with their real offset/size upfront.
+
+        new_asset_entry = obj
+
+        self.children[index] = new_asset_entry  
 
 
     def __repr__(self):
