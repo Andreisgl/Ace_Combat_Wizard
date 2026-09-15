@@ -13,11 +13,13 @@ listed before RAW_DATA so they win as the default wherever they apply, while
 RAW_DATA (applicable to everything) is the universal fallback.'''
 from asset_classes import Asset
 from visualizers.base import Visualizer
+from visualizers.dat_header import DAT_HEADER
 from visualizers.gim_image import GIM_IMAGE
 from visualizers.raw_hex import RAW_DATA
 
 ALL_VISUALIZERS: list[Visualizer] = [
     GIM_IMAGE,
+    DAT_HEADER,
     RAW_DATA,
 ]
 

@@ -415,6 +415,7 @@ class DataPacAsset(Container):
 class DatFile(Container):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.header:list = []
         self.zero_offset_list = []
         self.dat_type:str = ''
         self.sizes_list = []
@@ -428,7 +429,7 @@ class DatFile(Container):
             to comply with the Liskov Substitution Principle'''
         pass
 
-    def init_offset_table(self):
+    def init_offset_table(self):   
         offset_list = []
         zero_offset_list = []
         file = self.data_ref
@@ -440,6 +441,7 @@ class DatFile(Container):
         read = file.read(4)            
         #read = file.get_data(curr_offset, 4)
         number_of_files = int.from_bytes(read, byteorder="little")
+        self.header.append(number_of_files)
         
         for offset_index in range(number_of_files):
             #curr_offset += 4
@@ -451,6 +453,8 @@ class DatFile(Container):
                 offset_list.append(data_int)
             else:
                 zero_offset_list.append(offset_index)
+
+            self.header.append(data_int)
         
         self.offset_table = offset_list
         self.zero_offset_list = zero_offset_list
