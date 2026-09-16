@@ -565,16 +565,24 @@ class DatFile(Container):
             to comply with the Liskov Substitution Principle'''
         pass
 
-    def init_offset_table(self):   
+    def init_offset_table(self):
         offset_list = []
         zero_offset_list = []
         file = self.data_ref
         #with open(dat_path, 'rb') as file:
 
-        file.seek(self.offset_father)
+        # self.data_ref is the single global buffer shared by the whole tree
+        # (passed down unchanged from the root), so seeking needs the absolute
+        # offset_ref (accumulated through the full father chain), not
+        # offset_father (relative to just the immediate parent). Those two
+        # happen to coincide for a DatFile whose parent is DATA_PAC directly
+        # (offset_father(DATA_PAC) == 0), which is why this stayed hidden until
+        # a DatFile ended up nested inside another one (e.g. a stage's own
+        # embedded sub-level dat).
+        file.seek(self.offset_ref)
         #curr_offset = self.offset
         # Read the raw data and null offset list from the .DAT
-        read = file.read(4)            
+        read = file.read(4)
         #read = file.get_data(curr_offset, 4)
         number_of_files = int.from_bytes(read, byteorder="little")
         self.header.append(number_of_files)
