@@ -1188,15 +1188,6 @@ class DataPacAsset(Container):
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-    #def generate_children(self):
-    #    '''Generates all children of the PAC file'''
-    #    self.generate_generic_children() # Generate generic assets
-    #    if self.asset_table == None:
-    #        return # If no asset list, stop here.
-    #    
-    #    
-    #    pass
-
 
 
 
@@ -1250,9 +1241,7 @@ class DatFile(Container):
         self.header.append(number_of_files)
 
         for offset_index in range(number_of_files):
-            #curr_offset += 4
             data = file.read(4)
-            #data = file.get_data(curr_offset, 4)
             data_int = int.from_bytes(data, byteorder="little")
 
             if data_int != 0:
@@ -1261,20 +1250,12 @@ class DatFile(Container):
             self.header.append(data_int)
 
         self.offset_table = offset_list
-        #return offset_list, zero_offset_list
 
-        ###
-
-        #self.offset_table = offset_table[:]
+        
         ref_table = self.header[1:]
         ref_table.append(self.size)
 
 
-        #for i, offset in enumerate(ref_table):
-        #    if i == len(ref_table)-1:
-        #        break
-        #    aux_size = ref_table[i+1] - ref_table[i]
-        #    self.sizes_list.append(aux_size)
         prev_offset = -1
         for offset in reversed(ref_table):
             if prev_offset == -1:
@@ -1309,43 +1290,6 @@ class DatFile(Container):
             #sizes_index += 1
 
 
-    ## TODO: Mark for deletion ##############################
-    #def generate_children(self):
-    #    '''Generates children based on asset table'''
-    #    self.generate_generic_children() # Generate generic assets
-    #    if self.asset_table == None:
-    #        return # If no asset list, stop here.
-    #    
-    #    # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
-    #    for dat_index in self.asset_table:
-    #        raw_asset:Asset
-    #        raw_asset = self.children[int(dat_index)]
-    #        entry:dict = self.asset_table[dat_index]
-    #        new_child = None
-    #        
-    #        dat_type = entry['dat_type']
-    #        new_name = f'{dat_type}_{entry['name']}'
-#
-    #        #name=new_name
-    #        size=raw_asset.size
-    #        offset=raw_asset.offset_father
-    #        data_ref=self.data_ref
-    #        index=int(dat_index)
-    #        father=self
-#
-    #        #ace_style = entry['ace_style']
-    #        ace_style = entry.get('ace_style', '')
-#
-    #        if ace_style != '':
-    #            new_name += f'_{ace_style}'
-#
-    #        if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
-    #            new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-    #        elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
-    #            new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-#
-    #        self.generate_child(index=int(dat_index), obj=new_child)
-    #    pass
     
     def generate_child(self, index:int, obj:Asset):
         '''Creates or overwrites a child asset.
@@ -1366,7 +1310,6 @@ class DatFile(Container):
         # by their own __init__, since they're constructed with their real offset/size upfront.
 
         new_asset_entry = obj
-
         self.children[index] = new_asset_entry  
 
 
@@ -1389,19 +1332,6 @@ class DatStage(DatFile):
         #self.generate_offset_table()
         self.dat_type:str = 'stage'
         self.ace_style = ace_style
-
-    #def generate_children(self):
-    #    '''Generates all children of the stage dat file'''
-    #    #sizes_index = 0 # index used for for 'sizes_list'
-    #    ref_list = self.header[1:]
-    #    for i, offset in enumerate(ref_list):
-    #        if offset == 0: # If offset is an empty entry skip it. Its offset will be skipped and indexes of the subfiles will be correct.
-    #            continue
-    #        name = f'{str(i).zfill( len(str(len(ref_list))))}'
-    #        asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
-    #        #self.children.append(asset)
-    #        self.children[i] = asset
-    #        #sizes_index += 1
 
     def __repr__(self):
         empty_note = ' [empty]' if self.is_empty else ''
@@ -1511,90 +1441,8 @@ class ACM(Asset):
     def __repr__(self):
             return f'ACM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
-
-
 def main():
     pass
-#    tbl_path = 'DATA.TBL'
-#    pac_path = 'DATA.PAC'
-#    
-#
-#    raw_datapac_data = b''
-#    with open(pac_path, 'rb') as file:
-#        raw_datapac_data = file.read()
-#    
-#    raw_datatbl_data = b''
-#    with open(tbl_path, 'rb') as file:
-#        raw_datatbl_data = file.read()
-#
-#    DATA_TBL_REF = DataRefTbl(name='datatbl_ref', raw_data=raw_datatbl_data)
-#    DATA_PAC_REF = DataRefPac(name='datapac_ref', raw_data=raw_datapac_data, tbl_ref=DATA_TBL_REF)
-#
-#    
-#    DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=DATA_PAC_REF, index=0, father=None)
-#    #DATA_PAC.init_offset_table()
-#
-#    
-#    DAT_ASSET_LIST = {
-#        '251': {'dat_type': 'mission', 'name': 'Glacial Skies', 'ace_style': 'all'},
-#        '252': {'dat_type': 'mission', 'name': 'Annex', 'ace_style': 'all'},
-#        '253': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'M'},
-#        '254': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'S'},
-#        '255': {'dat_type': 'mission', 'name': 'The Round Table', 'ace_style': 'K'},
-#        '256': {'dat_type': 'mission', 'name': 'Juggernaut', 'ace_style': 'M'},
-#        '257': {'dat_type': 'mission', 'name': 'Juggernaut', 'ace_style': 'S'},
-#        '258': {'dat_type': 'mission', 'name': 'Juggernaut', 'ace_style': 'K'},
-#        '259': {'dat_type': 'mission', 'name': 'Flicker of Hope', 'ace_style': 'all'},
-#        '260': {'dat_type': 'mission', 'name': 'Diapason', 'ace_style': 'all'},
-#        '261': {'dat_type': 'mission', 'name': 'Bastion', 'ace_style': 'all'},
-#        '262': {'dat_type': 'mission', 'name': 'Merlon', 'ace_style': 'M'},
-#        '263': {'dat_type': 'mission', 'name': 'Merlon', 'ace_style': 'S'},
-#        '264': {'dat_type': 'mission', 'name': 'Merlon', 'ace_style': 'K'},
-#        '265': {'dat_type': 'mission', 'name': 'Sword of Annihilation', 'ace_style': 'all'},
-#        '266': {'dat_type': 'mission', 'name': 'Mayhem', 'ace_style': 'M'},
-#        '267': {'dat_type': 'mission', 'name': 'Mayhem', 'ace_style': 'S'},
-#        '268': {'dat_type': 'mission', 'name': 'Mayhem', 'ace_style': 'K'},
-#        '269': {'dat_type': 'mission', 'name': 'The Inferno', 'ace_style': 'all'},
-#        '270': {'dat_type': 'mission', 'name': 'The Stage of the Apocalypse', 'ace_style': 'all'},
-#        '271': {'dat_type': 'mission', 'name': 'Lying in Deceit', 'ace_style': 'all'},
-#        '272': {'dat_type': 'mission', 'name': 'The Final Overture', 'ace_style': 'M'},
-#        '273': {'dat_type': 'mission', 'name': 'The Final Overture', 'ace_style': 'S'},
-#        '274': {'dat_type': 'mission', 'name': 'The Final Overture', 'ace_style': 'K'},
-#        '275': {'dat_type': 'mission', 'name': 'The Talon of Ruin', 'ace_style': 'all'},
-#        '276': {'dat_type': 'mission', 'name': 'The Demon of the Round Table', 'ace_style': 'M'},
-#        '277': {'dat_type': 'mission', 'name': 'The Demon of the Round Table', 'ace_style': 'S'},
-#        '278': {'dat_type': 'mission', 'name': 'The Demon of the Round Table', 'ace_style': 'K'},
-#        '279': {'dat_type': 'mission', 'name': 'The Valley of Kings', 'ace_style': 'all'},
-#        '280': {'dat_type': 'mission', 'name': 'ZERO', 'ace_style': 'all'},
-#        '281': {'dat_type': 'mission', 'name': 'The Gauntlet', 'ace_style': 'all'}
-#    }
-#
-#
-#    for dat_index in DAT_ASSET_LIST:
-#        raw_asset:Asset
-#        raw_asset = DATA_PAC.children[int(dat_index)]
-#        entry = DAT_ASSET_LIST[dat_index]
-#        new_child = None
-#        
-#        dat_type = entry['dat_type']
-#        new_name = f'{dat_type}_{entry['name']}'
-#        
-#        if entry['dat_type'] == 'mission':
-#            ace_style = entry['ace_style']
-#            new_child = DatMission(name=new_name, size=-1, offset=-1, data_ref=DATA_PAC.data_ref, index=int(dat_index), father=DATA_PAC, ace_style=ace_style, deferred_children=True)
-#            DATA_PAC.generate_child(index=int(dat_index), obj=new_child)
-#        #elif .... other classes...
-#
-#        
-#
-#
-#        #DATA_PAC.generate_child(int(dat_index), new_name, child_class)
-#        #DATA_PAC.generate_child(int(dat_index), new_name, child_class)
-#
-#        print(DATA_PAC.children[int(dat_index)])
-#
-#    
-#    pass
 
 
 if __name__ == '__main__':
