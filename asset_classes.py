@@ -182,6 +182,7 @@ class ACZProject(Project):
         # Give the asset table to DATA.PAC's children
         for child in self.DATA_PAC.children.values():
             if type(child) is DatStage:
+                print(child)
             #if isinstance(child, Container):
                 child.asset_table = self.ACZ_STAGE_DAT_ASSET_LIST
                 child.generate_children()
