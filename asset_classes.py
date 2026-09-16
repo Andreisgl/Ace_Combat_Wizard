@@ -795,15 +795,44 @@ class ACZProject(Project):
             '11': {'type': 'gim', 'name': '11'},
         }
 
+        # Slot-by-slot contents of a flyable aircraft's .dat, reverse-
+        # engineered this session by exporting and hex-analyzing real
+        # Gripen/Draken sub-files - see AIRCRAFT_FORMAT_NOTES.md for the
+        # full evidence. type:'' entries are honestly unresolved (matches
+        # this table's own convention elsewhere), not guessed at. Only
+        # registered for DatAircraft, not DatAircraftHangar - the hangar-
+        # quality variant's internal layout hasn't been checked and may
+        # differ.
+        self.ACZ_AIRCRAFT_DAT_ASSET_LIST = {
+            '0': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '1': {'type': 'aircraft_parts_dat', 'name': 'Part geometry (ACM meshes/GIM textures, 10 entries matching the P3D hardpoint table)'},
+            '2': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '3': {'type': 'p3d', 'name': 'Hardpoint & special weapon attachment table (10 records)'},
+            '4': {'type': '', 'name': "Raw data blob (size cross-referenced by slot 3's header)"},
+            '5': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '6': {'type': '', 'name': 'Unknown parameter block (contains float values - hangar display data?)'},
+            '7': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '8': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '9': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '10': {'type': '', 'name': 'Unknown parameter block (identical across aircraft, same as slot 9)'},
+            '11': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '12': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '13': {'type': 'gim', 'name': 'Small texture (icon/thumbnail?)'},
+            '14': {'type': '', 'name': 'Unknown tiny flag/version block'},
+            '15': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '16': {'type': 'gim', 'name': 'Main livery texture'},
+        }
+
         # Per-class asset tables for this game (see Project.asset_tables /
-        # Container._resolve_asset_table). Any DatStage/DatAmbientTextures -
-        # top-level or nested arbitrarily deep inside another one - resolves
-        # its own table from this automatically at construction time; no
-        # manual propagation needed.
+        # Container._resolve_asset_table). Any DatStage/DatAmbientTextures/
+        # DatAircraft - top-level or nested arbitrarily deep inside another
+        # one - resolves its own table from this automatically at
+        # construction time; no manual propagation needed.
         self.asset_tables = {
             DataPacAsset: self.ACZ_DAT_ASSET_LIST,
             DatStage: self.ACZ_STAGE_DAT_ASSET_LIST,
             DatAmbientTextures: self.ACZ_AMBIENT_TEXTURES_ASSET_LIST,
+            DatAircraft: self.ACZ_AIRCRAFT_DAT_ASSET_LIST,
         }
 
         # Asset creation:
@@ -1146,6 +1175,8 @@ class Container(Asset): # Abstract
                 new_child = DatAircraft(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'aircraft_hangar_dat':
                 new_child = DatAircraftHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'aircraft_parts_dat':
+                new_child = DatAircraftParts(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'hangar_dat':
                 new_child = DatHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'ambient_textures_dat':
@@ -1161,6 +1192,8 @@ class Container(Asset): # Abstract
                 new_child = EFD(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'acm':
                 new_child = ACM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'p3d':
+                new_child = P3D(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == '': # If type is not known yet, make it a generic "Asset", but bring over table data.
                 new_child = Asset(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 
@@ -1397,6 +1430,23 @@ class DatAircraftHangar(DatFile):
     def __repr__(self):
         return f'AIRCRAFT_HANGAR_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
+class DatAircraftParts(DatFile):
+    '''Slot 1 of a flyable aircraft's .dat (see ACZ_AIRCRAFT_DAT_ASSET_LIST) -
+    a plain NOF-based container whose children are the aircraft's actual
+    geometry. Confirmed (via both sample aircraft, see
+    AIRCRAFT_FORMAT_NOTES.md) to always hold exactly 10 entries lining up
+    1:1 with slot 3's (P3D) 10 hardpoint records: 7-8 ACM meshes, 1 AHM
+    (unidentified), and 1-2 GIM textures. No dedicated per-index sub-table
+    is registered for this class - its children are already fully typed by
+    signature-based autodetection alone (see autodetect_asset_type), since
+    ACM/AHM/GIM are all confirmed formats.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'aircraft_parts'
+
+    def __repr__(self):
+        return f'AIRCRAFT_PARTS_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
 class DatAmbientTextures(DatFile):
     '''A stage's ambient (skybox/weather) texture set - shadow cloud map,
     moon, clouds, star, lens flare, etc. (slot 19 of a stage .dat). Its own
@@ -1462,28 +1512,41 @@ class EFD(Asset):
             return f'EFD | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 class ACM(Asset):
-    'A 3D model file (seen used for stage trees/foliage)'
+    'A 3D model file (mesh chunk - seen used for stage trees/foliage and, confirmed this session, aircraft part geometry)'
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
             super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 
     def __repr__(self):
             return f'ACM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
+class AHM(Asset):
+    '''Unidentified aircraft-part format, confirmed by signature only. Found
+    nested inside a DatAircraftParts container at a fixed slot (index 4 of
+    10) alongside 7 ACM meshes and 2 GIM textures, in both sample aircraft
+    checked (Gripen, Draken) - see AIRCRAFT_FORMAT_NOTES.md. Purpose and
+    internal structure not yet reverse-engineered.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+
+    def __repr__(self):
+            return f'AHM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
+
 
 # Byte signatures for autodetecting assets that have no asset-table entry at
-# all (see Container._autodetect_untyped_children). GIM is confirmed (also
-# used by visualizers/gim_image.py's real decoder). P3D is an unverified
-# guess carried over from an earlier exploratory pass, never confirmed
-# against real P3D files. Only listed here if there's an actual signature to
+# all (see Container._autodetect_untyped_children). GIM, P3D, ACM and AHM
+# are all confirmed real signatures (see AIRCRAFT_FORMAT_NOTES.md for how
+# P3D/ACM/AHM were confirmed this session, by decoding real exported
+# aircraft sub-files). Only listed here if there's an actual signature to
 # check - types recognized purely by structural shape (DatFile's NOF header)
 # are deliberately excluded; guessing those risks misidentifying arbitrary
 # unknown data as a real, parseable .dat (see TASKS.md).
 GIM_SIGNATURE = b'GIM\x00'
 _AUTODETECT_SIGNATURES = (
     (GIM_SIGNATURE, GIM),
-    (b'P3D', P3D),
+    (b'P3Dp', P3D),
     (b'EFD', EFD),
-    (b'ACM', ACM),
+    (b'ACM\x00', ACM),
+    (b'AHM\x00', AHM),
 )
 _AUTODETECT_MAX_SIGNATURE_LEN = max(len(signature) for signature, _ in _AUTODETECT_SIGNATURES)
 
