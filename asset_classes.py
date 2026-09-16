@@ -180,7 +180,7 @@ class ACZProject(Project):
         self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self, asset_list=self.ACZ_DAT_ASSET_LIST)
 
         # Give the asset table to DATA.PAC's children
-        for child in self.DATA_PAC.children:
+        for child in self.DATA_PAC.children.values():
             if type(child) is DatStage:
             #if isinstance(child, Container):
                 child.asset_table = self.ACZ_STAGE_DAT_ASSET_LIST
