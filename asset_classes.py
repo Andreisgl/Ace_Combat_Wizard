@@ -421,8 +421,29 @@ class Container(Asset): # Abstract
 
         # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
         for dat_index in self.asset_table:
+            index = int(dat_index)
+            if index not in self.children:
+                # Two legitimate reasons an index can be absent here:
+                # (1) explicitly empty - the header has a real 0x00000000 entry
+                #     at this slot (recorded in zero_offset_list), or
+                # (2) out of range - this file's header is shorter than the
+                #     asset table assumes (not every stage/mission uses every
+                #     optional trailing slot; the table describes the maximum
+                #     layout, not a fixed one), so the slot was never read at all.
+                # Anything else missing is a real bug and should still surface
+                # loudly, not be swallowed here.
+                header_slots = getattr(self, 'header', None)
+                out_of_range = header_slots is not None and index >= len(header_slots) - 1
+                known_empty = index in getattr(self, 'zero_offset_list', [])
+                if out_of_range or known_empty:
+                    continue
+                raise KeyError(
+                    f'{self!r}: asset table references index {index}, but it is neither '
+                    f'a populated child nor a known-empty/out-of-range header slot.'
+                )
+
             raw_asset:Asset
-            raw_asset = self.children[int(dat_index)]
+            raw_asset = self.children[index]
             entry:dict = self.asset_table[dat_index]
             new_child = None
             
@@ -443,9 +464,14 @@ class Container(Asset): # Abstract
                 new_name += f'_{ace_style}'
 
             # Overwrite raw assets as stage assets
-            if asset_type == 'dat': 
-                new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'mission_dat':
+            # IMPORTANT! The '.dat' extension is not used consistently as the data structure I have described here;
+            #   It's also used as a generic unknown file in the existing documentation.
+            #   Trying to unpack a '.dat' that has a big number as its 'number of files' header, but does not use this number
+            #   for this role might break unpackers, as they think they are parsing very a very long header that does not exist.
+            #   We need a more specific nomenclature. I'll try to use '.unk' for unknown file formats from now on.
+            #if asset_type == 'dat': 
+            #    new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            if asset_type == 'mission_dat':
                 new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
             elif asset_type == 'stage_dat':
                 new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
