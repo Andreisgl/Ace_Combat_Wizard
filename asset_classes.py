@@ -182,7 +182,9 @@ class ACZProject(Project):
         # Give the asset table to DATA.PAC's children
         for child in self.DATA_PAC.children:
             if type(child) is DatStage:
-                #child.generate_children()
+            #if isinstance(child, Container):
+                child.asset_table = self.ACZ_STAGE_DAT_ASSET_LIST
+                child.generate_children()
                 pass
         
         
@@ -360,7 +362,7 @@ class Asset():
 class Container(Asset): # Abstract
     '''A simple container that has generic children based on a offset table
     and a hook for asset tables for future classes'''
-    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, asset_list:dict):
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, asset_list:dict=None):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.offset_table = []
         self.sizes_list:list = []
