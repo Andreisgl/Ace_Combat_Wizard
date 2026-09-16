@@ -37,7 +37,20 @@ class Project():
         # Check for game data
         if len(os.listdir(self._source_folder)) <= 0:
             print('No game files!') # Source is empty
-        
+
+        # Per-class asset tables for this game/project (e.g. {DatStage: ...}).
+        # Populated by subclasses (ACZProject, and eventually an AC5Project)
+        # with their own game-specific tables under the same class keys, so
+        # Container instances can look theirs up automatically regardless of
+        # which game is actually loaded - see Asset.root_project and
+        # Container._resolve_asset_table.
+        self.asset_tables: dict = {}
+
+    def get_asset_table(self, asset_class) -> dict | None:
+        '''Returns the asset table registered for `asset_class` in this
+        project, or None if this project doesn't define one for it.'''
+        return self.asset_tables.get(asset_class)
+
 class ACZProject(Project):
     '''Extends class 'Project for ACZ-specific projects.'''
     def __init__(self, project_folder_path:str, name:str=''):
@@ -176,20 +189,17 @@ class ACZProject(Project):
             '38': {'type': 'stage_dat', 'name': 'Null or landing stage data'},
         }
 
+        # Per-class asset tables for this game (see Project.asset_tables /
+        # Container._resolve_asset_table). Any DatStage - top-level or nested
+        # arbitrarily deep inside another one - resolves its own table from
+        # this automatically at construction time; no manual propagation needed.
+        self.asset_tables = {
+            DataPacAsset: self.ACZ_DAT_ASSET_LIST,
+            DatStage: self.ACZ_STAGE_DAT_ASSET_LIST,
+        }
+
         # Asset creation:
         self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self, asset_list=self.ACZ_DAT_ASSET_LIST)
-
-        # Give the asset table to DATA.PAC's children
-        for child in self.DATA_PAC.children.values():
-            if type(child) is DatStage:
-                print(child)
-            #if isinstance(child, Container):
-                child.asset_table = self.ACZ_STAGE_DAT_ASSET_LIST
-                child.generate_children()
-                pass
-        
-        
-        pass
 
         if False:
             def auto_apply_type(asset:Asset):
@@ -352,6 +362,17 @@ class Asset():
             return self.offset_father + self.father.offset_ref
         return self.offset_father
 
+    @property
+    def root_project(self):
+        '''Walks up the father chain to the Project this asset ultimately
+        belongs to (the first ancestor that isn't itself an Asset) - the
+        same walking pattern as offset_ref, used to look up which
+        game/project's data (like a per-class asset table) applies here.'''
+        node = self.father
+        while isinstance(node, Asset):
+            node = node.father
+        return node
+
     def get_raw_data(self) -> bytes:
         '''Returns this asset's own raw bytes, read from its data reference.'''
         return self.data_ref.get_data(self.offset_ref, self.size)
@@ -368,8 +389,18 @@ class Container(Asset): # Abstract
         self.offset_table = []
         self.sizes_list:list = []
         self.children = dict()
-        self.asset_table:dict = asset_list
-    
+        # asset_list is an explicit override, for the rare exception that needs
+        # one; the normal case is auto-resolving the right table for this
+        # class from the active project, so every container (top-level or
+        # nested arbitrarily deep) gets typed correctly with no manual wiring.
+        self.asset_table:dict = asset_list if asset_list is not None else self._resolve_asset_table()
+
+    def _resolve_asset_table(self) -> dict | None:
+        project = self.root_project
+        if project is None:
+            return None
+        return project.get_asset_table(type(self))
+
     def set_offset_table(self, offset_table:list):
         self.offset_table = offset_table[:]
 
