@@ -173,7 +173,7 @@ class ACZProject(Project):
             '35': {'type': '', 'name': 'Unknown data file'},
             '36': {'type': '', 'name': 'Padding 0x10'},
             '37': {'type': '', 'name': "Stage's graphic configuration file"},
-            '38': {'type': '', 'name': 'Null or landing stage data'},
+            '38': {'type': 'stage_dat', 'name': 'Null or landing stage data'},
         }
 
         # Asset creation:
@@ -550,6 +550,14 @@ class DatFile(Container):
         self.init_offset_table()
         self.generate_children()
 
+    @property
+    def is_empty(self) -> bool:
+        '''True if this dat's header declares zero files - a real, valid
+        placeholder state (e.g. a stage's unused sub-level slot, seen as a
+        fixed-size file of a null file count followed by 0xCC filler), not
+        an error. Not to be confused with an individual zero-offset slot
+        inside a populated dat - this is about the dat itself having none.'''
+        return bool(self.header) and self.header[0] == 0
 
     def set_offset_table(self, offset_table:list):
         '''This method does nothing. It receives an unused param
@@ -720,7 +728,8 @@ class DatStage(DatFile):
     #        #sizes_index += 1
 
     def __repr__(self):
-        return f'STAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+        empty_note = ' [empty]' if self.is_empty else ''
+        return f'STAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}{empty_note}'
 
 class GIM(Asset):
     'A GIM image file'
