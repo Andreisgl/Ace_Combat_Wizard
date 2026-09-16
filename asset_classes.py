@@ -128,6 +128,54 @@ class ACZProject(Project):
             '281': {'type': 'mission_dat', 'name': 'The Gauntlet', 'ace_style': ''}
         }
 
+        # Slot-by-slot contents of a stage .dat, per death_the_d0g's table.
+        # Not yet applied anywhere (see TASKS/notes) - will later be hooked up
+        # to type the children of 'stage_dat' (and, once confirmed, 'mission_dat')
+        # containers, the same way ACZ_DAT_ASSET_LIST types DATA.PAC's own children.
+        # TOC entries with a null (0x00000000) offset are skipped by the game at
+        # load time - usually files holding only empty/unused parameters.
+        self.ACZ_STAGE_DAT_ASSET_LIST = {
+            '0': {'type': 'dat', 'name': 'Terrain mesh tile placement map'},
+            '1': {'type': 'dat', 'name': 'Mesh tile data placement data'},
+            '2': {'type': 'dat', 'name': 'Unknown - affects tile texture'},
+            '3': {'type': 'dat', 'name': 'Unknown - affects tile texture'},
+            '4': {'type': 'dat', 'name': 'Terrain mesh vertex color data/Texture tile transparency'},
+            '5': {'type': 'dat', 'name': '1024x1024 texture tile placement map'},
+            '6': {'type': 'dat', 'name': '64x64 texture tile placement data'},
+            '7': {'type': 'dat', 'name': 'Terrain texture tile data'},
+            '8': {'type': 'dat', 'name': 'Terrain texture palette data'},
+            '9': {'type': 'gim', 'name': 'Unknown texture file'},
+            '10': {'type': 'gim', 'name': 'Main light source environment map texture'},
+            '11': {'type': 'dat', 'name': 'Skybox parameters and vertex color configuration'},
+            '12': {'type': 'gim', 'name': 'Unknown texture file'},
+            '13': {'type': 'dat', 'name': 'Unknown data file - related to stage props (buildings, etc.)'},
+            '14': {'type': 'dat', 'name': 'Unknown data file, related to stage props (buildings, etc.)'},
+            '15': {'type': 'dat', 'name': 'Stage props ID and their coordinates data'},
+            '16': {'type': 'dat', 'name': 'Stage props 3D model data'},
+            '17': {'type': 'dat', 'name': 'Stage props texture data'},
+            '18': {'type': 'dat', 'name': "Stage's graphic configuration file"},
+            '19': {'type': 'dat', 'name': 'Skybox/weather texture files (shadow cloud map/moon/clouds/star/lens flare textures)'},
+            '20': {'type': 'efd', 'name': 'Stage particle effect configuration file'},
+            '21': {'type': 'gim', 'name': 'Particle effect texture sheet 1'},
+            '22': {'type': 'gim', 'name': 'Particle effect texture sheet 2'},
+            '23': {'type': 'gim', 'name': 'Unknown texture'},
+            '24': {'type': 'gim', 'name': 'Radar map texture'},
+            '25': {'type': 'dat', 'name': 'Foliage tile placement map ?'},
+            '26': {'type': 'dat', 'name': 'Foliage tile data placement map ?'},
+            '27': {'type': 'dat', 'name': 'Related to foliage data'},
+            '28': {'type': 'acm', 'name': 'Tree model file 1'},
+            '29': {'type': 'acm', 'name': 'Tree model file 2'},
+            '30': {'type': 'acm', 'name': 'Tree model file 3'},
+            '31': {'type': 'gim', 'name': 'Tree texture file 1'},
+            '32': {'type': 'gim', 'name': 'Tree texture file 2'},
+            '33': {'type': 'gim', 'name': 'Tree texture file 3'},
+            '34': {'type': 'dat', 'name': 'Unknown data file'},
+            '35': {'type': 'dat', 'name': 'Unknown data file'},
+            '36': {'type': 'dat', 'name': 'Padding 0x10'},
+            '37': {'type': 'dat', 'name': "Stage's graphic configuration file"},
+            '38': {'type': 'dat', 'name': 'Null or landing stage data'},
+        }
+
         # Asset creation:
         self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self, asset_list=self.ACZ_DAT_ASSET_LIST)
         
@@ -645,6 +693,22 @@ class P3D(Asset):
 
     def __repr__(self):
             return f'P3D | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
+
+class EFD(Asset):
+    'A stage particle effect configuration file'
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+
+    def __repr__(self):
+            return f'EFD | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
+
+class ACM(Asset):
+    'A 3D model file (seen used for stage trees/foliage)'
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+            super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+
+    def __repr__(self):
+            return f'ACM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 
 
