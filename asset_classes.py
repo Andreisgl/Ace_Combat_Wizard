@@ -442,10 +442,20 @@ class Container(Asset): # Abstract
             if ace_style != '':
                 new_name += f'_{ace_style}'
 
-            if asset_type == 'mission_dat': # Overwrite raw assets as mission assets
+            # Overwrite raw assets as stage assets
+            if asset_type == 'dat': 
+                new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'mission_dat':
                 new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif asset_type == 'stage_dat': # Overwrite raw assets as stage assets
+            elif asset_type == 'stage_dat':
                 new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+            #
+            elif asset_type == 'gim':
+                new_child = GIM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'efd':
+                new_child = EFD(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'acm':
+                new_child = ACM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 
             if new_child != None:
                 self.generate_child(index=int(dat_index), obj=new_child)
