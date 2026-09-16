@@ -416,10 +416,37 @@ class Container(Asset): # Abstract
         self.generate_generic_children() # Generate generic assets
         if self.asset_table == None:
             return # If no asset list, stop here.
-        else:
-            pass
-            # Custom per-type child generation logic here.
-            # This is an abstract class, so it does not need its logic
+
+        # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
+        for dat_index in self.asset_table:
+            raw_asset:Asset
+            raw_asset = self.children[int(dat_index)]
+            entry:dict = self.asset_table[dat_index]
+            new_child = None
+            
+            asset_type = entry['type']
+            new_name = f'{asset_type}_{entry['name']}'
+
+            #name=new_name
+            size=raw_asset.size
+            offset=raw_asset.offset_father
+            data_ref=self.data_ref
+            index=int(dat_index)
+            father=self
+
+            #ace_style = entry['ace_style']
+            ace_style = entry.get('ace_style', '')
+
+            if ace_style != '':
+                new_name += f'_{ace_style}'
+
+            if asset_type == 'mission_dat': # Overwrite raw assets as mission assets
+                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+            elif asset_type == 'stage_dat': # Overwrite raw assets as stage assets
+                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+
+            if new_child != None:
+                self.generate_child(index=int(dat_index), obj=new_child)
             
     def __repr__(self):
         return f'CONTAINER | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
@@ -456,43 +483,14 @@ class DataPacAsset(Container):
             aux_size = ref_table[i+1] - ref_table[i]
             self.sizes_list.append(aux_size)
 
-    def generate_children(self):
-        '''Generates all children of the PAC file'''
-        self.generate_generic_children() # Generate generic assets
-        if self.asset_table == None:
-            return # If no asset list, stop here.
-        
-        # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
-        for dat_index in self.asset_table:
-            raw_asset:Asset
-            raw_asset = self.children[int(dat_index)]
-            entry:dict = self.asset_table[dat_index]
-            new_child = None
-            
-            asset_type = entry['type']
-            new_name = f'{asset_type}_{entry['name']}'
-
-            #name=new_name
-            size=raw_asset.size
-            offset=raw_asset.offset_father
-            data_ref=self.data_ref
-            index=int(dat_index)
-            father=self
-
-            #ace_style = entry['ace_style']
-            ace_style = entry.get('ace_style', '')
-
-            if ace_style != '':
-                new_name += f'_{ace_style}'
-
-            if asset_type == 'mission_dat': # Overwrite raw assets as mission assets
-                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif asset_type == 'stage_dat': # Overwrite raw assets as stage assets
-                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-
-            if new_child != None:
-                self.generate_child(index=int(dat_index), obj=new_child)
-        pass
+    #def generate_children(self):
+    #    '''Generates all children of the PAC file'''
+    #    self.generate_generic_children() # Generate generic assets
+    #    if self.asset_table == None:
+    #        return # If no asset list, stop here.
+    #    
+    #    
+    #    pass
 
 
 
@@ -585,42 +583,44 @@ class DatFile(Container):
             self.children[i] = asset
             #sizes_index += 1
 
-    def generate_children(self):
-        '''Generates children based on asset table'''
-        self.generate_generic_children() # Generate generic assets
-        if self.asset_table == None:
-            return # If no asset list, stop here.
-        
-        # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
-        for dat_index in self.asset_table:
-            raw_asset:Asset
-            raw_asset = self.children[int(dat_index)]
-            entry:dict = self.asset_table[dat_index]
-            new_child = None
-            
-            dat_type = entry['dat_type']
-            new_name = f'{dat_type}_{entry['name']}'
 
-            #name=new_name
-            size=raw_asset.size
-            offset=raw_asset.offset_father
-            data_ref=self.data_ref
-            index=int(dat_index)
-            father=self
-
-            #ace_style = entry['ace_style']
-            ace_style = entry.get('ace_style', '')
-
-            if ace_style != '':
-                new_name += f'_{ace_style}'
-
-            if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
-                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
-                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-
-            self.generate_child(index=int(dat_index), obj=new_child)
-        pass
+    ## TODO: Mark for deletion ##############################
+    #def generate_children(self):
+    #    '''Generates children based on asset table'''
+    #    self.generate_generic_children() # Generate generic assets
+    #    if self.asset_table == None:
+    #        return # If no asset list, stop here.
+    #    
+    #    # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
+    #    for dat_index in self.asset_table:
+    #        raw_asset:Asset
+    #        raw_asset = self.children[int(dat_index)]
+    #        entry:dict = self.asset_table[dat_index]
+    #        new_child = None
+    #        
+    #        dat_type = entry['dat_type']
+    #        new_name = f'{dat_type}_{entry['name']}'
+#
+    #        #name=new_name
+    #        size=raw_asset.size
+    #        offset=raw_asset.offset_father
+    #        data_ref=self.data_ref
+    #        index=int(dat_index)
+    #        father=self
+#
+    #        #ace_style = entry['ace_style']
+    #        ace_style = entry.get('ace_style', '')
+#
+    #        if ace_style != '':
+    #            new_name += f'_{ace_style}'
+#
+    #        if entry['dat_type'] == 'mission': # Overwrite raw assets as mission assets
+    #            new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+    #        elif entry['dat_type'] == 'stage': # Overwrite raw assets as stage assets
+    #            new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+#
+    #        self.generate_child(index=int(dat_index), obj=new_child)
+    #    pass
     
     def generate_child(self, index:int, obj:Asset):
         '''Creates or overwrites a child asset.
