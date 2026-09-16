@@ -448,7 +448,7 @@ class Container(Asset): # Abstract
             new_child = None
             
             asset_type = entry['type']
-            new_name = f'{asset_type}_{entry['name']}'
+            new_name = f'{index}_{asset_type}_{entry['name']}'
 
             #name=new_name
             size=raw_asset.size
