@@ -689,7 +689,6 @@ class DatFile(Container):
 class DatMission(DatFile):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, ace_style:str=''):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-        self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = 'mission'
         self.ace_style = ace_style
@@ -700,7 +699,6 @@ class DatMission(DatFile):
 class DatStage(DatFile):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, ace_style:str=''):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-        self.zero_offset_list = []
         #self.generate_offset_table()
         self.dat_type:str = 'stage'
         self.ace_style = ace_style
