@@ -32,7 +32,7 @@ _MODE_OPTIONS = (
 
 
 class AssetPanel(QWidget):
-    '''Right-hand panel: project/export actions, a forced-visualization-mode
+    '''Right-hand panel: export actions, a forced-visualization-mode
     selector, and a pluggable visualization area for whichever asset is
     currently selected in the tree.'''
 
@@ -43,15 +43,11 @@ class AssetPanel(QWidget):
         self._viz_widget: QWidget | None = None
         self._mode = MODE_AUTO
 
-        self.open_project_button = QPushButton('Open Project')
-        # Not wired to a handler yet - project picking isn't implemented.
-
         self.export_button = QPushButton('Export Asset')
         self.export_button.setEnabled(False)
         self.export_button.clicked.connect(self._on_export_clicked)
 
         button_row = QHBoxLayout()
-        button_row.addWidget(self.open_project_button)
         button_row.addWidget(self.export_button)
 
         mode_row = QHBoxLayout()

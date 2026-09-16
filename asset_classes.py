@@ -4,17 +4,23 @@ import json
 
 
 class Project():
-    def __init__(self, project_folder_path:str, name:str=''):
+    ACW_FILENAME = 'project.ACW'
+
+    def __init__(self, project_folder_path:str, name:str='', game_id:str=''):
         '''Class that represents a ACW project.
         - name: If creating a new project, this will be its name.
-            If project already exists, this will be unused.'''
-    
+            If project already exists, this will be unused.
+        - game_id: If creating a new project, the game this project is for
+            (see game_registry.GAME_REGISTRY). If the project already exists,
+            this is unused - the game id is read back from project.ACW instead.'''
+
         # Project preparation
         self.project_name = ''
+        self.game_id = game_id
         self._folders_list = []
         #self._files_list = []
         self._project_folder_path = project_folder_path
-        self._flag_file_path = os.path.join(self._project_folder_path, 'project.ACW')
+        self._flag_file_path = os.path.join(self._project_folder_path, self.ACW_FILENAME)
         #
         self._source_folder = os.path.join(project_folder_path, 'source')
         self._folders_list.append(self._source_folder)
@@ -23,17 +29,18 @@ class Project():
             os.makedirs(folder, exist_ok=True)
 
         # Check for ACW file. Create if non-existent.
-        if os.path.exists(self._flag_file_path): # Read project name from .ACW
+        if os.path.exists(self._flag_file_path): # Read project name/game from .ACW
             data = ''
             with open(self._flag_file_path, 'r') as flag_file:
                 data = json.load(flag_file)
             self.project_name = data['project_name']
-        else: # Create ACW flag file and write the project's name to it.
+            self.game_id = data['game']
+        else: # Create ACW flag file and write the project's name/game to it.
             self.project_name = name
-            data = {'project_name': self.project_name}
+            data = {'project_name': self.project_name, 'game': self.game_id}
             with open(self._flag_file_path, 'w') as flag_file:
                 json.dump(data, flag_file)
-        
+
         # Check for game data
         if len(os.listdir(self._source_folder)) <= 0:
             print('No game files!') # Source is empty
@@ -46,15 +53,42 @@ class Project():
         # Container._resolve_asset_table.
         self.asset_tables: dict = {}
 
+    @property
+    def folder_path(self) -> str:
+        '''This project's root folder on disk - used by game_registry's
+        Save As (duplicate_project) to copy the folder without reaching
+        into the underscore-prefixed attribute from outside this class.'''
+        return self._project_folder_path
+
     def get_asset_table(self, asset_class) -> dict | None:
         '''Returns the asset table registered for `asset_class` in this
         project, or None if this project doesn't define one for it.'''
         return self.asset_tables.get(asset_class)
 
+    @staticmethod
+    def read_acw_metadata(project_folder_path:str) -> dict | None:
+        '''Reads project.ACW from `project_folder_path` without constructing
+        a Project - used to peek at a candidate folder's metadata (project
+        name, game id) before knowing which Project subclass to instantiate,
+        e.g. game_registry.open_project() and the project picker's folder
+        listing. Returns None if there's no valid project.ACW there.'''
+        flag_file_path = os.path.join(project_folder_path, Project.ACW_FILENAME)
+        if not os.path.isfile(flag_file_path):
+            return None
+        try:
+            with open(flag_file_path, 'r') as flag_file:
+                return json.load(flag_file)
+        except (json.JSONDecodeError, OSError):
+            return None
+
 class ACZProject(Project):
     '''Extends class 'Project for ACZ-specific projects.'''
+    GAME_ID = 'ACZ'
+    DISPLAY_NAME = 'Ace Combat Zero'
+    REQUIRED_SOURCE_FILES = ('DATA.PAC', 'DATA.TBL')
+
     def __init__(self, project_folder_path:str, name:str=''):
-        super().__init__(project_folder_path=project_folder_path, name=name)
+        super().__init__(project_folder_path=project_folder_path, name=name, game_id=self.GAME_ID)
         
         # References setup:
         tbl_path = os.path.join(self._source_folder, 'DATA.TBL')

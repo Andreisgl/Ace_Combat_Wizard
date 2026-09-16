@@ -1,23 +1,24 @@
 import os
 import sys
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QDialog
 
-from asset_classes import ACZProject
+import game_registry
 from gui.main_window import MainWindow
-
-
-def build_test_project() -> ACZProject:
-    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    projects_folder = os.path.join(repo_root, 'projects')
-    project_path = os.path.join(projects_folder, 'testproj')
-    return ACZProject(project_folder_path=project_path, name='test_proj')
+from gui.project_picker_dialog import ProjectPickerDialog
 
 
 def main():
     app = QApplication(sys.argv)
-    project = build_test_project()
-    window = MainWindow(project)
+
+    projects_root = game_registry.default_projects_root()
+    os.makedirs(projects_root, exist_ok=True)
+
+    picker = ProjectPickerDialog(projects_root)
+    if picker.exec() != QDialog.Accepted or picker.project is None:
+        sys.exit(0)
+
+    window = MainWindow(picker.project)
     window.show()
     sys.exit(app.exec())
 
