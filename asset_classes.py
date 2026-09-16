@@ -1025,7 +1025,7 @@ class Container(Asset): # Abstract
     def generate_generic_children(self):
         '''Generates all children of the container'''
         for i, offset in enumerate(self.offset_table):
-            name = f'{str(i).zfill( len(str(len(self.offset_table))))}'
+            name = f'{str(i).zfill( len(str(len(self.offset_table)-1)))}'
             asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
             #self.children.append(asset)
             self.children[i] = asset
@@ -1088,7 +1088,10 @@ class Container(Asset): # Abstract
             new_child = None
             
             asset_type = entry['type']
-            new_name = f'{index}_{asset_type}_{entry['name']}'
+            #name = f'{str(i).zfill( len(str(len(self.offset_table))))}'
+
+            index_zfill = str(index).zfill(len(str(len(self.asset_table)-1)))
+            new_name = f'{index_zfill}_{asset_type}_{entry['name']}'
 
             #name=new_name
             size=raw_asset.size
