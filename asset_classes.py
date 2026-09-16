@@ -959,6 +959,19 @@ class Asset():
         self.offset_father = offset # Offset from its father container.
         self.index_father = index # Offset from its father container.
         self.data_ref = data_ref
+        # True when this asset's type was guessed from its raw bytes rather
+        # than assigned by an asset table - see autodetect_asset_type/
+        # Container._autodetect_untyped_children.
+        self.autodetected = False
+
+    @property
+    def display_type(self) -> str:
+        '''Type name for display, tagged with '[autodetected]' when this
+        asset's type came from signature-sniffing rather than an asset
+        table, so the user can tell curated typing apart from a guess.'''
+        if self.autodetected:
+            return f'{type(self).__name__}[autodetected]'
+        return type(self).__name__
 
     @property
     def offset_ref(self) -> int:
@@ -1057,6 +1070,7 @@ class Container(Asset): # Abstract
         '''Generates all children with custom logic'''
         self.generate_generic_children() # Generate generic assets
         if self.asset_table == None:
+            self._autodetect_untyped_children()
             return # If no asset list, stop here.
 
         # Overwrite generic "Asset" children for typed dats in the asset table (like missions and aircraft)
@@ -1152,7 +1166,21 @@ class Container(Asset): # Abstract
 
             if new_child != None:
                 self.generate_child(index=int(dat_index), obj=new_child)
-            
+
+        self._autodetect_untyped_children()
+
+    def _autodetect_untyped_children(self):
+        '''Final fallback pass: anything still a plain generic Asset after
+        table-driven typing (no asset table at all, no table entry for this
+        slot, or an explicit type:'' entry) gets one shot at signature-based
+        autodetection - see autodetect_asset_type.'''
+        for index, child in list(self.children.items()):
+            if type(child) is not Asset:
+                continue # Already a specific subclass - table-typed or previously autodetected.
+            detected = autodetect_asset_type(child)
+            if detected is not None:
+                self.generate_child(index=index, obj=detected)
+
     def __repr__(self):
         return f'CONTAINER | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
@@ -1440,6 +1468,40 @@ class ACM(Asset):
 
     def __repr__(self):
             return f'ACM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
+
+
+# Byte signatures for autodetecting assets that have no asset-table entry at
+# all (see Container._autodetect_untyped_children). GIM is confirmed (also
+# used by visualizers/gim_image.py's real decoder). P3D is an unverified
+# guess carried over from an earlier exploratory pass, never confirmed
+# against real P3D files. Only listed here if there's an actual signature to
+# check - types recognized purely by structural shape (DatFile's NOF header)
+# are deliberately excluded; guessing those risks misidentifying arbitrary
+# unknown data as a real, parseable .dat (see TASKS.md).
+GIM_SIGNATURE = b'GIM\x00'
+_AUTODETECT_SIGNATURES = (
+    (GIM_SIGNATURE, GIM),
+    (b'P3D', P3D),
+    (b'EFD', EFD),
+    (b'ACM', ACM),
+)
+_AUTODETECT_MAX_SIGNATURE_LEN = max(len(signature) for signature, _ in _AUTODETECT_SIGNATURES)
+
+
+def autodetect_asset_type(asset: Asset) -> Asset | None:
+    '''Returns a newly constructed typed Asset subclass instance if
+    `asset`'s raw bytes match a known signature, else None. Reads only the
+    small signature-length prefix (not the full asset, which can be large -
+    aircraft dats, etc) via data_ref.get_data directly.'''
+    prefix = asset.data_ref.get_data(asset.offset_ref, _AUTODETECT_MAX_SIGNATURE_LEN)
+    for signature, asset_class in _AUTODETECT_SIGNATURES:
+        if prefix[:len(signature)] == signature:
+            new_asset = asset_class(name=asset.name, size=asset.size, offset=asset.offset_father,
+                                     data_ref=asset.data_ref, index=asset.index_father, father=asset.father)
+            new_asset.autodetected = True
+            return new_asset
+    return None
+
 
 def main():
     pass

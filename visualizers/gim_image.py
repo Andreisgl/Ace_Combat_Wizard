@@ -38,10 +38,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QImage, QPixmap
 from PySide6.QtWidgets import QLabel, QSizePolicy, QWidget
 
-from asset_classes import Asset, GIM
+from asset_classes import GIM_SIGNATURE, Asset, GIM
 from visualizers.base import Visualizer
 
-GIM_SIGNATURE = b'GIM\x00'
 HEADER_SIZE = 32  # through width/height fields
 PADDING_AFTER_PIXELS = 12
 UNKNOWN_FIELD_SIZE = 4  # position/length only - see module docstring

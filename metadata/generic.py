@@ -8,7 +8,7 @@ def get_generic_fields(asset: Asset) -> list[tuple[str, str]]:
     container_metadata.py) that want to extend rather than replace these.'''
     return [
         ('Name', asset.name),
-        ('Type', type(asset).__name__),
+        ('Type', asset.display_type),
         ('Size', f'{asset.size:,} bytes'),
         ('Offset', str(asset.offset_ref)),
     ]

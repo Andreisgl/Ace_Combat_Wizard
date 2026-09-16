@@ -8,6 +8,7 @@
 testfile
 testfolder/
 projects/
+ignore/
 
 
 # Standard Python ignores:

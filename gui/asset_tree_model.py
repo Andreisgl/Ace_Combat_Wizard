@@ -76,7 +76,7 @@ class AssetTreeModel(QAbstractItemModel):
         if column == 0:
             return asset.name
         if column == 1:
-            return type(asset).__name__
+            return asset.display_type
         if column == 2:
             return str(asset.size)
         if column == 3:
