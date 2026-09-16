@@ -178,7 +178,12 @@ class ACZProject(Project):
 
         # Asset creation:
         self.DATA_PAC = DataPacAsset(name='DATA.PAC', size=os.stat(pac_path).st_size, offset = 0, data_ref=self._DATA_PAC_REF, index=0, father=self, asset_list=self.ACZ_DAT_ASSET_LIST)
-        
+
+        # Give the asset table to DATA.PAC's children
+        for child in self.DATA_PAC.children:
+            if type(child) is DatStage:
+                #child.generate_children()
+                pass
         
         
         pass
@@ -662,18 +667,18 @@ class DatStage(DatFile):
         self.dat_type:str = 'stage'
         self.ace_style = ace_style
 
-    def generate_children(self):
-        '''Generates all children of the stage dat file'''
-        #sizes_index = 0 # index used for for 'sizes_list'
-        ref_list = self.header[1:]
-        for i, offset in enumerate(ref_list):
-            if offset == 0: # If offset is an empty entry skip it. Its offset will be skipped and indexes of the subfiles will be correct.
-                continue
-            name = f'{str(i).zfill( len(str(len(ref_list))))}'
-            asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
-            #self.children.append(asset)
-            self.children[i] = asset
-            #sizes_index += 1
+    #def generate_children(self):
+    #    '''Generates all children of the stage dat file'''
+    #    #sizes_index = 0 # index used for for 'sizes_list'
+    #    ref_list = self.header[1:]
+    #    for i, offset in enumerate(ref_list):
+    #        if offset == 0: # If offset is an empty entry skip it. Its offset will be skipped and indexes of the subfiles will be correct.
+    #            continue
+    #        name = f'{str(i).zfill( len(str(len(ref_list))))}'
+    #        asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
+    #        #self.children.append(asset)
+    #        self.children[i] = asset
+    #        #sizes_index += 1
 
     def __repr__(self):
         return f'STAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
