@@ -135,45 +135,45 @@ class ACZProject(Project):
         # TOC entries with a null (0x00000000) offset are skipped by the game at
         # load time - usually files holding only empty/unused parameters.
         self.ACZ_STAGE_DAT_ASSET_LIST = {
-            '0': {'type': 'dat', 'name': 'Terrain mesh tile placement map'},
-            '1': {'type': 'dat', 'name': 'Mesh tile data placement data'},
-            '2': {'type': 'dat', 'name': 'Unknown - affects tile texture'},
-            '3': {'type': 'dat', 'name': 'Unknown - affects tile texture'},
-            '4': {'type': 'dat', 'name': 'Terrain mesh vertex color data/Texture tile transparency'},
-            '5': {'type': 'dat', 'name': '1024x1024 texture tile placement map'},
-            '6': {'type': 'dat', 'name': '64x64 texture tile placement data'},
-            '7': {'type': 'dat', 'name': 'Terrain texture tile data'},
-            '8': {'type': 'dat', 'name': 'Terrain texture palette data'},
+            '0': {'type': '', 'name': 'Terrain mesh tile placement map'},
+            '1': {'type': '', 'name': 'Mesh tile data placement data'},
+            '2': {'type': '', 'name': 'Unknown - affects tile texture'},
+            '3': {'type': '', 'name': 'Unknown - affects tile texture'},
+            '4': {'type': '', 'name': 'Terrain mesh vertex color data/Texture tile transparency'},
+            '5': {'type': '', 'name': '1024x1024 texture tile placement map'},
+            '6': {'type': '', 'name': '64x64 texture tile placement data'},
+            '7': {'type': '', 'name': 'Terrain texture tile data'},
+            '8': {'type': '', 'name': 'Terrain texture palette data'},
             '9': {'type': 'gim', 'name': 'Unknown texture file'},
             '10': {'type': 'gim', 'name': 'Main light source environment map texture'},
-            '11': {'type': 'dat', 'name': 'Skybox parameters and vertex color configuration'},
+            '11': {'type': '', 'name': 'Skybox parameters and vertex color configuration'},
             '12': {'type': 'gim', 'name': 'Unknown texture file'},
-            '13': {'type': 'dat', 'name': 'Unknown data file - related to stage props (buildings, etc.)'},
-            '14': {'type': 'dat', 'name': 'Unknown data file, related to stage props (buildings, etc.)'},
-            '15': {'type': 'dat', 'name': 'Stage props ID and their coordinates data'},
-            '16': {'type': 'dat', 'name': 'Stage props 3D model data'},
-            '17': {'type': 'dat', 'name': 'Stage props texture data'},
-            '18': {'type': 'dat', 'name': "Stage's graphic configuration file"},
-            '19': {'type': 'dat', 'name': 'Skybox/weather texture files (shadow cloud map/moon/clouds/star/lens flare textures)'},
+            '13': {'type': '', 'name': 'Unknown data file - related to stage props (buildings, etc.)'},
+            '14': {'type': '', 'name': 'Unknown data file, related to stage props (buildings, etc.)'},
+            '15': {'type': '', 'name': 'Stage props ID and their coordinates data'},
+            '16': {'type': '', 'name': 'Stage props 3D model data'},
+            '17': {'type': '', 'name': 'Stage props texture data'},
+            '18': {'type': '', 'name': "Stage's graphic configuration file"},
+            '19': {'type': '', 'name': 'Skybox/weather texture files (shadow cloud map/moon/clouds/star/lens flare textures)'},
             '20': {'type': 'efd', 'name': 'Stage particle effect configuration file'},
             '21': {'type': 'gim', 'name': 'Particle effect texture sheet 1'},
             '22': {'type': 'gim', 'name': 'Particle effect texture sheet 2'},
             '23': {'type': 'gim', 'name': 'Unknown texture'},
             '24': {'type': 'gim', 'name': 'Radar map texture'},
-            '25': {'type': 'dat', 'name': 'Foliage tile placement map ?'},
-            '26': {'type': 'dat', 'name': 'Foliage tile data placement map ?'},
-            '27': {'type': 'dat', 'name': 'Related to foliage data'},
+            '25': {'type': '', 'name': 'Foliage tile placement map ?'},
+            '26': {'type': '', 'name': 'Foliage tile data placement map ?'},
+            '27': {'type': '', 'name': 'Related to foliage data'},
             '28': {'type': 'acm', 'name': 'Tree model file 1'},
             '29': {'type': 'acm', 'name': 'Tree model file 2'},
             '30': {'type': 'acm', 'name': 'Tree model file 3'},
             '31': {'type': 'gim', 'name': 'Tree texture file 1'},
             '32': {'type': 'gim', 'name': 'Tree texture file 2'},
             '33': {'type': 'gim', 'name': 'Tree texture file 3'},
-            '34': {'type': 'dat', 'name': 'Unknown data file'},
-            '35': {'type': 'dat', 'name': 'Unknown data file'},
-            '36': {'type': 'dat', 'name': 'Padding 0x10'},
-            '37': {'type': 'dat', 'name': "Stage's graphic configuration file"},
-            '38': {'type': 'dat', 'name': 'Null or landing stage data'},
+            '34': {'type': '', 'name': 'Unknown data file'},
+            '35': {'type': '', 'name': 'Unknown data file'},
+            '36': {'type': '', 'name': 'Padding 0x10'},
+            '37': {'type': '', 'name': "Stage's graphic configuration file"},
+            '38': {'type': '', 'name': 'Null or landing stage data'},
         }
 
         # Asset creation:
@@ -469,8 +469,9 @@ class Container(Asset): # Abstract
             #   Trying to unpack a '.dat' that has a big number as its 'number of files' header, but does not use this number
             #   for this role might break unpackers, as they think they are parsing very a very long header that does not exist.
             #   We need a more specific nomenclature. I'll try to use '.unk' for unknown file formats from now on.
-            #if asset_type == 'dat': 
-            #    new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            #   My solution for now: Not considering every freaking unknown file as a .dat. Gotta diverge from the docs...
+            if asset_type == 'dat': 
+                new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             if asset_type == 'mission_dat':
                 new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
             elif asset_type == 'stage_dat':
@@ -482,6 +483,8 @@ class Container(Asset): # Abstract
                 new_child = EFD(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'acm':
                 new_child = ACM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == '': # If type is not known yet, make it a generic "Asset", but bring over table data.
+                new_child = Asset(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 
             if new_child != None:
                 self.generate_child(index=int(dat_index), obj=new_child)
