@@ -64,6 +64,14 @@
 
 
 
+1. Repacking (write-back) - **not implemented yet**
+    1. **Known format quirk to respect when this is built:** a `.dat`'s TOC has (at least) two different conventions for marking an empty/zero-length slot, and they are NOT interchangeable:
+        - Top-level stage/mission dats (`DatStage`/`DatMission`, direct children of DATA.PAC): an empty slot's 4-byte offset is the literal `\x00\x00\x00\x00`.
+        - The sub-level dat nested inside a stage's own slot 38 (a `DatStage` reused recursively via `ACZ_STAGE_DAT_ASSET_LIST`, e.g. Glacial Skies' landing-stage data): an empty slot instead repeats the *same offset as the following slot* (never a literal 0). Confirmed while fixing the slot-38 header-visualizer bug (raw offset showed as "same as the next file", size 0, and the slot got unpacked as a real 0-byte child before the fix) - see `DatFile.init_offset_table()`'s `zero_offset_list` comment and `git log` around that fix for the full story.
+        - Current code detects "empty" uniformly by computed size (`sizes_list[i] == 0`), which handles reading both conventions correctly - but a repacker has to go the other way (decide which convention to *write*), so this can't be papered over the same way. Get this wrong and the game likely won't load the rebuilt file.
+        - Open question, not yet decided: whether this nested/substage TOC convention is common to all `DatStage` instances found inside another `DatStage` (i.e. a property of *nesting depth*), or specific to this null/landing-stage slot 38 case - needs more real samples to confirm before repacking is attempted.
+    1. **Open design question:** should this nested-dat convention become its own type (e.g. a `DatSubStage`/`DatSubLevel` class, distinct from `DatStage`) rather than reusing `DatStage` as-is? Leaning toward treating it as a distinct on-disk variant of the `.dat` format (different empty-slot encoding = different format, not just a different table), which would also give repacking a natural place to special-case the write-side logic per class. Not decided/implemented - revisit once more nested-dat samples are found.
+
 1. Miscellaneous
     1. The icon for this program could really be Wizard Squadron's roundel lol
         

@@ -598,7 +598,6 @@ class DatFile(Container):
 
     def init_offset_table(self):
         offset_list = []
-        zero_offset_list = []
         file = self.data_ref
         #with open(dat_path, 'rb') as file:
 
@@ -617,22 +616,19 @@ class DatFile(Container):
         #read = file.get_data(curr_offset, 4)
         number_of_files = int.from_bytes(read, byteorder="little")
         self.header.append(number_of_files)
-        
+
         for offset_index in range(number_of_files):
             #curr_offset += 4
             data = file.read(4)
             #data = file.get_data(curr_offset, 4)
             data_int = int.from_bytes(data, byteorder="little")
-            
+
             if data_int != 0:
                 offset_list.append(data_int)
-            else:
-                zero_offset_list.append(offset_index)
 
             self.header.append(data_int)
-        
+
         self.offset_table = offset_list
-        self.zero_offset_list = zero_offset_list
         #return offset_list, zero_offset_list
 
         ###
@@ -641,7 +637,7 @@ class DatFile(Container):
         ref_table = self.header[1:]
         ref_table.append(self.size)
 
-    
+
         #for i, offset in enumerate(ref_table):
         #    if i == len(ref_table)-1:
         #        break
@@ -659,12 +655,20 @@ class DatFile(Container):
             self.sizes_list.insert(0, aux_size)
             prev_offset = offset
 
+        # A slot is empty whenever its computed size is 0 - not just when its
+        # raw offset is the literal 0x00000000 flag. Some sub-dats (e.g. the
+        # nested stage dat at Glacial Skies' own slot 38) mark a zero-length
+        # slot by repeating the *next* slot's offset instead of writing 0, so
+        # the offset alone can't tell empty from populated; the computed size
+        # (prev_offset - offset, from the pass above) can.
+        self.zero_offset_list = [i for i, sz in enumerate(self.sizes_list) if sz == 0]
+
     def generate_generic_children(self):
         '''Generates generic children'''
         #sizes_index = 0 # index used for for 'sizes_list'
         ref_list = self.header[1:]
         for i, offset in enumerate(ref_list):
-            if offset == 0: # If offset is an empty entry skip it. Its offset will be skipped and indexes of the subfiles will be correct.
+            if self.sizes_list[i] == 0: # Empty slot (literal 0 offset, or a zero-length file sharing the next slot's offset) - skip it. Indexes of the subfiles remain correct.
                 continue
             name = f'{str(i).zfill( len(str(len(ref_list))))}'
             asset = Asset(name=name, offset=offset, size=self.sizes_list[i], data_ref=self.data_ref, index=i, father=self)
