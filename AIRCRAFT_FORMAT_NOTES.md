@@ -31,12 +31,12 @@ Slot `1` of an aircraft's `.dat` is a plain **NOF-based container** - byte-for-b
 | 5 | `ACM` | 2,704 | 2,432 |
 | 6 | `ACM` | 8,192 | 8,064 |
 | 7 | `ACM` | 11,216 | 22,096 |
-| 8 | `GIM` | 263,216 | 263,216 |
-| 9 | `GIM` | 17,456 | 17,456 |
+| 8 | `GIM` - **main aircraft texture** | 263,216 | 263,216 |
+| 9 | `GIM` - **cockpit texture** | 17,456 | 17,456 |
 
-Notable: entries 8 and 9 (the two textures) are **exactly the same size in both aircraft** - these are very likely shared/generic textures (e.g. a common cockpit-glass reflection map or panel decal), not the aircraft's unique livery. The real per-aircraft skin is more likely slot `16` of the top-level aircraft `.dat` (see table below), which does vary slightly in size between the two aircraft (34,032 vs 34,720 bytes).
+Slots 8/9 confirmed by visually inspecting the decoded textures in this tool's own Image visualizer, not just by signature. Entries 8 and 9 being **exactly the same byte size in both aircraft** turned out to be a coincidence of both aircraft sharing the same fixed texture resolution/format for these slots, not shared content - slot 8 is confirmed to be the actual per-aircraft livery texture, despite the size match.
 
-This container is modeled as the new `DatAircraftParts(DatFile)` class. It has **no dedicated per-index sub-table** - its children are fully typed by the existing signature-based autodetection (`autodetect_asset_type` in `asset_classes.py`) alone, since `ACM`/`AHM`/`GIM` are all now confirmed/registered signatures.
+This container is modeled as the new `DatAircraftParts(DatFile)` class, with its own `ACZ_AIRCRAFT_PARTS_ASSET_LIST` sub-table (slots 0-7 still positionally named - which aircraft part each `ACM` mesh is isn't confirmed yet).
 
 ## Slot `03`: the `P3D` hardpoint table
 
@@ -96,7 +96,7 @@ Three `1.0f` constants per record (at `0x2C`, `0x40`, `0x44`) read like a 3-axis
 | 10 | *(unresolved)* | 96 bytes, byte-identical between aircraft, same shape as slot 9 |
 | 11 | *(unresolved)* | 43,376 / 36,080 bytes - varies per aircraft; first 4 bytes look plausibly like a NOF-style count, **unconfirmed** |
 | 12 | *(unresolved)* | 49,376 / 52,240 bytes - varies; same "maybe a container" caveat as slot 11, **unconfirmed** |
-| 13 | `gim` (`GIM`) | 3,376 bytes, byte-identical between aircraft - likely a shared icon/thumbnail texture |
+| 13 | `gim` (`GIM`) | 3,376 bytes, byte-identical in size between aircraft - confirmed by the user: the aircraft silhouette icon shown at the screen's lower-right corner |
 | 14 | *(unresolved)* | 16 bytes, byte-identical between aircraft |
 | 15 | *(unresolved)* | 8,496 bytes, byte-identical between aircraft; same "maybe a container" caveat as 11/12 |
 | 16 | `gim` (`GIM`) | 34,032 / 34,720 bytes - varies slightly per aircraft; likely the real per-aircraft livery texture |

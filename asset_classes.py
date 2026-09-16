@@ -817,22 +817,43 @@ class ACZProject(Project):
             '10': {'type': '', 'name': 'Unknown parameter block (identical across aircraft, same as slot 9)'},
             '11': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
             '12': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
-            '13': {'type': 'gim', 'name': 'Small texture (icon/thumbnail?)'},
+            '13': {'type': 'gim', 'name': "Aircraft silhouette icon (shown at the screen's lower-right corner)"},
             '14': {'type': '', 'name': 'Unknown tiny flag/version block'},
             '15': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
             '16': {'type': 'gim', 'name': 'Main livery texture'},
         }
 
+        # Slot-by-slot contents of a DatAircraftParts container (slot 1 of
+        # ACZ_AIRCRAFT_DAT_ASSET_LIST above) - confirmed this session by
+        # exporting real Gripen/Draken part containers, plus visually
+        # inspecting slots 8/9 in this tool's own Image visualizer (see
+        # AIRCRAFT_FORMAT_NOTES.md). Slots 0-7 are positionally named
+        # ('00'-'07') since we know they're mesh chunks (ACM) but not yet
+        # which part of the aircraft each one is.
+        self.ACZ_AIRCRAFT_PARTS_ASSET_LIST = {
+            '0': {'type': 'acm', 'name': '00'},
+            '1': {'type': 'acm', 'name': '01'},
+            '2': {'type': 'acm', 'name': '02'},
+            '3': {'type': 'acm', 'name': '03'},
+            '4': {'type': 'ahm', 'name': '04'},
+            '5': {'type': 'acm', 'name': '05'},
+            '6': {'type': 'acm', 'name': '06'},
+            '7': {'type': 'acm', 'name': '07'},
+            '8': {'type': 'gim', 'name': 'Main aircraft texture'},
+            '9': {'type': 'gim', 'name': 'Cockpit texture'},
+        }
+
         # Per-class asset tables for this game (see Project.asset_tables /
         # Container._resolve_asset_table). Any DatStage/DatAmbientTextures/
-        # DatAircraft - top-level or nested arbitrarily deep inside another
-        # one - resolves its own table from this automatically at
-        # construction time; no manual propagation needed.
+        # DatAircraft/DatAircraftParts - top-level or nested arbitrarily deep
+        # inside another one - resolves its own table from this
+        # automatically at construction time; no manual propagation needed.
         self.asset_tables = {
             DataPacAsset: self.ACZ_DAT_ASSET_LIST,
             DatStage: self.ACZ_STAGE_DAT_ASSET_LIST,
             DatAmbientTextures: self.ACZ_AMBIENT_TEXTURES_ASSET_LIST,
             DatAircraft: self.ACZ_AIRCRAFT_DAT_ASSET_LIST,
+            DatAircraftParts: self.ACZ_AIRCRAFT_PARTS_ASSET_LIST,
         }
 
         # Asset creation:
@@ -1194,6 +1215,8 @@ class Container(Asset): # Abstract
                 new_child = ACM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'p3d':
                 new_child = P3D(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'ahm':
+                new_child = AHM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == '': # If type is not known yet, make it a generic "Asset", but bring over table data.
                 new_child = Asset(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 
@@ -1435,11 +1458,14 @@ class DatAircraftParts(DatFile):
     a plain NOF-based container whose children are the aircraft's actual
     geometry. Confirmed (via both sample aircraft, see
     AIRCRAFT_FORMAT_NOTES.md) to always hold exactly 10 entries lining up
-    1:1 with slot 3's (P3D) 10 hardpoint records: 7-8 ACM meshes, 1 AHM
-    (unidentified), and 1-2 GIM textures. No dedicated per-index sub-table
-    is registered for this class - its children are already fully typed by
-    signature-based autodetection alone (see autodetect_asset_type), since
-    ACM/AHM/GIM are all confirmed formats.'''
+    1:1 with slot 3's (P3D) 10 hardpoint records: 8 ACM meshes (slots 0-7,
+    still only positionally identified - which aircraft part each one is
+    isn't confirmed yet), 1 AHM (slot 4, unidentified), and 2 GIM textures
+    (slot 8 = the main aircraft texture, slot 9 = a cockpit texture -
+    confirmed by visually inspecting them in this tool's own Image
+    visualizer). Typed via
+    ACZ_AIRCRAFT_PARTS_ASSET_LIST rather than relying on autodetection, now
+    that the slot layout is known.'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.dat_type:str = 'aircraft_parts'
