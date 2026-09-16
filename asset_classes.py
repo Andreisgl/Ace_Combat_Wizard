@@ -754,7 +754,7 @@ class ACZProject(Project):
             '16': {'type': '', 'name': 'Stage props 3D model data'},
             '17': {'type': '', 'name': 'Stage props texture data'},
             '18': {'type': '', 'name': "Stage's graphic configuration file"},
-            '19': {'type': '', 'name': 'Skybox/weather texture files (shadow cloud map/moon/clouds/star/lens flare textures)'},
+            '19': {'type': 'ambient_textures_dat', 'name': 'Skybox/weather texture files (shadow cloud map/moon/clouds/star/lens flare textures)'},
             '20': {'type': 'efd', 'name': 'Stage particle effect configuration file'},
             '21': {'type': 'gim', 'name': 'Particle effect texture sheet 1'},
             '22': {'type': 'gim', 'name': 'Particle effect texture sheet 2'},
@@ -776,13 +776,34 @@ class ACZProject(Project):
             '38': {'type': 'stage_dat', 'name': 'Null or landing stage data'},
         }
 
+        # Slot-by-slot contents of a stage's ambient textures .dat (slot 19
+        # of ACZ_STAGE_DAT_ASSET_LIST) - 12 GIM textures, purpose of each
+        # individual slot not yet identified, so they're named positionally
+        # (00-11) rather than guessed at.
+        self.ACZ_AMBIENT_TEXTURES_ASSET_LIST = {
+            '0': {'type': 'gim', 'name': '00'},
+            '1': {'type': 'gim', 'name': '01'},
+            '2': {'type': 'gim', 'name': '02'},
+            '3': {'type': 'gim', 'name': '03'},
+            '4': {'type': 'gim', 'name': '04'},
+            '5': {'type': 'gim', 'name': '05'},
+            '6': {'type': 'gim', 'name': '06'},
+            '7': {'type': 'gim', 'name': '07'},
+            '8': {'type': 'gim', 'name': '08'},
+            '9': {'type': 'gim', 'name': '09'},
+            '10': {'type': 'gim', 'name': '10'},
+            '11': {'type': 'gim', 'name': '11'},
+        }
+
         # Per-class asset tables for this game (see Project.asset_tables /
-        # Container._resolve_asset_table). Any DatStage - top-level or nested
-        # arbitrarily deep inside another one - resolves its own table from
-        # this automatically at construction time; no manual propagation needed.
+        # Container._resolve_asset_table). Any DatStage/DatAmbientTextures -
+        # top-level or nested arbitrarily deep inside another one - resolves
+        # its own table from this automatically at construction time; no
+        # manual propagation needed.
         self.asset_tables = {
             DataPacAsset: self.ACZ_DAT_ASSET_LIST,
             DatStage: self.ACZ_STAGE_DAT_ASSET_LIST,
+            DatAmbientTextures: self.ACZ_AMBIENT_TEXTURES_ASSET_LIST,
         }
 
         # Asset creation:
@@ -1110,6 +1131,8 @@ class Container(Asset): # Abstract
                 new_child = DatAircraftHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'hangar_dat':
                 new_child = DatHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            elif asset_type == 'ambient_textures_dat':
+                new_child = DatAmbientTextures(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'briefing_terrain_dat':
                 new_child = DatBriefingTerrain(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
             elif asset_type == 'title_card_dat':
@@ -1412,6 +1435,19 @@ class DatAircraftHangar(DatFile):
 
     def __repr__(self):
         return f'AIRCRAFT_HANGAR_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatAmbientTextures(DatFile):
+    '''A stage's ambient (skybox/weather) texture set - shadow cloud map,
+    moon, clouds, star, lens flare, etc. (slot 19 of a stage .dat). Its own
+    12-slot sub-table (ACZ_AMBIENT_TEXTURES_ASSET_LIST) names each GIM
+    positionally (00-11), since which texture is which isn't identified
+    yet.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'ambient_textures'
+
+    def __repr__(self):
+        return f'AMBIENT_TEXTURES_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatHangar(DatFile):
     'A hangar building/environment asset (not per-aircraft).'
