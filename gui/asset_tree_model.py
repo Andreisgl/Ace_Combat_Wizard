@@ -55,6 +55,17 @@ class AssetTreeModel(QAbstractItemModel):
         siblings = list(father.children.values())
         return siblings.index(asset) if asset in siblings else 0
 
+    def index_for(self, asset) -> QModelIndex:
+        '''Builds a QModelIndex for `asset` as it currently sits in the tree.
+        Used to retarget persistent indexes (the tree view's expanded-state
+        and selection bookkeeping) when a child object is swapped for a
+        different one at the same position - e.g. Asset.cast_to - via
+        layoutChanged + changePersistentIndex, instead of a full model
+        reset that would collapse the whole tree.'''
+        if asset is self._root:
+            return self.createIndex(0, 0, self._root)
+        return self.createIndex(self._row_of(asset), 0, asset)
+
     def rowCount(self, parent=QModelIndex()):
         if not parent.isValid():
             return 1

@@ -1013,15 +1013,37 @@ class Asset():
         # than assigned by an asset table - see autodetect_asset_type/
         # Container._autodetect_untyped_children.
         self.autodetected = False
+        # True when this asset's type was manually overridden by the user
+        # via the GUI's "Cast as" feature (see cast_to) for exploratory
+        # analysis - not derived from a table or a signature at all.
+        self.manually_cast = False
 
     @property
     def display_type(self) -> str:
-        '''Type name for display, tagged with '[autodetected]' when this
-        asset's type came from signature-sniffing rather than an asset
-        table, so the user can tell curated typing apart from a guess.'''
+        '''Type name for display, tagged with '[autodetected]' or
+        '[MANUAL CAST]' when this asset's type didn't come from a curated
+        asset table, so the user can tell curated typing apart from a guess
+        or a deliberate temporary override.'''
+        if self.manually_cast:
+            return f'{type(self).__name__}[MANUAL CAST]'
         if self.autodetected:
             return f'{type(self).__name__}[autodetected]'
         return type(self).__name__
+
+    def cast_to(self, target_class: type) -> 'Asset':
+        '''Temporarily reinterprets this asset as `target_class`, for manual
+        exploratory analysis - e.g. a .dat nested inside a container that
+        has no table entry pointing at it, so it was never auto-typed and
+        its own contents can't otherwise be browsed. Not persisted anywhere
+        and not written back to any asset table; it only replaces this
+        object in its parent's children (via the same generate_child hook
+        used by table-driven typing and autodetection), so it reverts
+        automatically the next time the project is reopened.'''
+        new_asset = target_class(name=self.name, size=self.size, offset=self.offset_father,
+                                  data_ref=self.data_ref, index=self.index_father, father=self.father)
+        new_asset.manually_cast = True
+        self.father.generate_child(index=self.index_father, obj=new_asset)
+        return new_asset
 
     @property
     def offset_ref(self) -> int:
@@ -1590,6 +1612,32 @@ def autodetect_asset_type(asset: Asset) -> Asset | None:
             new_asset.autodetected = True
             return new_asset
     return None
+
+
+# Types offered by the GUI's "Cast as" feature (see Asset.cast_to) - every
+# concrete Asset/Container subclass that takes the common (name, size,
+# offset, data_ref, index, father) constructor shape (ace_style, where
+# present, always defaults to ''). DataPacAsset and the abstract Container
+# base are excluded - they don't make sense as a manual cast target.
+CASTABLE_TYPES = (
+    ('DatFile (generic .dat container)', DatFile),
+    ('DatStage', DatStage),
+    ('DatMission', DatMission),
+    ('DatFreeFlight', DatFreeFlight),
+    ('DatAircraft', DatAircraft),
+    ('DatAircraftHangar', DatAircraftHangar),
+    ('DatAircraftParts', DatAircraftParts),
+    ('DatAmbientTextures', DatAmbientTextures),
+    ('DatHangar', DatHangar),
+    ('DatBriefingTerrain', DatBriefingTerrain),
+    ('DatTitleCardTexture', DatTitleCardTexture),
+    ('GIM', GIM),
+    ('P3D', P3D),
+    ('EFD', EFD),
+    ('ACM', ACM),
+    ('AHM', AHM),
+    ('Asset (revert to generic/untyped)', Asset),
+)
 
 
 def main():

@@ -1,4 +1,4 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QKeySequence
 from PySide6.QtWidgets import (
     QButtonGroup,
@@ -13,7 +13,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from asset_classes import Asset
+from asset_classes import CASTABLE_TYPES, Asset
 from metadata import get_metadata_fields
 from visualizers import get_available_visualizers
 
@@ -33,8 +33,17 @@ _MODE_OPTIONS = (
 
 class AssetPanel(QWidget):
     '''Right-hand panel: export actions, a forced-visualization-mode
-    selector, and a pluggable visualization area for whichever asset is
-    currently selected in the tree.'''
+    selector, a manual type-cast control for exploratory analysis, and a
+    pluggable visualization area for whichever asset is currently selected
+    in the tree.'''
+
+    # Emitted with (asset, target_class) when the user requests a "Cast as" -
+    # AssetPanel doesn't perform the cast itself: MainWindow needs to record
+    # the asset's current tree position *before* the cast happens, since
+    # Asset.cast_to swaps the new object into its parent's children
+    # immediately, and looking up the old position afterward would already
+    # be too late (the old object is no longer there to find).
+    cast_requested = Signal(object, object)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -49,6 +58,18 @@ class AssetPanel(QWidget):
 
         button_row = QHBoxLayout()
         button_row.addWidget(self.export_button)
+
+        self.cast_combo = QComboBox()
+        for label, _ in CASTABLE_TYPES:
+            self.cast_combo.addItem(label)
+        self.cast_button = QPushButton('Cast')
+        self.cast_button.setEnabled(False)
+        self.cast_button.clicked.connect(self._on_cast_clicked)
+
+        cast_row = QHBoxLayout()
+        cast_row.addWidget(QLabel('Cast as:'))
+        cast_row.addWidget(self.cast_combo, 1)
+        cast_row.addWidget(self.cast_button)
 
         mode_row = QHBoxLayout()
         self._mode_group = QButtonGroup(self)
@@ -69,6 +90,7 @@ class AssetPanel(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addLayout(button_row)
+        layout.addLayout(cast_row)
         layout.addLayout(mode_row)
         layout.addWidget(self.visualizer_combo)
         layout.addLayout(self._metadata_form)
@@ -88,6 +110,7 @@ class AssetPanel(QWidget):
     def set_asset(self, asset: Asset | None):
         self._current_asset = asset
         self.export_button.setEnabled(asset is not None)
+        self.cast_button.setEnabled(asset is not None)
         self._update_metadata(asset)
 
         self.visualizer_combo.blockSignals(True)
@@ -158,6 +181,17 @@ class AssetPanel(QWidget):
             self._viz_widget.deleteLater()
         self._viz_widget = widget
         self._viz_container.addWidget(widget)
+
+    def _on_cast_clicked(self):
+        if self._current_asset is None:
+            return
+
+        index = self.cast_combo.currentIndex()
+        if index < 0 or index >= len(CASTABLE_TYPES):
+            return
+
+        _, target_class = CASTABLE_TYPES[index]
+        self.cast_requested.emit(self._current_asset, target_class)
 
     def _on_export_clicked(self):
         if self._current_asset is None:
