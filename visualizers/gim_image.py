@@ -31,7 +31,17 @@ that PS2 GS doesn't apply that interleaving, so it's used as-is.
 INDEX4 packs two pixel indices per byte; which nibble is the "first"
 (leftmost) pixel isn't confirmed from any reference - low-nibble-first is
 assumed below as the more common convention. If an INDEX4 image renders
-with pixels swapped in pairs, that assumption is what to flip.'''
+with pixels swapped in pairs, that assumption is what to flip.
+
+Real assets extracted straight from DATA.PAC (as opposed to the small
+tool-converted samples this format was first reverse-engineered from) can
+have trailing 0xCC filler bytes after the palette - confirmed on a real
+256x128 aircraft texture, where the palette landed exactly where the
+INDEX8 formula predicts, followed by nothing but 0xCC out to the slot's
+full declared size. This is almost certainly PAC/DAT-level allocation
+padding (unrelated to the GIM format itself), not part of the image - see
+detect_gim_format, which allows and ignores trailing bytes instead of
+requiring an exact total-size match.'''
 from dataclasses import dataclass
 
 from PySide6.QtCore import Qt
@@ -119,7 +129,12 @@ class GimFormat:
 
 def detect_gim_format(data: bytes) -> GimFormat:
     '''Parses just the header and determines which known layout (INDEX8 or
-    INDEX4) the file matches, by exact total-size arithmetic.'''
+    INDEX4) the file matches. Picks whichever known format's computed
+    palette_end fits within the file with the least leftover slack, rather
+    than requiring an exact total-size match - real extracted assets can
+    have trailing 0xCC allocation padding after the palette (see module
+    docstring), so the true format is "smallest non-negative leftover", not
+    "exact fit".'''
     if len(data) < HEADER_SIZE:
         raise GimDecodeError(f'File too short for a GIM header ({len(data)} bytes)')
 
@@ -131,10 +146,16 @@ def detect_gim_format(data: bytes) -> GimFormat:
     if width <= 0 or height <= 0:
         raise GimDecodeError(f'Invalid dimensions: {width}x{height}')
 
+    best_fit = None
+    best_slack = None
     for palette_entries, packed in _KNOWN_FORMATS:
         fmt = GimFormat(width, height, palette_entries, packed)
-        if fmt.palette_end == len(data):
-            return fmt
+        slack = len(data) - fmt.palette_end
+        if slack >= 0 and (best_slack is None or slack < best_slack):
+            best_fit, best_slack = fmt, slack
+
+    if best_fit is not None:
+        return best_fit
 
     raise GimDecodeError(
         f'Size mismatch: header claims {width}x{height}, but that matches neither a known '
