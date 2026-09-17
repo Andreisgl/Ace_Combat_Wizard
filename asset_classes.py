@@ -815,11 +815,11 @@ class ACZProject(Project):
             '8': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
             '9': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
             '10': {'type': '', 'name': 'Unknown parameter block (identical across aircraft, same as slot 9)'},
-            '11': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
-            '12': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '11': {'type': 'dat', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '12': {'type': 'dat', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
             '13': {'type': 'gim', 'name': "Aircraft silhouette icon (shown at the screen's lower-right corner)"},
             '14': {'type': '', 'name': 'Unknown tiny flag/version block'},
-            '15': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '15': {'type': 'dat', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
             '16': {'type': 'gim', 'name': 'Special weapon icons'},
         }
 
