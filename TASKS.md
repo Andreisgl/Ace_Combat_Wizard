@@ -80,6 +80,9 @@
         - **Distinct from the earlier-rejected idea of a general "is this really a valid .dat" plausibility check** - that's still not implemented, and for the same reason as before (an in-bounds NOF/offsets can still describe the wrong data, unprovable from bytes alone). What's implemented here only ever rejects headers that are *impossible* (physically can't fit), never ones that are merely *unlikely*.
         - `Container.generate_children()`'s table-driven dispatch catches `DatHeaderError` and falls back to leaving the slot as a generic `Asset` (with a console warning) instead of letting one bad table entry crash the whole project load. The GUI's manual "Cast as" feature (see below) has its own separate try/except showing a dialog instead.
 
+1. Documentation
+    1. **README.md needs CLI usage instructions** - `cli.py` (invoked via `python gui_main.py --cli ...`) isn't documented anywhere yet: the `ls`/`hex`/`cast`/`export` commands, the `PATH` addressing scheme (slash-separated `children` dict indices, e.g. `3/19/9`), and the chainable `--cast PATH:TYPE` flag all need a real walkthrough with examples so it's usable without re-deriving it from `cli.py`'s own `--help` output.
+
 1. Miscellaneous
     1. The icon for this program could really be Wizard Squadron's roundel lol
         
