@@ -677,11 +677,13 @@ class ACZProject(Project):
             '941': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle (PIXY)'},
             '946': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (PJ)'},
             #
-            # Named but structurally unverified - carried over for
-            # documentation without a dedicated parsed type (see docs/TASKS.md).
-            '1160': {'type': '', 'name': 'MPBM hangar assets'},
-            '1170': {'type': '', 'name': 'TLS unit hangar assets (ADFX-01)'},
-            '1171': {'type': '', 'name': 'TLS unit hangar assets (ADF-01)'},
+            # Confirmed via CLI casting to share DatAircraftHangar's own
+            # wrapper shape (see docs/ACM_FORMAT_NOTES.md's "Hangar aircraft
+            # mesh packages" section) - a single child that is itself the
+            # 10-slot hangar mesh/texture package (ACZ_HANGAR_PACKAGE_ASSET_LIST).
+            '1160': {'type': 'aircraft_hangar_dat', 'name': 'MPBM hangar assets'},
+            '1170': {'type': 'aircraft_hangar_dat', 'name': 'TLS unit hangar assets (ADFX-01)'},
+            '1171': {'type': 'aircraft_hangar_dat', 'name': 'TLS unit hangar assets (ADF-01)'},
             '1448': {'type': '', 'name': 'Hangar aircraft prices and satellite-plot chart parameters'},
             #
             # Per-mission briefing digitized terrain assets.
@@ -900,6 +902,59 @@ class ACZProject(Project):
             '7': {'type': '', 'name': 'Unknown file (related to slot 6)'},
         }
 
+        # DatAircraftHangar's own single child (index '0') is itself a
+        # plain .dat wrapper around the real hangar mesh/texture package -
+        # confirmed via CLI casting on Draken (720) plus the MPBM/TLS
+        # assets (1160/1170/1171), see docs/ACM_FORMAT_NOTES.md. Applies to
+        # every aircraft_hangar_dat slot (~250 of them, one per livery).
+        self.ACZ_AIRCRAFT_HANGAR_ASSET_LIST = {
+            '0': {'type': 'hangar_package_dat', 'name': 'Hangar mesh/texture package'},
+        }
+
+        # Slot-by-slot contents of a hangar_package_dat (the single child of
+        # every DatAircraftHangar). Confirmed via CLI casting across many
+        # real samples (Draken, Gripen, Typhoon, Tornado GR4, F-4E, F-15C,
+        # MPBM, TLS ADFX-01, TLS ADF-01 - see docs/ACM_FORMAT_NOTES.md):
+        # slots 0/2/3 are always ACM, 6-8 are always GIM. Slots 1/4/9 are
+        # always a small placeholder/unknown Asset in every sample. Slot 5
+        # is left untyped deliberately - it's a real ACM (a fuel tank
+        # model, confirmed size-matched against Draken's own flight-model
+        # fuel tank) only for Draken among every sample checked; every
+        # other aircraft so far, including other "standard" ones, has just
+        # a 16-byte placeholder there. Not simply a standard-vs-MPBM/TLS
+        # split as first assumed - looks tied to which specific real-world
+        # aircraft actually carries an external drop tank, not a broad
+        # category. Relying on autodetection lets every case resolve
+        # correctly regardless.
+        self.ACZ_HANGAR_PACKAGE_ASSET_LIST = {
+            '0': {'type': 'acm', 'name': 'Main hangar-display model'},
+            '1': {'type': '', 'name': 'Unknown file (16-byte placeholder in every sample)'},
+            '2': {'type': 'acm', 'name': 'Secondary hangar-display model'},
+            '3': {'type': 'acm', 'name': 'Hangar-display model'},
+            '4': {'type': '', 'name': 'Unknown file (16-byte placeholder in every sample)'},
+            '5': {'type': '', 'name': 'Fuel tank model (only present on some aircraft, e.g. Draken - a 16-byte placeholder otherwise)'},
+            '6': {'type': 'gim', 'name': 'Hangar texture'},
+            '7': {'type': 'gim', 'name': 'Hangar texture'},
+            '8': {'type': 'gim', 'name': 'Hangar texture'},
+            '9': {'type': '', 'name': 'Unknown file - likely inert padding (0xCC-filled in every sample)'},
+        }
+
+        # Slot-by-slot contents of a DatBriefingTerrain (per-mission
+        # briefing "digitized terrain" asset). Only slot 2 is typed - it's
+        # a plain .dat wrapper holding 5 ACM meshes + 3 GIM textures,
+        # confirmed via CLI casting on mission M01 (1430/2) and
+        # size-matched as byte-identical across 5 missions checked
+        # (M01/M02/M06/M11/M16) - see docs/ACM_FORMAT_NOTES.md. Likely a
+        # shared/generic wireframe or UI package reused by every mission's
+        # briefing screen, not the per-mission terrain data itself (that's
+        # suspected to live in slots 6-8, still unresolved). Slot 1 and
+        # slot 6 were both tried as .dat casts and correctly rejected by
+        # DatHeaderError - they are genuinely not containers, left
+        # untyped/autodetected like every other slot here.
+        self.ACZ_BRIEFING_TERRAIN_ASSET_LIST = {
+            '2': {'type': 'dat', 'name': 'Shared briefing wireframe/UI mesh package'},
+        }
+
         # Per-class asset tables for this game (see Project.asset_tables /
         # Container._resolve_asset_table). Any DatStage/DatAmbientTextures/
         # DatAircraft/DatAircraftParts - top-level or nested arbitrarily deep
@@ -914,10 +969,13 @@ class ACZProject(Project):
             DatAmbientTextures: self.ACZ_AMBIENT_TEXTURES_ASSET_LIST,
             DatAircraft: self.ACZ_AIRCRAFT_DAT_ASSET_LIST,
             DatAircraftParts: self.ACZ_AIRCRAFT_PARTS_ASSET_LIST,
+            DatAircraftHangar: self.ACZ_AIRCRAFT_HANGAR_ASSET_LIST,
+            DatHangarPackage: self.ACZ_HANGAR_PACKAGE_ASSET_LIST,
             DatSpwPackage: self.ACZ_SPW_PACKAGE_ASSET_LIST,
             DatSpwLodSet: self.ACZ_SPW_LOD_SET_ASSET_LIST,
             DatLowPolyAircraft: self.ACZ_LOW_POLY_AIRCRAFT_ASSET_LIST,
             DatMissileSpwHudTextures: self.ACZ_MISSILE_SPW_HUD_ASSET_LIST,
+            DatBriefingTerrain: self.ACZ_BRIEFING_TERRAIN_ASSET_LIST,
         }
 
         # Asset creation:
@@ -1283,6 +1341,8 @@ class Container(Asset): # Abstract
                     new_child = DatAircraft(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'aircraft_hangar_dat':
                     new_child = DatAircraftHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'hangar_package_dat':
+                    new_child = DatHangarPackage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'aircraft_parts_dat':
                     new_child = DatAircraftParts(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'hangar_dat':
@@ -1606,6 +1666,18 @@ class DatAircraftHangar(DatFile):
 
     def __repr__(self):
         return f'AIRCRAFT_HANGAR_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatHangarPackage(DatFile):
+    '''The single child of a DatAircraftHangar (see ACZ_AIRCRAFT_HANGAR_ASSET_LIST) -
+    a plain NOF-based container holding the actual hangar-display mesh/texture
+    set: 3-4 ACM models, 3 GIM textures, and a few small placeholder/unknown
+    slots. See ACZ_HANGAR_PACKAGE_ASSET_LIST and docs/ACM_FORMAT_NOTES.md.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'hangar_package'
+
+    def __repr__(self):
+        return f'HANGAR_PACKAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatAircraftParts(DatFile):
     '''Slot 1 of a flyable aircraft's .dat (see ACZ_AIRCRAFT_DAT_ASSET_LIST) -
