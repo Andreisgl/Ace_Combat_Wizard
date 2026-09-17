@@ -45,7 +45,7 @@ Matches our existing table closely. Notable new information:
 | 13 | Aircraft silhouette icon (lower-right corner) | Aircraft HUD texture file | Compatible - d0g's is a generic label, ours is the specific confirmed usage (from your own visual check via the Image visualizer) |
 | 14 | Unknown tiny flag/version block | Unknown file | Still unresolved by both sources |
 | 15 | Unknown data - possibly a small container | Missile/SpW HUD texture package - 8 entries: Missile HUD + 3x SpW HUD textures, each paired with an "unknown, related to file above" companion | New, confirms our "possibly a container" guess (8 entries in 8,496 bytes ≈ ~1,062 bytes/entry, plausible for small icons) |
-| 16 | Special weapon icons (confirmed via Image visualizer: 3 selection icons + 3 weapon-dynamic-type icons) | "SpW HUD texture (refueling mode)" | **Discrepancy, not a clean match** - see `OPEN_DISCREPANCIES.md` |
+| 16 | Special weapon selection icons (rearm/refuel weapon-selection screen): 3 selection icons + 3 weapon-dynamic-type icons | "SpW HUD texture (refueling mode)" | **Resolved - d0g was right.** Confirmed: these are the icons for the weapon-selection screen shown when rearming at a base ("refueling mode"). Was tracked as a discrepancy in `OPEN_DISCREPANCIES.md` until confirmed. |
 
 ### Aircraft model package (slot 1 / `DatAircraftParts`, `ACZ_AIRCRAFT_PARTS_ASSET_LIST`)
 

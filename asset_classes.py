@@ -751,8 +751,8 @@ class ACZProject(Project):
             '13': {'type': '', 'name': 'Unknown data file - related to stage props (buildings, etc.)'},
             '14': {'type': '', 'name': 'Unknown data file, related to stage props (buildings, etc.)'},
             '15': {'type': '', 'name': 'Stage props ID and their coordinates data'},
-            '16': {'type': '', 'name': 'Stage props 3D model data'},
-            '17': {'type': '', 'name': 'Stage props texture data'},
+            '16': {'type': 'stage_props_dat', 'name': 'Stage props 3D model data'},
+            '17': {'type': 'stage_prop_textures_dat', 'name': 'Stage props texture data'},
             '18': {'type': '', 'name': "Stage's graphic configuration file"},
             '19': {'type': 'ambient_textures_dat', 'name': 'Skybox/weather texture files (shadow cloud map/moon/clouds/star/lens flare textures)'},
             '20': {'type': 'efd', 'name': 'Stage particle effect configuration file'},
@@ -777,70 +777,127 @@ class ACZProject(Project):
         }
 
         # Slot-by-slot contents of a stage's ambient textures .dat (slot 19
-        # of ACZ_STAGE_DAT_ASSET_LIST) - 12 GIM textures, purpose of each
-        # individual slot not yet identified, so they're named positionally
-        # (00-11) rather than guessed at.
+        # of ACZ_STAGE_DAT_ASSET_LIST) - 12 GIM textures. Names per
+        # death_the_d0g's acz_data_struc.md (see docs/DAT_STRUCTURE_FINDINGS.md).
         self.ACZ_AMBIENT_TEXTURES_ASSET_LIST = {
-            '0': {'type': 'gim', 'name': '00'},
-            '1': {'type': 'gim', 'name': '01'},
-            '2': {'type': 'gim', 'name': '02'},
-            '3': {'type': 'gim', 'name': '03'},
-            '4': {'type': 'gim', 'name': '04'},
-            '5': {'type': 'gim', 'name': '05'},
-            '6': {'type': 'gim', 'name': '06'},
-            '7': {'type': 'gim', 'name': '07'},
-            '8': {'type': 'gim', 'name': '08'},
-            '9': {'type': 'gim', 'name': '09'},
-            '10': {'type': 'gim', 'name': '10'},
-            '11': {'type': 'gim', 'name': '11'},
+            '0': {'type': 'gim', 'name': 'Sun texture 1'},
+            '1': {'type': 'gim', 'name': 'Sun texture 2'},
+            '2': {'type': 'gim', 'name': 'Sun texture 3'},
+            '3': {'type': 'gim', 'name': 'Sun texture 4'},
+            '4': {'type': 'gim', 'name': 'Moon texture'},
+            '5': {'type': 'gim', 'name': 'Star texture'},
+            '6': {'type': 'gim', 'name': 'Cloud map texture'},
+            '7': {'type': 'gim', 'name': 'Background cloud texture'},
+            '8': {'type': 'gim', 'name': 'Cloud texture'},
+            '9': {'type': 'gim', 'name': 'Unknown texture'},
+            '10': {'type': 'gim', 'name': 'Lens flare texture'},
+            '11': {'type': 'gim', 'name': 'Unknown texture'},
         }
 
-        # Slot-by-slot contents of a flyable aircraft's .dat, reverse-
-        # engineered this session by exporting and hex-analyzing real
-        # Gripen/Draken sub-files - see docs/AIRCRAFT_FORMAT_NOTES.md for the
-        # full evidence. type:'' entries are honestly unresolved (matches
-        # this table's own convention elsewhere), not guessed at. Only
-        # registered for DatAircraft, not DatAircraftHangar - the hangar-
-        # quality variant's internal layout hasn't been checked and may
-        # differ.
+        # Slot-by-slot contents of a flyable aircraft's .dat. Names below are
+        # per death_the_d0g's acz_data_struc.md except where noted otherwise -
+        # see docs/DAT_STRUCTURE_FINDINGS.md for the full comparison against
+        # this session's own reverse-engineering, and
+        # docs/OPEN_DISCREPANCIES.md for the slot left unchanged because
+        # d0g's doc actively conflicts with something we'd already confirmed
+        # (slot 3 - deliberately NOT touched here). Only registered for
+        # DatAircraft, not DatAircraftHangar - the hangar-quality variant's
+        # internal layout is confirmed different (see
+        # docs/DAT_STRUCTURE_FINDINGS.md's Hangar aircraft section).
         self.ACZ_AIRCRAFT_DAT_ASSET_LIST = {
-            '0': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '0': {'type': '', 'name': 'Aircraft movement stat parameter file'},
             '1': {'type': 'aircraft_parts_dat', 'name': 'Part geometry (ACM meshes/GIM textures, 10 entries matching the P3D hardpoint table)'},
-            '2': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
+            '2': {'type': '', 'name': 'Camera coordinate placement file'},
             '3': {'type': 'p3d', 'name': 'Hardpoint & special weapon attachment table (10 records)'},
-            '4': {'type': '', 'name': "Raw data blob (size cross-referenced by slot 3's header)"},
-            '5': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
-            '6': {'type': '', 'name': 'Unknown parameter block (contains float values - hangar display data?)'},
-            '7': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
-            '8': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
-            '9': {'type': '', 'name': 'Unknown parameter block (identical across aircraft)'},
-            '10': {'type': '', 'name': 'Unknown parameter block (identical across aircraft, same as slot 9)'},
-            '11': {'type': 'dat', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
-            '12': {'type': 'dat', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
+            '4': {'type': '', 'name': "Engine sound effect file (size cross-referenced by slot 3's header)"},
+            '5': {'type': '', 'name': 'Unknown file'},
+            '6': {'type': '', 'name': 'Joint movement limit file'},
+            '7': {'type': '', 'name': 'Properties file 1'},
+            '8': {'type': '', 'name': 'Properties file 2'},
+            '9': {'type': '', 'name': 'GUN parameter file'},
+            '10': {'type': '', 'name': 'MISSILE parameter file'},
+            '11': {'type': 'spw_package_dat', 'name': 'Special Weapon model and parameter asset package'},
+            '12': {'type': 'low_poly_aircraft_dat', 'name': 'Low-poly aircraft asset package'},
             '13': {'type': 'gim', 'name': "Aircraft silhouette icon (shown at the screen's lower-right corner)"},
-            '14': {'type': '', 'name': 'Unknown tiny flag/version block'},
-            '15': {'type': 'dat', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
-            '16': {'type': 'gim', 'name': 'Special weapon icons'},
+            '14': {'type': '', 'name': 'Unknown file'},
+            '15': {'type': 'missile_spw_hud_dat', 'name': 'Missile/SpW HUD texture asset package'},
+            '16': {'type': 'gim', 'name': 'Special weapon selection icons (rearm/refuel weapon-selection screen)'},
         }
 
         # Slot-by-slot contents of a DatAircraftParts container (slot 1 of
-        # ACZ_AIRCRAFT_DAT_ASSET_LIST above) - confirmed this session by
-        # exporting real Gripen/Draken part containers, plus visually
-        # inspecting slots 8/9 in this tool's own Image visualizer (see
-        # docs/AIRCRAFT_FORMAT_NOTES.md). Slots 0-7 are positionally named
-        # ('00'-'07') since we know they're mesh chunks (ACM) but not yet
-        # which part of the aircraft each one is.
+        # ACZ_AIRCRAFT_DAT_ASSET_LIST above). Names per death_the_d0g's
+        # acz_data_struc.md - see docs/DAT_STRUCTURE_FINDINGS.md. Slot 4
+        # (AHM)'s "dynamic shadow" purpose is now known, but its internal
+        # structure still isn't - see the AHM class docstring.
         self.ACZ_AIRCRAFT_PARTS_ASSET_LIST = {
-            '0': {'type': 'acm', 'name': '00'},
-            '1': {'type': 'acm', 'name': '01'},
-            '2': {'type': 'acm', 'name': '02'},
-            '3': {'type': 'acm', 'name': '03'},
-            '4': {'type': 'ahm', 'name': '04'},
-            '5': {'type': 'acm', 'name': '05'},
-            '6': {'type': 'acm', 'name': '06'},
-            '7': {'type': 'acm', 'name': '07'},
-            '8': {'type': 'gim', 'name': 'Main aircraft texture'},
+            '0': {'type': 'acm', 'name': 'Airframe model'},
+            '1': {'type': 'acm', 'name': 'Landing gear model'},
+            '2': {'type': 'acm', 'name': 'Cockpit model'},
+            '3': {'type': 'acm', 'name': 'Cockpit model (back view)'},
+            '4': {'type': 'ahm', 'name': "Dynamic shadow data"},
+            '5': {'type': 'acm', 'name': 'Unknown model file'},
+            '6': {'type': 'acm', 'name': 'Low-poly model version of the aircraft'},
+            '7': {'type': 'acm', 'name': 'Fuel tank model'},
+            '8': {'type': 'gim', 'name': 'Main aircraft texture (512x512)'},
             '9': {'type': 'gim', 'name': 'Cockpit texture'},
+        }
+
+        # Slot-by-slot contents of an aircraft's Special Weapon package
+        # (slot 11 of ACZ_AIRCRAFT_DAT_ASSET_LIST) - 3 sub-folders, one per
+        # SpW option. Directly confirmed this session (not just from d0g's
+        # doc): draken/11/0, dug into deeply while diagnosing a DatFile
+        # crash, is exactly this shape - see docs/AIRCRAFT_FORMAT_NOTES.md.
+        self.ACZ_SPW_PACKAGE_ASSET_LIST = {
+            '0': {'type': 'spw_lod_set_dat', 'name': 'Special Weapon 1'},
+            '1': {'type': 'spw_lod_set_dat', 'name': 'Special Weapon 2'},
+            '2': {'type': 'spw_lod_set_dat', 'name': 'Special Weapon 3'},
+        }
+
+        # Slot-by-slot contents of one Special Weapon's own LOD set (each of
+        # ACZ_SPW_PACKAGE_ASSET_LIST's 3 children) - a LOD parameter file
+        # plus 3 ACM models of decreasing detail. Matches the confirmed
+        # structure of draken/11/0 (16-byte float header, then 3 ACM
+        # children of decreasing size).
+        self.ACZ_SPW_LOD_SET_ASSET_LIST = {
+            '0': {'type': '', 'name': 'Model LoD parameter file'},
+            '1': {'type': 'acm', 'name': 'SpW model file (LoD level 0)'},
+            '2': {'type': 'acm', 'name': 'SpW model file (LoD level 1)'},
+            '3': {'type': 'acm', 'name': 'SpW model file (LoD level 2)'},
+        }
+
+        # Slot-by-slot contents of an aircraft's low-poly asset package
+        # (slot 12 of ACZ_AIRCRAFT_DAT_ASSET_LIST). Per death_the_d0g's
+        # acz_data_struc.md - not independently verified via hex/CLI this
+        # session, unlike the SpW package above.
+        self.ACZ_LOW_POLY_AIRCRAFT_ASSET_LIST = {
+            '0': {'type': '', 'name': 'Model LoD parameter file'},
+            '1': {'type': 'acm', 'name': 'Aircraft model (LoD level 0)'},
+            '2': {'type': 'acm', 'name': 'Aircraft model (LoD level 1)'},
+            '3': {'type': 'acm', 'name': 'Aircraft model (LoD level 2)'},
+            '4': {'type': 'acm', 'name': 'Aircraft model (LoD level 3)'},
+            '5': {'type': 'acm', 'name': 'Aircraft model (LoD level 4)'},
+            '6': {'type': 'gim', 'name': 'Unknown texture file'},
+            '7': {'type': 'gim', 'name': 'Unknown texture file'},
+            '8': {'type': 'gim', 'name': 'Unknown texture file'},
+            '9': {'type': 'gim', 'name': 'Aircraft texture file (128x128)'},
+            '10': {'type': 'gim', 'name': 'Unknown texture file'},
+        }
+
+        # Slot-by-slot contents of an aircraft's Missile/SpW HUD texture
+        # package (slot 15 of ACZ_AIRCRAFT_DAT_ASSET_LIST). Per
+        # death_the_d0g's acz_data_struc.md - not independently verified
+        # this session. The odd-numbered slots are documented only as
+        # "unknown, related to the file above" (possibly an alpha mask or
+        # palette companion to each HUD texture).
+        self.ACZ_MISSILE_SPW_HUD_ASSET_LIST = {
+            '0': {'type': 'gim', 'name': 'Missile HUD texture'},
+            '1': {'type': '', 'name': 'Unknown file (related to slot 0)'},
+            '2': {'type': 'gim', 'name': 'SpW 1 HUD texture'},
+            '3': {'type': '', 'name': 'Unknown file (related to slot 2)'},
+            '4': {'type': 'gim', 'name': 'SpW 2 HUD texture'},
+            '5': {'type': '', 'name': 'Unknown file (related to slot 4)'},
+            '6': {'type': 'gim', 'name': 'SpW 3 HUD texture'},
+            '7': {'type': '', 'name': 'Unknown file (related to slot 6)'},
         }
 
         # Per-class asset tables for this game (see Project.asset_tables /
@@ -848,12 +905,19 @@ class ACZProject(Project):
         # DatAircraft/DatAircraftParts - top-level or nested arbitrarily deep
         # inside another one - resolves its own table from this
         # automatically at construction time; no manual propagation needed.
+        # DatStageProps/DatStagePropTextures have no entry here deliberately
+        # - their child count/order isn't documented, so their children are
+        # typed by autodetection alone (see Container._autodetect_untyped_children).
         self.asset_tables = {
             DataPacAsset: self.ACZ_DAT_ASSET_LIST,
             DatStage: self.ACZ_STAGE_DAT_ASSET_LIST,
             DatAmbientTextures: self.ACZ_AMBIENT_TEXTURES_ASSET_LIST,
             DatAircraft: self.ACZ_AIRCRAFT_DAT_ASSET_LIST,
             DatAircraftParts: self.ACZ_AIRCRAFT_PARTS_ASSET_LIST,
+            DatSpwPackage: self.ACZ_SPW_PACKAGE_ASSET_LIST,
+            DatSpwLodSet: self.ACZ_SPW_LOD_SET_ASSET_LIST,
+            DatLowPolyAircraft: self.ACZ_LOW_POLY_AIRCRAFT_ASSET_LIST,
+            DatMissileSpwHudTextures: self.ACZ_MISSILE_SPW_HUD_ASSET_LIST,
         }
 
         # Asset creation:
@@ -1225,6 +1289,18 @@ class Container(Asset): # Abstract
                     new_child = DatHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'ambient_textures_dat':
                     new_child = DatAmbientTextures(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'stage_props_dat':
+                    new_child = DatStageProps(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'stage_prop_textures_dat':
+                    new_child = DatStagePropTextures(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'spw_package_dat':
+                    new_child = DatSpwPackage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'spw_lod_set_dat':
+                    new_child = DatSpwLodSet(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'low_poly_aircraft_dat':
+                    new_child = DatLowPolyAircraft(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'missile_spw_hud_dat':
+                    new_child = DatMissileSpwHudTextures(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'briefing_terrain_dat':
                     new_child = DatBriefingTerrain(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'title_card_dat':
@@ -1534,16 +1610,10 @@ class DatAircraftHangar(DatFile):
 class DatAircraftParts(DatFile):
     '''Slot 1 of a flyable aircraft's .dat (see ACZ_AIRCRAFT_DAT_ASSET_LIST) -
     a plain NOF-based container whose children are the aircraft's actual
-    geometry. Confirmed (via both sample aircraft, see
-    docs/AIRCRAFT_FORMAT_NOTES.md) to always hold exactly 10 entries lining up
-    1:1 with slot 3's (P3D) 10 hardpoint records: 8 ACM meshes (slots 0-7,
-    still only positionally identified - which aircraft part each one is
-    isn't confirmed yet), 1 AHM (slot 4, unidentified), and 2 GIM textures
-    (slot 8 = the main aircraft texture, slot 9 = a cockpit texture -
-    confirmed by visually inspecting them in this tool's own Image
-    visualizer). Typed via
-    ACZ_AIRCRAFT_PARTS_ASSET_LIST rather than relying on autodetection, now
-    that the slot layout is known.'''
+    geometry: 10 entries (per death_the_d0g's acz_data_struc.md, see
+    docs/DAT_STRUCTURE_FINDINGS.md) - airframe, landing gear, cockpit
+    (front/back), a shadow file (AHM, slot 4), an unknown model, a low-poly
+    model, a fuel tank model, and 2 textures (main livery + cockpit).'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.dat_type:str = 'aircraft_parts'
@@ -1552,11 +1622,10 @@ class DatAircraftParts(DatFile):
         return f'AIRCRAFT_PARTS_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatAmbientTextures(DatFile):
-    '''A stage's ambient (skybox/weather) texture set - shadow cloud map,
-    moon, clouds, star, lens flare, etc. (slot 19 of a stage .dat). Its own
-    12-slot sub-table (ACZ_AMBIENT_TEXTURES_ASSET_LIST) names each GIM
-    positionally (00-11), since which texture is which isn't identified
-    yet.'''
+    '''A stage's ambient (skybox/weather) texture set - 4 sun textures, moon,
+    star, cloud map, background cloud, cloud, 2 unknowns, and lens flare
+    (slot 19 of a stage .dat; names per death_the_d0g's acz_data_struc.md,
+    see docs/DAT_STRUCTURE_FINDINGS.md).'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
         self.dat_type:str = 'ambient_textures'
@@ -1572,6 +1641,76 @@ class DatHangar(DatFile):
 
     def __repr__(self):
         return f'HANGAR_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatStageProps(DatFile):
+    '''A stage's prop 3D models (slot 16 of a stage .dat) - a container of
+    .acm models, per death_the_d0g's acz_data_struc.md. Exact child
+    count/order isn't documented, so no per-index sub-table is registered -
+    children are typed by autodetection alone (see
+    Container._autodetect_untyped_children).'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'stage_props'
+
+    def __repr__(self):
+        return f'STAGE_PROPS_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatStagePropTextures(DatFile):
+    '''A stage's prop textures (slot 17 of a stage .dat) - a container of
+    .gim textures for DatStageProps' models. Same "no sub-table, rely on
+    autodetection" reasoning as DatStageProps.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'stage_prop_textures'
+
+    def __repr__(self):
+        return f'STAGE_PROP_TEXTURES_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatSpwPackage(DatFile):
+    '''An aircraft's Special Weapon model/parameter package (slot 11 of
+    ACZ_AIRCRAFT_DAT_ASSET_LIST) - 3 sub-folders, one per SpW option, each a
+    DatSpwLodSet. Directly confirmed this session (draken/11), not just
+    from death_the_d0g's doc - see docs/AIRCRAFT_FORMAT_NOTES.md.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'spw_package'
+
+    def __repr__(self):
+        return f'SPW_PACKAGE_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatSpwLodSet(DatFile):
+    '''One Special Weapon's own LOD set (each child of DatSpwPackage) - a
+    model LoD parameter file plus 3 ACM models of decreasing detail.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'spw_lod_set'
+
+    def __repr__(self):
+        return f'SPW_LOD_SET_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatLowPolyAircraft(DatFile):
+    '''An aircraft's low-poly asset package (slot 12 of
+    ACZ_AIRCRAFT_DAT_ASSET_LIST) - a model LoD parameter file, 5 ACM LODs,
+    and 5 GIM textures. Per death_the_d0g's acz_data_struc.md - not
+    independently verified via hex/CLI this session.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'low_poly_aircraft'
+
+    def __repr__(self):
+        return f'LOW_POLY_AIRCRAFT_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+
+class DatMissileSpwHudTextures(DatFile):
+    '''An aircraft's Missile/SpW HUD texture package (slot 15 of
+    ACZ_AIRCRAFT_DAT_ASSET_LIST) - 4 GIM HUD textures (missile + 3 SpW),
+    each paired with an unidentified companion file. Per death_the_d0g's
+    acz_data_struc.md - not independently verified this session.'''
+    def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
+        super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+        self.dat_type:str = 'missile_spw_hud'
+
+    def __repr__(self):
+        return f'MISSILE_SPW_HUD_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatBriefingTerrain(DatFile):
     'A per-mission briefing digitized terrain asset.'
@@ -1624,11 +1763,13 @@ class ACM(Asset):
             return f'ACM | ({self.index_father})_{self.name} - size={self.size} - offset={self.offset_father}'
 
 class AHM(Asset):
-    '''Unidentified aircraft-part format, confirmed by signature only. Found
-    nested inside a DatAircraftParts container at a fixed slot (index 4 of
-    10) alongside 7 ACM meshes and 2 GIM textures, in both sample aircraft
-    checked (Gripen, Draken) - see docs/AIRCRAFT_FORMAT_NOTES.md. Purpose and
-    internal structure not yet reverse-engineered.'''
+    '''Aircraft-part format related to the aircraft's dynamic shadow (per
+    death_the_d0g's acz_data_struc.md - see docs/DAT_STRUCTURE_FINDINGS.md).
+    Found nested inside a DatAircraftParts container at a fixed slot (index
+    4 of 10) alongside 7 ACM meshes and 2 GIM textures, in both sample
+    aircraft checked (Gripen, Draken) - see docs/AIRCRAFT_FORMAT_NOTES.md.
+    Internal byte structure still not reverse-engineered - only the
+    signature and general purpose are known.'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
             super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
 

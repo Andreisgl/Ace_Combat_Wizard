@@ -99,7 +99,7 @@ Three `1.0f` constants per record (at `0x2C`, `0x40`, `0x44`) read like a 3-axis
 | 13 | `gim` (`GIM`) | 3,376 bytes, byte-identical in size between aircraft - confirmed by the user: the aircraft silhouette icon shown at the screen's lower-right corner |
 | 14 | *(unresolved)* | 16 bytes, byte-identical between aircraft |
 | 15 | *(unresolved)* | 8,496 bytes, byte-identical between aircraft; same "maybe a container" caveat as 11/12 |
-| 16 | `gim` (`GIM`), name "Special weapon icons" | 34,032 / 34,720 bytes - varies slightly per aircraft. Confirmed via the tool's Image visualizer: depicts the 3 special-weapon icons shown in the weapon-selection menu, plus 3 more underneath showing each weapon's dynamic/type (e.g. semi-active, unguided bomb, rocket, for this aircraft) - independent confirmation of the "3 special weapons" split already suspected from `P3D`'s 3-vs-7 record grouping above |
+| 16 | `gim` (`GIM`), name "Special weapon selection icons (rearm/refuel weapon-selection screen)" | 34,032 / 34,720 bytes - varies slightly per aircraft. Confirmed via the tool's Image visualizer plus d0g's documentation and direct confirmation: depicts the 3 special-weapon icons shown on the rearm/refuel weapon-selection screen, plus 3 more underneath showing each weapon's dynamic/type (e.g. semi-active, unguided bomb, rocket, for this aircraft) - independent confirmation of the "3 special weapons" split already suspected from `P3D`'s 3-vs-7 record grouping above |
 
 Registered only for `DatAircraft`, not `DatAircraftHangar` - the hangar-quality variant's internal layout hasn't been checked and may differ.
 

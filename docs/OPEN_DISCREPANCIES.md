@@ -18,13 +18,9 @@ Each entry: what conflicts, the evidence on each side, and why it's not resolved
 
 ---
 
-## 2. Aircraft slot 16: "Special weapon icons" vs. "SpW HUD texture (refueling mode)"
+## 2. ~~Aircraft slot 16: "Special weapon icons" vs. "SpW HUD texture (refueling mode)"~~ - RESOLVED
 
-**Our finding**: directly observed via this tool's own Image visualizer - the texture depicts 6 icons: 3 for the weapon-selection menu, 3 more showing each weapon's dynamic/type (semi-active, unguided bomb, rocket, for the aircraft checked).
-
-**d0g's documentation**: labels the same slot "SpW HUD texture (refueling mode)" - a narrower, different-sounding purpose (a single icon for a specific in-flight HUD context, not a 6-icon selection sheet).
-
-**Why unresolved**: both could be partially right if the same texture sheet is reused across different UI contexts (selection menu and in-flight HUD alike) - not unusual for games to share icon atlases. Or one description is simply less precise than the other. Direct visual observation is strong evidence, but doesn't rule out the texture also being used the way d0g describes elsewhere in the game.
+d0g was right. Confirmed by the user: the icons are for the weapon-selection screen shown when rearming the aircraft at a base ("refueling mode" in d0g's wording) - you choose which special weapon to load, and these icons belong to that selection UI. Table entry updated to `'Special weapon selection icons (rearm/refuel weapon-selection screen)'`. See `docs/DAT_STRUCTURE_FINDINGS.md` for the updated table row.
 
 ---
 
