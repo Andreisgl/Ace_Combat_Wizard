@@ -820,7 +820,7 @@ class ACZProject(Project):
             '13': {'type': 'gim', 'name': "Aircraft silhouette icon (shown at the screen's lower-right corner)"},
             '14': {'type': '', 'name': 'Unknown tiny flag/version block'},
             '15': {'type': '', 'name': 'Unknown data - possibly a small container (unconfirmed)'},
-            '16': {'type': 'gim', 'name': 'Main livery texture'},
+            '16': {'type': 'gim', 'name': 'Special weapon icons'},
         }
 
         # Slot-by-slot contents of a DatAircraftParts container (slot 1 of
