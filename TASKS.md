@@ -72,6 +72,14 @@
         - Open question, not yet decided: whether this nested/substage TOC convention is common to all `DatStage` instances found inside another `DatStage` (i.e. a property of *nesting depth*), or specific to this null/landing-stage slot 38 case - needs more real samples to confirm before repacking is attempted.
     1. **Open design question:** should this nested-dat convention become its own type (e.g. a `DatSubStage`/`DatSubLevel` class, distinct from `DatStage`) rather than reusing `DatStage` as-is? Leaning toward treating it as a distinct on-disk variant of the `.dat` format (different empty-slot encoding = different format, not just a different table), which would also give repacking a natural place to special-case the write-side logic per class. Not decided/implemented - revisit once more nested-dat samples are found.
 
+1. Safety guards
+    1. **`DatFile.init_offset_table()` sanity checks (implemented):** a `.dat`'s header (NOF + offset entries) is now checked two ways before being trusted, both raising `DatHeaderError`:
+        - Right after reading NOF: does `4 + NOF*4` even fit inside this asset's own declared size? If not, fail immediately instead of looping NOF times (this is what real memory-explosion crashes turned out to be - a misread NOF followed by mostly zero/small bytes still passes a per-entry check, but the loop itself is the cost).
+        - Per entry, while reading: does this specific offset point past the asset's own size? Catches a bogus entry even when NOF itself is small enough to look plausible.
+        - Both use only the asset's own real, already-known size - no arbitrary constant (a fixed max-entry-count cap was considered and explicitly rejected: it would either let a small-but-still-garbage NOF through, or reject a genuinely large real `.dat`, depending on where the number is set).
+        - **Distinct from the earlier-rejected idea of a general "is this really a valid .dat" plausibility check** - that's still not implemented, and for the same reason as before (an in-bounds NOF/offsets can still describe the wrong data, unprovable from bytes alone). What's implemented here only ever rejects headers that are *impossible* (physically can't fit), never ones that are merely *unlikely*.
+        - `Container.generate_children()`'s table-driven dispatch catches `DatHeaderError` and falls back to leaving the slot as a generic `Asset` (with a console warning) instead of letting one bad table entry crash the whole project load. The GUI's manual "Cast as" feature (see below) has its own separate try/except showing a dialog instead.
+
 1. Miscellaneous
     1. The icon for this program could really be Wizard Squadron's roundel lol
         

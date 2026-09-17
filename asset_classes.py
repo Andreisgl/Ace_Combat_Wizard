@@ -1206,41 +1206,52 @@ class Container(Asset): # Abstract
             #   for this role might break unpackers, as they think they are parsing very a very long header that does not exist.
             #   We need a more specific nomenclature. I'll try to use '.unk' for unknown file formats from now on.
             #   My solution for now: Not considering every freaking unknown file as a .dat. Gotta diverge from the docs...
-            if asset_type == 'dat': 
-                new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            if asset_type == 'mission_dat':
-                new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif asset_type == 'stage_dat':
-                new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif asset_type == 'free_flight_dat':
-                new_child = DatFreeFlight(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
-            elif asset_type == 'aircraft_dat':
-                new_child = DatAircraft(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'aircraft_hangar_dat':
-                new_child = DatAircraftHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'aircraft_parts_dat':
-                new_child = DatAircraftParts(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'hangar_dat':
-                new_child = DatHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'ambient_textures_dat':
-                new_child = DatAmbientTextures(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'briefing_terrain_dat':
-                new_child = DatBriefingTerrain(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'title_card_dat':
-                new_child = DatTitleCardTexture(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            #
-            elif asset_type == 'gim':
-                new_child = GIM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'efd':
-                new_child = EFD(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'acm':
-                new_child = ACM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'p3d':
-                new_child = P3D(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == 'ahm':
-                new_child = AHM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-            elif asset_type == '': # If type is not known yet, make it a generic "Asset", but bring over table data.
-                new_child = Asset(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            try:
+                if asset_type == 'dat':
+                    new_child = DatFile(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                if asset_type == 'mission_dat':
+                    new_child = DatMission(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+                elif asset_type == 'stage_dat':
+                    new_child = DatStage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+                elif asset_type == 'free_flight_dat':
+                    new_child = DatFreeFlight(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
+                elif asset_type == 'aircraft_dat':
+                    new_child = DatAircraft(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'aircraft_hangar_dat':
+                    new_child = DatAircraftHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'aircraft_parts_dat':
+                    new_child = DatAircraftParts(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'hangar_dat':
+                    new_child = DatHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'ambient_textures_dat':
+                    new_child = DatAmbientTextures(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'briefing_terrain_dat':
+                    new_child = DatBriefingTerrain(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'title_card_dat':
+                    new_child = DatTitleCardTexture(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                #
+                elif asset_type == 'gim':
+                    new_child = GIM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'efd':
+                    new_child = EFD(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'acm':
+                    new_child = ACM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'p3d':
+                    new_child = P3D(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'ahm':
+                    new_child = AHM(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == '': # If type is not known yet, make it a generic "Asset", but bring over table data.
+                    new_child = Asset(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+            except DatHeaderError as exc:
+                # A curated table entry's type turned out to be wrong for
+                # this particular file (its header fails the offset-bounds
+                # sanity check) - failsafe: warn and leave the slot as
+                # whatever generate_generic_children() already built,
+                # rather than letting one bad table entry crash the whole
+                # project load. Casting it manually still surfaces the same
+                # error via the GUI's own try/except in that path.
+                print(f'Warning: {exc} Leaving this slot untyped.')
+                new_child = None
 
             if new_child != None:
                 self.generate_child(index=int(dat_index), obj=new_child)
@@ -1300,6 +1311,20 @@ class DataPacAsset(Container):
     def __repr__(self):
         return f'PAC_CONTAINER | {self.name} - size={self.size} - offset={self.offset_father}'
 
+class DatHeaderError(ValueError):
+    '''Raised when a .dat's header contains an offset entry past the
+    asset's own declared size - see the check in
+    DatFile.init_offset_table(). Deliberately narrower than a general "is
+    this really a valid .dat" plausibility check (explicitly rejected
+    earlier - an in-bounds NOF/offsets can still describe the wrong data,
+    and there's no reliable way to tell that from the bytes alone). An
+    offset that points past the asset's own size is different: it's an
+    unambiguous, unavoidable impossibility, not a guess - and looping
+    `number_of_files` times without catching it is exactly what caused
+    real memory-explosion crashes (confirmed via the manual "Cast as"
+    feature on a garbage/oversized NOF).'''
+
+
 class DatFile(Container):
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father, asset_list:dict=None):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, asset_list=asset_list)
@@ -1344,11 +1369,42 @@ class DatFile(Container):
         read = file.read(4)
         #read = file.get_data(curr_offset, 4)
         number_of_files = int.from_bytes(read, byteorder="little")
+
+        # The header itself (the NOF field plus that many 4-byte offset
+        # entries) can never take up more space than this asset's own
+        # declared size - if it would, NOF was misread, and looping that
+        # many times to read entries that can't possibly all exist is
+        # exactly what caused real memory-explosion crashes. This uses only
+        # the asset's own real size, not an arbitrary constant, so it can't
+        # be too strict for a genuinely large real .dat or too loose for a
+        # small misread one - it scales with the specific file either way.
+        # This catches cases the per-entry check below can't: a huge NOF
+        # followed by small/zero "offset" bytes (e.g. reading into a
+        # zero-padded region) would pass every per-entry check yet still
+        # loop `number_of_files` times.
+        claimed_header_size = 4 + number_of_files * 4
+        if claimed_header_size > self.size:
+            raise DatHeaderError(
+                f'{self!r}: header claims {number_of_files} entries ({claimed_header_size} bytes), '
+                f"which is more than this asset's own size ({self.size} bytes) - not a valid .dat header."
+            )
+
         self.header.append(number_of_files)
 
         for offset_index in range(number_of_files):
             data = file.read(4)
             data_int = int.from_bytes(data, byteorder="little")
+
+            # A real offset can never point past this asset's own declared
+            # size - if one does, the header (almost always the NOF itself)
+            # was misread, and continuing this loop `number_of_files` times
+            # is exactly what caused real memory-explosion crashes. Fail
+            # fast on the first offending entry instead of trusting it.
+            if data_int > self.size:
+                raise DatHeaderError(
+                    f'{self!r}: header entry {offset_index} has offset {data_int}, past this '
+                    f"asset's own size ({self.size} bytes) - not a valid .dat header."
+                )
 
             if data_int != 0:
                 offset_list.append(data_int)
