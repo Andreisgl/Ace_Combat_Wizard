@@ -678,7 +678,7 @@ class ACZProject(Project):
             '946': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (PJ)'},
             #
             # Named but structurally unverified - carried over for
-            # documentation without a dedicated parsed type (see TASKS.md).
+            # documentation without a dedicated parsed type (see docs/TASKS.md).
             '1160': {'type': '', 'name': 'MPBM hangar assets'},
             '1170': {'type': '', 'name': 'TLS unit hangar assets (ADFX-01)'},
             '1171': {'type': '', 'name': 'TLS unit hangar assets (ADF-01)'},
@@ -797,7 +797,7 @@ class ACZProject(Project):
 
         # Slot-by-slot contents of a flyable aircraft's .dat, reverse-
         # engineered this session by exporting and hex-analyzing real
-        # Gripen/Draken sub-files - see AIRCRAFT_FORMAT_NOTES.md for the
+        # Gripen/Draken sub-files - see docs/AIRCRAFT_FORMAT_NOTES.md for the
         # full evidence. type:'' entries are honestly unresolved (matches
         # this table's own convention elsewhere), not guessed at. Only
         # registered for DatAircraft, not DatAircraftHangar - the hangar-
@@ -827,7 +827,7 @@ class ACZProject(Project):
         # ACZ_AIRCRAFT_DAT_ASSET_LIST above) - confirmed this session by
         # exporting real Gripen/Draken part containers, plus visually
         # inspecting slots 8/9 in this tool's own Image visualizer (see
-        # AIRCRAFT_FORMAT_NOTES.md). Slots 0-7 are positionally named
+        # docs/AIRCRAFT_FORMAT_NOTES.md). Slots 0-7 are positionally named
         # ('00'-'07') since we know they're mesh chunks (ACM) but not yet
         # which part of the aircraft each one is.
         self.ACZ_AIRCRAFT_PARTS_ASSET_LIST = {
@@ -1535,7 +1535,7 @@ class DatAircraftParts(DatFile):
     '''Slot 1 of a flyable aircraft's .dat (see ACZ_AIRCRAFT_DAT_ASSET_LIST) -
     a plain NOF-based container whose children are the aircraft's actual
     geometry. Confirmed (via both sample aircraft, see
-    AIRCRAFT_FORMAT_NOTES.md) to always hold exactly 10 entries lining up
+    docs/AIRCRAFT_FORMAT_NOTES.md) to always hold exactly 10 entries lining up
     1:1 with slot 3's (P3D) 10 hardpoint records: 8 ACM meshes (slots 0-7,
     still only positionally identified - which aircraft part each one is
     isn't confirmed yet), 1 AHM (slot 4, unidentified), and 2 GIM textures
@@ -1627,7 +1627,7 @@ class AHM(Asset):
     '''Unidentified aircraft-part format, confirmed by signature only. Found
     nested inside a DatAircraftParts container at a fixed slot (index 4 of
     10) alongside 7 ACM meshes and 2 GIM textures, in both sample aircraft
-    checked (Gripen, Draken) - see AIRCRAFT_FORMAT_NOTES.md. Purpose and
+    checked (Gripen, Draken) - see docs/AIRCRAFT_FORMAT_NOTES.md. Purpose and
     internal structure not yet reverse-engineered.'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
             super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
@@ -1638,12 +1638,12 @@ class AHM(Asset):
 
 # Byte signatures for autodetecting assets that have no asset-table entry at
 # all (see Container._autodetect_untyped_children). GIM, P3D, ACM and AHM
-# are all confirmed real signatures (see AIRCRAFT_FORMAT_NOTES.md for how
+# are all confirmed real signatures (see docs/AIRCRAFT_FORMAT_NOTES.md for how
 # P3D/ACM/AHM were confirmed this session, by decoding real exported
 # aircraft sub-files). Only listed here if there's an actual signature to
 # check - types recognized purely by structural shape (DatFile's NOF header)
 # are deliberately excluded; guessing those risks misidentifying arbitrary
-# unknown data as a real, parseable .dat (see TASKS.md).
+# unknown data as a real, parseable .dat (see docs/TASKS.md).
 GIM_SIGNATURE = b'GIM\x00'
 _AUTODETECT_SIGNATURES = (
     (GIM_SIGNATURE, GIM),

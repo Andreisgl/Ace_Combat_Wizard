@@ -3,7 +3,7 @@
 Each Visualizer takes an Asset and produces a widget. Kept separate from
 asset_classes.py because content format (image/audio/3D/text/raw) is
 orthogonal to the Asset/Container structural hierarchy, and per
-PROGRAM_STRUCUTRE.MD these are meant to be independent modules, not
+docs/PROGRAM_STRUCUTRE.MD these are meant to be independent modules, not
 data-model methods.
 
 List order doubles as "auto mode" priority: get_available_visualizers()
