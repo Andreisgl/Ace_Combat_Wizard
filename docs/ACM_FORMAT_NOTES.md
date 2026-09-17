@@ -76,7 +76,45 @@ Dumping records 0-4 of `503/1/0` (F-15C airframe, `node_count = 62`) shows recor
 
 By contrast, every stage-prop, SpW-model, and low-poly-LOD table checked has all-zero position data in every record past record 0, **even when `node_count > 1`** (e.g. an 11-node stage prop with every record's position at the origin) - these look like simple multi-chunk static meshes (perhaps per-material or per-texture-page submeshes) rather than an articulated hierarchy.
 
-**Not yet explained:** within one aircraft's own parts container, the airframe (`503/1/0`) and fuel tank (`503/1/7`) both carry the `10` type tag, while landing gear (`1`), both cockpit views (`2`,`3`), an unidentified model (`5`), and the low-poly duplicate (`6`) all carry `8` - even though landing gear visibly animates in-game (retracts) and the fuel tank does not. Whatever the tag distinguishes, it is **not** simply "this mesh moves/articulates." Only one aircraft has been checked this thoroughly; needs a second full aircraft breakdown to see if the same slots (`0`,`7`) always get tag `10`.
+**Not yet explained:** within one aircraft's own parts container, the airframe (`503/1/0`) and fuel tank (`503/1/7`) both carry the `10` type tag, while landing gear (`1`), both cockpit views (`2`,`3`), an unidentified model (`5`), and the low-poly duplicate (`6`) all carry `8` - even though landing gear visibly animates in-game (retracts) and the fuel tank does not. Whatever the tag distinguishes, it is **not** simply "this mesh moves/articulates."
+
+**Cross-checked against a second aircraft (`498`, J35J Draken) - the `0`/`7` = tag `10` split holds exactly.** Airframe (`498/1/0`) and fuel tank (`498/1/7`) both `10`; landing gear, both cockpit views, the unknown model, and the low-poly duplicate all `8`, identical to the F-15C. This resolves the "needs a second aircraft" question above - the split is a real, reproducible rule, just not yet an explained one.
+
+**However, the exact sub-record byte layout is *not* identical between the two aircraft's airframe tables**, even though the overall shape (record 0 = root, records 1+ = real per-part data) and record 0's own tag (`10`) match. Comparing `503/1/0` records 1-3 against `498/1/0` records 1-3:
+
+| Rel. offset | F-15C (`503`) records 1-3 | Draken (`498`) records 1-3 |
+|---|---|---|
+| `0x00` (type tag) | `10` (same as record 0) | `8` (differs from record 0's `10`) |
+| `0x08` | Clean incrementing index (`1`, `2`, `3`, ...) | `0xFFFFFFFF` sentinel in every record checked |
+| `0x10` | Small incrementing value (`1`, `5`, `7`, ...) | A packed value with a constant low half (`0x0067`) and a varying high half (`0x000C`, `0x000B`, `0x0002`, ...) |
+| `0x18` | `0` | `0xFFFFFFFF` sentinel |
+
+So the per-record field table above (the `0x08`/`0x10`/`0x18` rows) should be read as "confirmed shape, values and even which fields are indices vs. sentinels can differ per aircraft" rather than a fixed universal layout - only record 0's role as a tag-bearing root record generalizes cleanly so far.
+
+**Leading hypothesis for what tag `10` actually means:** landing gear, cockpit, and the low-poly duplicate are always rigidly attached to the airframe and never separate from it in-game; the airframe itself obviously is its own independently-simulated rigid body; and a fuel tank *can* become one too - both AC5 and (per the user's recollection) ACZ let aircraft jettison external fuel tanks at some mission starts, at which point the tank stops following the airframe and becomes its own free-falling object. So tag `10` may mark **"mesh that can exist as its own independent rigid body,"** rather than tag `8`'s "always a fixed sub-mesh of the parent's own body." This reading is also consistent with the hangar-package difference below: Draken's hangar package has a real, tag-`10` fuel tank mesh (matching its flight model), while the MPBM/TLS packages have no fuel tank mesh at all but *do* have a second tag-`10` mesh at slot `2` where Draken has an ordinary tag-`8` one - plausibly some other separable/droppable component specific to those aircraft. Still a hypothesis, not a certainty - `AHM` (aircraft slot `1`/`4`, "dynamic shadow data") would be a natural place to check next, since a jettisoned tank's shadow would need to detach too if this theory is right.
+
+**New finding: mirrored left/right attachment points.** Draken's airframe records 1 and 3 share identical `0x24`/`0x28` position floats, with `0x20` negated between them (`+10.72` vs `-10.72`) - a textbook left/right symmetric pair (e.g. mirrored wingtip or pylon attachment points). This is independent, format-internal evidence for the same "hardpoint-like attachment table" reading already suspected for `P3D` (see [AIRCRAFT_FORMAT_NOTES.md](AIRCRAFT_FORMAT_NOTES.md)) - now also visible inside `.ACM`'s own node table, in a completely different file.
+
+## Hangar aircraft mesh packages, and the MPBM/TLS unit assets
+
+`asset_classes.py` carries three top-level `DATA.PAC` slots marked "named but structurally unverified" - `1160` (MPBM hangar assets), `1170`/`1171` (TLS unit hangar assets, ADFX-01/ADF-01). All three are untyped generic `Asset`s in the table. Casting each as a `.dat` (and then casting its own single child `0` as a `.dat` too) reveals they all follow the **same package shape**, and that this shape is also the real structure behind `DatAircraftHangar` (slot `720`, J35J Draken's hangar package) - previously only seen as one unparsed 686,064-byte blob, never cast further until now:
+
+| Child | `1160` (MPBM) | `1170` (TLS ADFX-01) | `1171` (TLS ADF-01) | `720/0` (Draken, standard flyable) |
+|---|---|---|---|---|
+| `0` | ACM, tag `10` | ACM, tag `10` | ACM, tag `10` | ACM, tag `10` |
+| `1` | 16-byte placeholder | 16-byte placeholder | 16-byte placeholder | 16-byte placeholder |
+| `2` | ACM, tag `10` | ACM, tag `10` | ACM, tag `10` | **ACM, tag `8`** |
+| `3` | ACM, tag `8` | ACM, tag `8` | ACM, tag `8` | ACM, tag `8` |
+| `4` | 16-byte placeholder | 16-byte placeholder | 16-byte placeholder | 16-byte placeholder |
+| `5` | 16-byte placeholder | 16-byte placeholder | 16-byte placeholder | **ACM, tag `10`** (22,096 bytes - exactly matches Draken's own flight-model fuel tank, `498/1/7`) |
+| `6`-`8` | GIM x3 | GIM x3 | GIM x3 | GIM x3 |
+| `9` | `Asset`, 1,888 bytes | `Asset`, 1,808 bytes | `Asset`, 224 bytes | `Asset`, 240 bytes |
+
+Two real differences between the "standard" aircraft's hangar package and the MPBM/TLS ones: (1) Draken's package has a genuine 4th ACM mesh at slot `5`, sized identically to its own flight-model fuel tank - consistent with death_the_d0g's doc description of a hangar package including "a fuel tank ACM" (see [DAT_STRUCTURE_FINDINGS.md](DAT_STRUCTURE_FINDINGS.md)) - while MPBM/TLS have only a placeholder there, i.e. **these unique aircraft don't carry a droppable fuel tank model in their hangar display**; (2) Draken's slot `2` is tag `8` while all three MPBM/TLS aircraft have tag `10` at slot `2` - an aircraft-family difference in which meshes get the `10` tag, not just a `0`/`7`-fixed rule as seen in the flight-model parts container.
+
+**Slot `9` is very likely inert padding, not real data.** Its first 16 bytes are zero, immediately followed by a run of `0xCC` bytes - the exact same "trailing debug-heap padding" byte pattern already diagnosed and fixed for in the GIM decoder (`visualizers/gim_image.py`) earlier this session. Sizes differ per aircraft (240/1,808/224/1,888 bytes) but that's consistent with "how much leftover padding happened to get baked in," not necessarily meaningful per-aircraft content.
+
+None of this has been applied to `asset_classes.py` yet - `1160`/`1170`/`1171` remain untyped and `DatAircraftHangar` remains a single-blob container in code. This section only documents what casting revealed; turning it into real typed classes (a `DatHangarAircraftPackage` sub-table, say) is a follow-up step if wanted.
 
 ## Geometry and footer structure - first full byte-accounting, from a minimal sample
 
@@ -111,7 +149,7 @@ This packet-tagged shape (running counter + type byte, several sub-blocks per un
 - Which of the footer's 8 floats corresponds to which axis/quantity of the bounding volume - the structural shape (symmetric pairs, one value shared with the header) is confirmed, exact semantics aren't.
 - What the two header floats at `0x08`/`0x0C` measure beyond "the footer restates `0x08`'s value exactly" - still short of a confirmed name for either.
 - What header fields `0x20`-`0x44` encode - several look like `(count, offset)` pairs pointing into the file's own geometry/material data, but no clean, universally-consistent division of bytes-per-element was found this pass.
-- What the record-level `0x00` type tag values (`0`/`8`/`9`/`10`) actually distinguish - category alone doesn't explain the airframe-vs-fuel-tank-vs-landing-gear split noted above, and tag `9` (briefing) sits oddly alongside `8` (everything else static) without an obvious reason for its own value.
+- What the record-level `0x00` type tag values (`0`/`8`/`9`/`10`) actually distinguish - leading hypothesis for `10` is "can exist as its own independent rigid body" (see above), not yet tested against `AHM`/shadow data or a jettisoned-tank scenario specifically. Tag `9` (briefing) and `0` (trees) still have no real hypothesis attached.
 - Whether record `0x04`'s "usually `node_count - 1`" pattern is a real rule or coincidental for small tables - it clearly breaks for the large airframe table.
 - What record field `0x10` (candidate: parent-record index) and the constant-per-file `0x30` float actually mean.
 - What children `6`-`8` of a `DatBriefingTerrain` (the ones that vary in size per mission, unlike `0`-`5`) actually hold - `6` was tried as a `.dat` cast and rejected as invalid, `7`/`8` cast without error but show 0 children (inconclusive). Still the best lead for where the actual per-mission terrain wireframe data lives, if it's not simply baked into the shared `2` package.
