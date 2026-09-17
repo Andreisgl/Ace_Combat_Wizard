@@ -494,196 +494,196 @@ class ACZProject(Project):
             #
             # Hangar-quality (higher-detail) aircraft models - same 5-tier
             # grid as the flyable aircraft above.
-            '720': {'type': 'aircraft_hangar_dat', 'name': 'J35J Draken (STANDARD)'},
-            '721': {'type': 'aircraft_hangar_dat', 'name': 'Gripen C (STANDARD)'},
-            '722': {'type': 'aircraft_hangar_dat', 'name': 'Typhoon (STANDARD)'},
-            '723': {'type': 'aircraft_hangar_dat', 'name': 'Tornado GR4 (STANDARD)'},
-            '724': {'type': 'aircraft_hangar_dat', 'name': 'F-4E II Phantom (STANDARD)'},
-            '725': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle CIPHER (STANDARD)'},
-            '726': {'type': 'aircraft_hangar_dat', 'name': 'F-15 Strike Eagle (STANDARD)'},
-            '727': {'type': 'aircraft_hangar_dat', 'name': 'F-15 SMTD (STANDARD)'},
-            '728': {'type': 'aircraft_hangar_dat', 'name': 'FA-18C Hornet (STANDARD)'},
-            '729': {'type': 'aircraft_hangar_dat', 'name': 'EA-18G (STANDARD)'},
-            '730': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (STANDARD)'},
-            '731': {'type': 'aircraft_hangar_dat', 'name': 'F-16 XL (STANDARD)'},
-            '732': {'type': 'aircraft_hangar_dat', 'name': 'F-117A Nighthawk (STANDARD)'},
-            '733': {'type': 'aircraft_hangar_dat', 'name': 'FA-22A Raptor (STANDARD)'},
-            '734': {'type': 'aircraft_hangar_dat', 'name': 'F-35C (STANDARD)'},
-            '735': {'type': 'aircraft_hangar_dat', 'name': 'F-5E Tiger II (STANDARD)'},
-            '736': {'type': 'aircraft_hangar_dat', 'name': 'F-20A Tigershark (STANDARD)'},
-            '737': {'type': 'aircraft_hangar_dat', 'name': 'X-29A (STANDARD)'},
-            '738': {'type': 'aircraft_hangar_dat', 'name': 'F-14D Super Tomcat (STANDARD)'},
-            '739': {'type': 'aircraft_hangar_dat', 'name': 'YF-23A Black Widow II (STANDARD)'},
-            '740': {'type': 'aircraft_hangar_dat', 'name': 'EA-6B Prowler (STANDARD)'},
-            '741': {'type': 'aircraft_hangar_dat', 'name': 'A-10A Thunderbolt II (STANDARD)'},
-            '742': {'type': 'aircraft_hangar_dat', 'name': 'Mirage 2000D (STANDARD)'},
-            '743': {'type': 'aircraft_hangar_dat', 'name': 'Rafale M (STANDARD)'},
-            '744': {'type': 'aircraft_hangar_dat', 'name': 'Su-27 Flanker (STANDARD)'},
-            '745': {'type': 'aircraft_hangar_dat', 'name': 'Su-32 Super Flanker (STANDARD)'},
-            '746': {'type': 'aircraft_hangar_dat', 'name': 'Su-37 Terminator (STANDARD)'},
-            '747': {'type': 'aircraft_hangar_dat', 'name': 'Su-47 Berkut (STANDARD)'},
-            '748': {'type': 'aircraft_hangar_dat', 'name': 'MiG-21bis Fishbed (STANDARD)'},
-            '749': {'type': 'aircraft_hangar_dat', 'name': 'MiG-29A Fulcrum (STANDARD)'},
-            '750': {'type': 'aircraft_hangar_dat', 'name': 'MiG-31 Foxhound (STANDARD)'},
-            '751': {'type': 'aircraft_hangar_dat', 'name': 'F1 (STANDARD)'},
-            '752': {'type': 'aircraft_hangar_dat', 'name': 'F-2A (STANDARD)'},
-            '753': {'type': 'aircraft_hangar_dat', 'name': 'X-02 Wyvern (STANDARD)'},
-            '754': {'type': 'aircraft_hangar_dat', 'name': 'ADF-01 Falken (STANDARD)'},
-            '755': {'type': 'aircraft_hangar_dat', 'name': 'ADFX-01 Morgan (STANDARD)'},
-            '756': {'type': 'aircraft_hangar_dat', 'name': 'J35J Draken (MERCENARY)'},
-            '757': {'type': 'aircraft_hangar_dat', 'name': 'Gripen C (MERCENARY)'},
-            '758': {'type': 'aircraft_hangar_dat', 'name': 'Typhoon (MERCENARY)'},
-            '759': {'type': 'aircraft_hangar_dat', 'name': 'Tornado GR4 (MERCENARY)'},
-            '760': {'type': 'aircraft_hangar_dat', 'name': 'F-4E II Phantom (MERCENARY)'},
-            '761': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle (MERCENARY)'},
-            '762': {'type': 'aircraft_hangar_dat', 'name': 'F-15 Strike Eagle (MERCENARY)'},
-            '763': {'type': 'aircraft_hangar_dat', 'name': 'F-15 SMTD (MERCENARY)'},
-            '764': {'type': 'aircraft_hangar_dat', 'name': 'FA-18C Hornet (MERCENARY)'},
-            '765': {'type': 'aircraft_hangar_dat', 'name': 'EA-18G (MERCENARY)'},
-            '766': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (MERCENARY)'},
-            '767': {'type': 'aircraft_hangar_dat', 'name': 'F-16 XL (MERCENARY)'},
-            '768': {'type': 'aircraft_hangar_dat', 'name': 'F-117A Nighthawk (MERCENARY)'},
-            '769': {'type': 'aircraft_hangar_dat', 'name': 'FA-22A Raptor (MERCENARY)'},
-            '770': {'type': 'aircraft_hangar_dat', 'name': 'F-35C (MERCENARY)'},
-            '771': {'type': 'aircraft_hangar_dat', 'name': 'F-5E Tiger II (MERCENARY)'},
-            '772': {'type': 'aircraft_hangar_dat', 'name': 'F-20A Tigershark (MERCENARY)'},
-            '773': {'type': 'aircraft_hangar_dat', 'name': 'X-29A (MERCENARY)'},
-            '774': {'type': 'aircraft_hangar_dat', 'name': 'F-14D Super Tomcat (MERCENARY)'},
-            '775': {'type': 'aircraft_hangar_dat', 'name': 'YF-23A Black Widow II (MERCENARY)'},
-            '776': {'type': 'aircraft_hangar_dat', 'name': 'EA-6B Prowler (MERCENARY)'},
-            '777': {'type': 'aircraft_hangar_dat', 'name': 'A-10A Thunderbolt II (MERCENARY)'},
-            '778': {'type': 'aircraft_hangar_dat', 'name': 'Mirage 2000D (MERCENARY)'},
-            '779': {'type': 'aircraft_hangar_dat', 'name': 'Rafale M (MERCENARY)'},
-            '780': {'type': 'aircraft_hangar_dat', 'name': 'Su-27 Flanker (MERCENARY)'},
-            '781': {'type': 'aircraft_hangar_dat', 'name': 'Su-32 Super Flanker (MERCENARY)'},
-            '782': {'type': 'aircraft_hangar_dat', 'name': 'Su-37 Terminator YELLOW (MERCENARY)'},
-            '783': {'type': 'aircraft_hangar_dat', 'name': 'Su-47 Berkut (MERCENARY)'},
-            '784': {'type': 'aircraft_hangar_dat', 'name': 'MiG-21bis Fishbed (MERCENARY)'},
-            '785': {'type': 'aircraft_hangar_dat', 'name': 'MiG-29A Fulcrum (MERCENARY)'},
-            '786': {'type': 'aircraft_hangar_dat', 'name': 'MiG-31 Foxhound (MERCENARY)'},
-            '787': {'type': 'aircraft_hangar_dat', 'name': 'F1 (MERCENARY)'},
-            '788': {'type': 'aircraft_hangar_dat', 'name': 'F-2A (MERCENARY)'},
-            '789': {'type': 'aircraft_hangar_dat', 'name': 'X-02 Wyvern (MERCENARY)'},
-            '790': {'type': 'aircraft_hangar_dat', 'name': 'ADF-01 Falken (MERCENARY)'},
-            '791': {'type': 'aircraft_hangar_dat', 'name': 'ADFX-01 Morgan (MERCENARY)'},
-            '792': {'type': 'aircraft_hangar_dat', 'name': 'J35J Draken (SOLDIER)'},
-            '793': {'type': 'aircraft_hangar_dat', 'name': 'Gripen C (SOLDIER)'},
-            '794': {'type': 'aircraft_hangar_dat', 'name': 'Typhoon (SOLDIER)'},
-            '795': {'type': 'aircraft_hangar_dat', 'name': 'Tornado GR4 (SOLDIER)'},
-            '796': {'type': 'aircraft_hangar_dat', 'name': 'F-4E II Phantom (SOLDIER)'},
-            '797': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle (SOLDIER)'},
-            '798': {'type': 'aircraft_hangar_dat', 'name': 'F-15 Strike Eagle (SOLDIER)'},
-            '799': {'type': 'aircraft_hangar_dat', 'name': 'F-15 SMTD (SOLDIER)'},
-            '800': {'type': 'aircraft_hangar_dat', 'name': 'FA-18C Hornet (SOLDIER)'},
-            '801': {'type': 'aircraft_hangar_dat', 'name': 'EA-18G (SOLDIER)'},
-            '802': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (SOLDIER)'},
-            '803': {'type': 'aircraft_hangar_dat', 'name': 'F-16 XL (SOLDIER)'},
-            '804': {'type': 'aircraft_hangar_dat', 'name': 'F-117A Nighthawk (SOLDIER)'},
-            '805': {'type': 'aircraft_hangar_dat', 'name': 'FA-22A Raptor MOBIUS (SOLDIER)'},
-            '806': {'type': 'aircraft_hangar_dat', 'name': 'F-35C (SOLDIER)'},
-            '807': {'type': 'aircraft_hangar_dat', 'name': 'F-5E Tiger II (SOLDIER)'},
-            '808': {'type': 'aircraft_hangar_dat', 'name': 'F-20A Tigershark (SOLDIER)'},
-            '809': {'type': 'aircraft_hangar_dat', 'name': 'X-29A (SOLDIER)'},
-            '810': {'type': 'aircraft_hangar_dat', 'name': 'F-14D Super Tomcat RAZGRIZ (SOLDIER)'},
-            '811': {'type': 'aircraft_hangar_dat', 'name': 'YF-23A Black Widow II (SOLDIER)'},
-            '812': {'type': 'aircraft_hangar_dat', 'name': 'EA-6B Prowler (SOLDIER)'},
-            '813': {'type': 'aircraft_hangar_dat', 'name': 'A-10A Thunderbolt II (SOLDIER)'},
-            '814': {'type': 'aircraft_hangar_dat', 'name': 'Mirage 2000D (SOLDIER)'},
-            '815': {'type': 'aircraft_hangar_dat', 'name': 'Rafale M (SOLDIER)'},
-            '816': {'type': 'aircraft_hangar_dat', 'name': 'Su-27 Flanker (SOLDIER)'},
-            '817': {'type': 'aircraft_hangar_dat', 'name': 'Su-32 Super Flanker (SOLDIER)'},
-            '818': {'type': 'aircraft_hangar_dat', 'name': 'Su-37 Terminator (SOLDIER)'},
-            '819': {'type': 'aircraft_hangar_dat', 'name': 'Su-47 Berkut (SOLDIER)'},
-            '820': {'type': 'aircraft_hangar_dat', 'name': 'MiG-21bis Fishbed (SOLDIER)'},
-            '821': {'type': 'aircraft_hangar_dat', 'name': 'MiG-29A Fulcrum (SOLDIER)'},
-            '822': {'type': 'aircraft_hangar_dat', 'name': 'MiG-31 Foxhound (SOLDIER)'},
-            '823': {'type': 'aircraft_hangar_dat', 'name': 'F1 (SOLDIER)'},
-            '824': {'type': 'aircraft_hangar_dat', 'name': 'F-2A (SOLDIER)'},
-            '825': {'type': 'aircraft_hangar_dat', 'name': 'X-02 Wyvern (SOLDIER)'},
-            '826': {'type': 'aircraft_hangar_dat', 'name': 'ADF-01 Falken (SOLDIER)'},
-            '827': {'type': 'aircraft_hangar_dat', 'name': 'ADFX-01 Morgan (SOLDIER)'},
-            '828': {'type': 'aircraft_hangar_dat', 'name': 'J35J Draken -ESPADA- (SPECIAL)'},
-            '829': {'type': 'aircraft_hangar_dat', 'name': 'Gripen C -INDIGO- (SPECIAL)'},
-            '830': {'type': 'aircraft_hangar_dat', 'name': 'Typhoon -ROT- (SPECIAL)'},
-            '832': {'type': 'aircraft_hangar_dat', 'name': 'F-4E II Phantom -SILBER- (SPECIAL)'},
-            '835': {'type': 'aircraft_hangar_dat', 'name': 'F-15 SMTD -SORCERER- (SPECIAL)'},
-            '836': {'type': 'aircraft_hangar_dat', 'name': 'FA-18C Hornet -GRUN- (SPECIAL)'},
-            '838': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon -SILBER- (SPECIAL)'},
-            '839': {'type': 'aircraft_hangar_dat', 'name': 'F-16 XL -WIZARD- (SPECIAL)'},
-            '846': {'type': 'aircraft_hangar_dat', 'name': 'F-14D Super Tomcat -SCHNEE- (SPECIAL)'},
-            '847': {'type': 'aircraft_hangar_dat', 'name': 'YF-23A Black Widow II -WIZARD- (SPECIAL)'},
-            '851': {'type': 'aircraft_hangar_dat', 'name': 'Rafale M -ESPADA- (SPECIAL)'},
-            '854': {'type': 'aircraft_hangar_dat', 'name': 'Su-37 Terminator GELB (SPECIAL)'},
-            '855': {'type': 'aircraft_hangar_dat', 'name': 'Su-47 Berkut -GAULT- (SPECIAL)'},
-            '858': {'type': 'aircraft_hangar_dat', 'name': 'MiG-31 Foxhound -SCHWARZE- (SPECIAL)'},
-            '863': {'type': 'aircraft_hangar_dat', 'name': 'ADFX-01 Morgan PIXY (SPECIAL)'},
-            '867': {'type': 'aircraft_hangar_dat', 'name': 'Tornado GR4 (SPECIAL)'},
-            '869': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle (SPECIAL)'},
-            '870': {'type': 'aircraft_hangar_dat', 'name': 'F-15 Strike Eagle (SPECIAL)'},
-            '873': {'type': 'aircraft_hangar_dat', 'name': 'EA-18G (SPECIAL)'},
-            '876': {'type': 'aircraft_hangar_dat', 'name': 'F-117A Nighthawk (SPECIAL)'},
-            '877': {'type': 'aircraft_hangar_dat', 'name': 'FA-22A Raptor (SPECIAL)'},
-            '878': {'type': 'aircraft_hangar_dat', 'name': 'F-35C (SPECIAL)'},
-            '879': {'type': 'aircraft_hangar_dat', 'name': 'F-5E Tiger II (SPECIAL)'},
-            '880': {'type': 'aircraft_hangar_dat', 'name': 'F-20A Tigershark (SPECIAL)'},
-            '881': {'type': 'aircraft_hangar_dat', 'name': 'X-29A (SPECIAL)'},
-            '884': {'type': 'aircraft_hangar_dat', 'name': 'EA-6B Prowler (SPECIAL)'},
-            '885': {'type': 'aircraft_hangar_dat', 'name': 'A-10A Thunderbolt II (SPECIAL)'},
-            '886': {'type': 'aircraft_hangar_dat', 'name': 'Mirage 2000D (SPECIAL)'},
-            '888': {'type': 'aircraft_hangar_dat', 'name': 'Su-27 Flanker (SPECIAL)'},
-            '889': {'type': 'aircraft_hangar_dat', 'name': 'Su-32 Super Flanker (SPECIAL)'},
-            '892': {'type': 'aircraft_hangar_dat', 'name': 'MiG-21bis Fishbed HUCKEBEIN (SPECIAL)'},
-            '893': {'type': 'aircraft_hangar_dat', 'name': 'MiG-29A Fulcrum (SPECIAL)'},
-            '895': {'type': 'aircraft_hangar_dat', 'name': 'F1 (SPECIAL)'},
-            '896': {'type': 'aircraft_hangar_dat', 'name': 'F-2A (SPECIAL)'},
-            '897': {'type': 'aircraft_hangar_dat', 'name': 'X-02 Wyvern (SPECIAL)'},
-            '898': {'type': 'aircraft_hangar_dat', 'name': 'ADF-01 Falken (SPECIAL)'},
-            '900': {'type': 'aircraft_hangar_dat', 'name': 'J35J Draken (KNIGHT)'},
-            '901': {'type': 'aircraft_hangar_dat', 'name': 'Gripen C (KNIGHT)'},
-            '902': {'type': 'aircraft_hangar_dat', 'name': 'Typhoon (KNIGHT)'},
-            '903': {'type': 'aircraft_hangar_dat', 'name': 'Tornado GR4 (KNIGHT)'},
-            '904': {'type': 'aircraft_hangar_dat', 'name': 'F-4E II Phantom (KNIGHT)'},
-            '905': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle (KNIGHT)'},
-            '906': {'type': 'aircraft_hangar_dat', 'name': 'F-15 Strike Eagle (KNIGHT)'},
-            '907': {'type': 'aircraft_hangar_dat', 'name': 'F-15 SMTD (KNIGHT)'},
-            '908': {'type': 'aircraft_hangar_dat', 'name': 'FA-18C Hornet (KNIGHT)'},
-            '909': {'type': 'aircraft_hangar_dat', 'name': 'EA-18G (KNIGHT)'},
-            '910': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (KNIGHT)'},
-            '911': {'type': 'aircraft_hangar_dat', 'name': 'F-16 XL (KNIGHT)'},
-            '912': {'type': 'aircraft_hangar_dat', 'name': 'F-117A Nighthawk (KNIGHT)'},
-            '913': {'type': 'aircraft_hangar_dat', 'name': 'FA-22A Raptor (KNIGHT)'},
-            '914': {'type': 'aircraft_hangar_dat', 'name': 'F-35C (KNIGHT)'},
-            '915': {'type': 'aircraft_hangar_dat', 'name': 'F-5E Tiger II (KNIGHT)'},
-            '916': {'type': 'aircraft_hangar_dat', 'name': 'F-20A Tigershark (KNIGHT)'},
-            '917': {'type': 'aircraft_hangar_dat', 'name': 'X-29A (KNIGHT)'},
-            '918': {'type': 'aircraft_hangar_dat', 'name': 'F-14D Super Tomcat (KNIGHT)'},
-            '919': {'type': 'aircraft_hangar_dat', 'name': 'YF-23A Black Widow II (KNIGHT)'},
-            '920': {'type': 'aircraft_hangar_dat', 'name': 'EA-6B Prowler (KNIGHT)'},
-            '921': {'type': 'aircraft_hangar_dat', 'name': 'A-10A Thunderbolt II (KNIGHT)'},
-            '922': {'type': 'aircraft_hangar_dat', 'name': 'Mirage 2000D (KNIGHT)'},
-            '923': {'type': 'aircraft_hangar_dat', 'name': 'Rafale M (KNIGHT)'},
-            '924': {'type': 'aircraft_hangar_dat', 'name': 'Su-27 Flanker (KNIGHT)'},
-            '925': {'type': 'aircraft_hangar_dat', 'name': 'Su-32 Super Flanker (KNIGHT)'},
-            '926': {'type': 'aircraft_hangar_dat', 'name': 'Su-37 Terminator (KNIGHT)'},
-            '927': {'type': 'aircraft_hangar_dat', 'name': 'Su-47 Berkut (KNIGHT)'},
-            '928': {'type': 'aircraft_hangar_dat', 'name': 'MiG-21bis Fishbed (KNIGHT)'},
-            '929': {'type': 'aircraft_hangar_dat', 'name': 'MiG-29A Fulcrum (KNIGHT)'},
-            '930': {'type': 'aircraft_hangar_dat', 'name': 'MiG-31 Foxhound (KNIGHT)'},
-            '931': {'type': 'aircraft_hangar_dat', 'name': 'F1 (KNIGHT)'},
-            '932': {'type': 'aircraft_hangar_dat', 'name': 'F-2A (KNIGHT)'},
-            '933': {'type': 'aircraft_hangar_dat', 'name': 'X-02 Wyvern (KNIGHT)'},
-            '934': {'type': 'aircraft_hangar_dat', 'name': 'ADF-01 Falken (KNIGHT)'},
-            '935': {'type': 'aircraft_hangar_dat', 'name': 'ADFX-01 Morgan (KNIGHT)'},
-            '941': {'type': 'aircraft_hangar_dat', 'name': 'F-15C Eagle (PIXY)'},
-            '946': {'type': 'aircraft_hangar_dat', 'name': 'F-16C Fighting Falcon (PJ)'},
+            '720': {'type': 'hangar_display_dat', 'name': 'J35J Draken (STANDARD)'},
+            '721': {'type': 'hangar_display_dat', 'name': 'Gripen C (STANDARD)'},
+            '722': {'type': 'hangar_display_dat', 'name': 'Typhoon (STANDARD)'},
+            '723': {'type': 'hangar_display_dat', 'name': 'Tornado GR4 (STANDARD)'},
+            '724': {'type': 'hangar_display_dat', 'name': 'F-4E II Phantom (STANDARD)'},
+            '725': {'type': 'hangar_display_dat', 'name': 'F-15C Eagle CIPHER (STANDARD)'},
+            '726': {'type': 'hangar_display_dat', 'name': 'F-15 Strike Eagle (STANDARD)'},
+            '727': {'type': 'hangar_display_dat', 'name': 'F-15 SMTD (STANDARD)'},
+            '728': {'type': 'hangar_display_dat', 'name': 'FA-18C Hornet (STANDARD)'},
+            '729': {'type': 'hangar_display_dat', 'name': 'EA-18G (STANDARD)'},
+            '730': {'type': 'hangar_display_dat', 'name': 'F-16C Fighting Falcon (STANDARD)'},
+            '731': {'type': 'hangar_display_dat', 'name': 'F-16 XL (STANDARD)'},
+            '732': {'type': 'hangar_display_dat', 'name': 'F-117A Nighthawk (STANDARD)'},
+            '733': {'type': 'hangar_display_dat', 'name': 'FA-22A Raptor (STANDARD)'},
+            '734': {'type': 'hangar_display_dat', 'name': 'F-35C (STANDARD)'},
+            '735': {'type': 'hangar_display_dat', 'name': 'F-5E Tiger II (STANDARD)'},
+            '736': {'type': 'hangar_display_dat', 'name': 'F-20A Tigershark (STANDARD)'},
+            '737': {'type': 'hangar_display_dat', 'name': 'X-29A (STANDARD)'},
+            '738': {'type': 'hangar_display_dat', 'name': 'F-14D Super Tomcat (STANDARD)'},
+            '739': {'type': 'hangar_display_dat', 'name': 'YF-23A Black Widow II (STANDARD)'},
+            '740': {'type': 'hangar_display_dat', 'name': 'EA-6B Prowler (STANDARD)'},
+            '741': {'type': 'hangar_display_dat', 'name': 'A-10A Thunderbolt II (STANDARD)'},
+            '742': {'type': 'hangar_display_dat', 'name': 'Mirage 2000D (STANDARD)'},
+            '743': {'type': 'hangar_display_dat', 'name': 'Rafale M (STANDARD)'},
+            '744': {'type': 'hangar_display_dat', 'name': 'Su-27 Flanker (STANDARD)'},
+            '745': {'type': 'hangar_display_dat', 'name': 'Su-32 Super Flanker (STANDARD)'},
+            '746': {'type': 'hangar_display_dat', 'name': 'Su-37 Terminator (STANDARD)'},
+            '747': {'type': 'hangar_display_dat', 'name': 'Su-47 Berkut (STANDARD)'},
+            '748': {'type': 'hangar_display_dat', 'name': 'MiG-21bis Fishbed (STANDARD)'},
+            '749': {'type': 'hangar_display_dat', 'name': 'MiG-29A Fulcrum (STANDARD)'},
+            '750': {'type': 'hangar_display_dat', 'name': 'MiG-31 Foxhound (STANDARD)'},
+            '751': {'type': 'hangar_display_dat', 'name': 'F1 (STANDARD)'},
+            '752': {'type': 'hangar_display_dat', 'name': 'F-2A (STANDARD)'},
+            '753': {'type': 'hangar_display_dat', 'name': 'X-02 Wyvern (STANDARD)'},
+            '754': {'type': 'hangar_display_dat', 'name': 'ADF-01 Falken (STANDARD)'},
+            '755': {'type': 'hangar_display_dat', 'name': 'ADFX-01 Morgan (STANDARD)'},
+            '756': {'type': 'hangar_display_dat', 'name': 'J35J Draken (MERCENARY)'},
+            '757': {'type': 'hangar_display_dat', 'name': 'Gripen C (MERCENARY)'},
+            '758': {'type': 'hangar_display_dat', 'name': 'Typhoon (MERCENARY)'},
+            '759': {'type': 'hangar_display_dat', 'name': 'Tornado GR4 (MERCENARY)'},
+            '760': {'type': 'hangar_display_dat', 'name': 'F-4E II Phantom (MERCENARY)'},
+            '761': {'type': 'hangar_display_dat', 'name': 'F-15C Eagle (MERCENARY)'},
+            '762': {'type': 'hangar_display_dat', 'name': 'F-15 Strike Eagle (MERCENARY)'},
+            '763': {'type': 'hangar_display_dat', 'name': 'F-15 SMTD (MERCENARY)'},
+            '764': {'type': 'hangar_display_dat', 'name': 'FA-18C Hornet (MERCENARY)'},
+            '765': {'type': 'hangar_display_dat', 'name': 'EA-18G (MERCENARY)'},
+            '766': {'type': 'hangar_display_dat', 'name': 'F-16C Fighting Falcon (MERCENARY)'},
+            '767': {'type': 'hangar_display_dat', 'name': 'F-16 XL (MERCENARY)'},
+            '768': {'type': 'hangar_display_dat', 'name': 'F-117A Nighthawk (MERCENARY)'},
+            '769': {'type': 'hangar_display_dat', 'name': 'FA-22A Raptor (MERCENARY)'},
+            '770': {'type': 'hangar_display_dat', 'name': 'F-35C (MERCENARY)'},
+            '771': {'type': 'hangar_display_dat', 'name': 'F-5E Tiger II (MERCENARY)'},
+            '772': {'type': 'hangar_display_dat', 'name': 'F-20A Tigershark (MERCENARY)'},
+            '773': {'type': 'hangar_display_dat', 'name': 'X-29A (MERCENARY)'},
+            '774': {'type': 'hangar_display_dat', 'name': 'F-14D Super Tomcat (MERCENARY)'},
+            '775': {'type': 'hangar_display_dat', 'name': 'YF-23A Black Widow II (MERCENARY)'},
+            '776': {'type': 'hangar_display_dat', 'name': 'EA-6B Prowler (MERCENARY)'},
+            '777': {'type': 'hangar_display_dat', 'name': 'A-10A Thunderbolt II (MERCENARY)'},
+            '778': {'type': 'hangar_display_dat', 'name': 'Mirage 2000D (MERCENARY)'},
+            '779': {'type': 'hangar_display_dat', 'name': 'Rafale M (MERCENARY)'},
+            '780': {'type': 'hangar_display_dat', 'name': 'Su-27 Flanker (MERCENARY)'},
+            '781': {'type': 'hangar_display_dat', 'name': 'Su-32 Super Flanker (MERCENARY)'},
+            '782': {'type': 'hangar_display_dat', 'name': 'Su-37 Terminator YELLOW (MERCENARY)'},
+            '783': {'type': 'hangar_display_dat', 'name': 'Su-47 Berkut (MERCENARY)'},
+            '784': {'type': 'hangar_display_dat', 'name': 'MiG-21bis Fishbed (MERCENARY)'},
+            '785': {'type': 'hangar_display_dat', 'name': 'MiG-29A Fulcrum (MERCENARY)'},
+            '786': {'type': 'hangar_display_dat', 'name': 'MiG-31 Foxhound (MERCENARY)'},
+            '787': {'type': 'hangar_display_dat', 'name': 'F1 (MERCENARY)'},
+            '788': {'type': 'hangar_display_dat', 'name': 'F-2A (MERCENARY)'},
+            '789': {'type': 'hangar_display_dat', 'name': 'X-02 Wyvern (MERCENARY)'},
+            '790': {'type': 'hangar_display_dat', 'name': 'ADF-01 Falken (MERCENARY)'},
+            '791': {'type': 'hangar_display_dat', 'name': 'ADFX-01 Morgan (MERCENARY)'},
+            '792': {'type': 'hangar_display_dat', 'name': 'J35J Draken (SOLDIER)'},
+            '793': {'type': 'hangar_display_dat', 'name': 'Gripen C (SOLDIER)'},
+            '794': {'type': 'hangar_display_dat', 'name': 'Typhoon (SOLDIER)'},
+            '795': {'type': 'hangar_display_dat', 'name': 'Tornado GR4 (SOLDIER)'},
+            '796': {'type': 'hangar_display_dat', 'name': 'F-4E II Phantom (SOLDIER)'},
+            '797': {'type': 'hangar_display_dat', 'name': 'F-15C Eagle (SOLDIER)'},
+            '798': {'type': 'hangar_display_dat', 'name': 'F-15 Strike Eagle (SOLDIER)'},
+            '799': {'type': 'hangar_display_dat', 'name': 'F-15 SMTD (SOLDIER)'},
+            '800': {'type': 'hangar_display_dat', 'name': 'FA-18C Hornet (SOLDIER)'},
+            '801': {'type': 'hangar_display_dat', 'name': 'EA-18G (SOLDIER)'},
+            '802': {'type': 'hangar_display_dat', 'name': 'F-16C Fighting Falcon (SOLDIER)'},
+            '803': {'type': 'hangar_display_dat', 'name': 'F-16 XL (SOLDIER)'},
+            '804': {'type': 'hangar_display_dat', 'name': 'F-117A Nighthawk (SOLDIER)'},
+            '805': {'type': 'hangar_display_dat', 'name': 'FA-22A Raptor MOBIUS (SOLDIER)'},
+            '806': {'type': 'hangar_display_dat', 'name': 'F-35C (SOLDIER)'},
+            '807': {'type': 'hangar_display_dat', 'name': 'F-5E Tiger II (SOLDIER)'},
+            '808': {'type': 'hangar_display_dat', 'name': 'F-20A Tigershark (SOLDIER)'},
+            '809': {'type': 'hangar_display_dat', 'name': 'X-29A (SOLDIER)'},
+            '810': {'type': 'hangar_display_dat', 'name': 'F-14D Super Tomcat RAZGRIZ (SOLDIER)'},
+            '811': {'type': 'hangar_display_dat', 'name': 'YF-23A Black Widow II (SOLDIER)'},
+            '812': {'type': 'hangar_display_dat', 'name': 'EA-6B Prowler (SOLDIER)'},
+            '813': {'type': 'hangar_display_dat', 'name': 'A-10A Thunderbolt II (SOLDIER)'},
+            '814': {'type': 'hangar_display_dat', 'name': 'Mirage 2000D (SOLDIER)'},
+            '815': {'type': 'hangar_display_dat', 'name': 'Rafale M (SOLDIER)'},
+            '816': {'type': 'hangar_display_dat', 'name': 'Su-27 Flanker (SOLDIER)'},
+            '817': {'type': 'hangar_display_dat', 'name': 'Su-32 Super Flanker (SOLDIER)'},
+            '818': {'type': 'hangar_display_dat', 'name': 'Su-37 Terminator (SOLDIER)'},
+            '819': {'type': 'hangar_display_dat', 'name': 'Su-47 Berkut (SOLDIER)'},
+            '820': {'type': 'hangar_display_dat', 'name': 'MiG-21bis Fishbed (SOLDIER)'},
+            '821': {'type': 'hangar_display_dat', 'name': 'MiG-29A Fulcrum (SOLDIER)'},
+            '822': {'type': 'hangar_display_dat', 'name': 'MiG-31 Foxhound (SOLDIER)'},
+            '823': {'type': 'hangar_display_dat', 'name': 'F1 (SOLDIER)'},
+            '824': {'type': 'hangar_display_dat', 'name': 'F-2A (SOLDIER)'},
+            '825': {'type': 'hangar_display_dat', 'name': 'X-02 Wyvern (SOLDIER)'},
+            '826': {'type': 'hangar_display_dat', 'name': 'ADF-01 Falken (SOLDIER)'},
+            '827': {'type': 'hangar_display_dat', 'name': 'ADFX-01 Morgan (SOLDIER)'},
+            '828': {'type': 'hangar_display_dat', 'name': 'J35J Draken -ESPADA- (SPECIAL)'},
+            '829': {'type': 'hangar_display_dat', 'name': 'Gripen C -INDIGO- (SPECIAL)'},
+            '830': {'type': 'hangar_display_dat', 'name': 'Typhoon -ROT- (SPECIAL)'},
+            '832': {'type': 'hangar_display_dat', 'name': 'F-4E II Phantom -SILBER- (SPECIAL)'},
+            '835': {'type': 'hangar_display_dat', 'name': 'F-15 SMTD -SORCERER- (SPECIAL)'},
+            '836': {'type': 'hangar_display_dat', 'name': 'FA-18C Hornet -GRUN- (SPECIAL)'},
+            '838': {'type': 'hangar_display_dat', 'name': 'F-16C Fighting Falcon -SILBER- (SPECIAL)'},
+            '839': {'type': 'hangar_display_dat', 'name': 'F-16 XL -WIZARD- (SPECIAL)'},
+            '846': {'type': 'hangar_display_dat', 'name': 'F-14D Super Tomcat -SCHNEE- (SPECIAL)'},
+            '847': {'type': 'hangar_display_dat', 'name': 'YF-23A Black Widow II -WIZARD- (SPECIAL)'},
+            '851': {'type': 'hangar_display_dat', 'name': 'Rafale M -ESPADA- (SPECIAL)'},
+            '854': {'type': 'hangar_display_dat', 'name': 'Su-37 Terminator GELB (SPECIAL)'},
+            '855': {'type': 'hangar_display_dat', 'name': 'Su-47 Berkut -GAULT- (SPECIAL)'},
+            '858': {'type': 'hangar_display_dat', 'name': 'MiG-31 Foxhound -SCHWARZE- (SPECIAL)'},
+            '863': {'type': 'hangar_display_dat', 'name': 'ADFX-01 Morgan PIXY (SPECIAL)'},
+            '867': {'type': 'hangar_display_dat', 'name': 'Tornado GR4 (SPECIAL)'},
+            '869': {'type': 'hangar_display_dat', 'name': 'F-15C Eagle (SPECIAL)'},
+            '870': {'type': 'hangar_display_dat', 'name': 'F-15 Strike Eagle (SPECIAL)'},
+            '873': {'type': 'hangar_display_dat', 'name': 'EA-18G (SPECIAL)'},
+            '876': {'type': 'hangar_display_dat', 'name': 'F-117A Nighthawk (SPECIAL)'},
+            '877': {'type': 'hangar_display_dat', 'name': 'FA-22A Raptor (SPECIAL)'},
+            '878': {'type': 'hangar_display_dat', 'name': 'F-35C (SPECIAL)'},
+            '879': {'type': 'hangar_display_dat', 'name': 'F-5E Tiger II (SPECIAL)'},
+            '880': {'type': 'hangar_display_dat', 'name': 'F-20A Tigershark (SPECIAL)'},
+            '881': {'type': 'hangar_display_dat', 'name': 'X-29A (SPECIAL)'},
+            '884': {'type': 'hangar_display_dat', 'name': 'EA-6B Prowler (SPECIAL)'},
+            '885': {'type': 'hangar_display_dat', 'name': 'A-10A Thunderbolt II (SPECIAL)'},
+            '886': {'type': 'hangar_display_dat', 'name': 'Mirage 2000D (SPECIAL)'},
+            '888': {'type': 'hangar_display_dat', 'name': 'Su-27 Flanker (SPECIAL)'},
+            '889': {'type': 'hangar_display_dat', 'name': 'Su-32 Super Flanker (SPECIAL)'},
+            '892': {'type': 'hangar_display_dat', 'name': 'MiG-21bis Fishbed HUCKEBEIN (SPECIAL)'},
+            '893': {'type': 'hangar_display_dat', 'name': 'MiG-29A Fulcrum (SPECIAL)'},
+            '895': {'type': 'hangar_display_dat', 'name': 'F1 (SPECIAL)'},
+            '896': {'type': 'hangar_display_dat', 'name': 'F-2A (SPECIAL)'},
+            '897': {'type': 'hangar_display_dat', 'name': 'X-02 Wyvern (SPECIAL)'},
+            '898': {'type': 'hangar_display_dat', 'name': 'ADF-01 Falken (SPECIAL)'},
+            '900': {'type': 'hangar_display_dat', 'name': 'J35J Draken (KNIGHT)'},
+            '901': {'type': 'hangar_display_dat', 'name': 'Gripen C (KNIGHT)'},
+            '902': {'type': 'hangar_display_dat', 'name': 'Typhoon (KNIGHT)'},
+            '903': {'type': 'hangar_display_dat', 'name': 'Tornado GR4 (KNIGHT)'},
+            '904': {'type': 'hangar_display_dat', 'name': 'F-4E II Phantom (KNIGHT)'},
+            '905': {'type': 'hangar_display_dat', 'name': 'F-15C Eagle (KNIGHT)'},
+            '906': {'type': 'hangar_display_dat', 'name': 'F-15 Strike Eagle (KNIGHT)'},
+            '907': {'type': 'hangar_display_dat', 'name': 'F-15 SMTD (KNIGHT)'},
+            '908': {'type': 'hangar_display_dat', 'name': 'FA-18C Hornet (KNIGHT)'},
+            '909': {'type': 'hangar_display_dat', 'name': 'EA-18G (KNIGHT)'},
+            '910': {'type': 'hangar_display_dat', 'name': 'F-16C Fighting Falcon (KNIGHT)'},
+            '911': {'type': 'hangar_display_dat', 'name': 'F-16 XL (KNIGHT)'},
+            '912': {'type': 'hangar_display_dat', 'name': 'F-117A Nighthawk (KNIGHT)'},
+            '913': {'type': 'hangar_display_dat', 'name': 'FA-22A Raptor (KNIGHT)'},
+            '914': {'type': 'hangar_display_dat', 'name': 'F-35C (KNIGHT)'},
+            '915': {'type': 'hangar_display_dat', 'name': 'F-5E Tiger II (KNIGHT)'},
+            '916': {'type': 'hangar_display_dat', 'name': 'F-20A Tigershark (KNIGHT)'},
+            '917': {'type': 'hangar_display_dat', 'name': 'X-29A (KNIGHT)'},
+            '918': {'type': 'hangar_display_dat', 'name': 'F-14D Super Tomcat (KNIGHT)'},
+            '919': {'type': 'hangar_display_dat', 'name': 'YF-23A Black Widow II (KNIGHT)'},
+            '920': {'type': 'hangar_display_dat', 'name': 'EA-6B Prowler (KNIGHT)'},
+            '921': {'type': 'hangar_display_dat', 'name': 'A-10A Thunderbolt II (KNIGHT)'},
+            '922': {'type': 'hangar_display_dat', 'name': 'Mirage 2000D (KNIGHT)'},
+            '923': {'type': 'hangar_display_dat', 'name': 'Rafale M (KNIGHT)'},
+            '924': {'type': 'hangar_display_dat', 'name': 'Su-27 Flanker (KNIGHT)'},
+            '925': {'type': 'hangar_display_dat', 'name': 'Su-32 Super Flanker (KNIGHT)'},
+            '926': {'type': 'hangar_display_dat', 'name': 'Su-37 Terminator (KNIGHT)'},
+            '927': {'type': 'hangar_display_dat', 'name': 'Su-47 Berkut (KNIGHT)'},
+            '928': {'type': 'hangar_display_dat', 'name': 'MiG-21bis Fishbed (KNIGHT)'},
+            '929': {'type': 'hangar_display_dat', 'name': 'MiG-29A Fulcrum (KNIGHT)'},
+            '930': {'type': 'hangar_display_dat', 'name': 'MiG-31 Foxhound (KNIGHT)'},
+            '931': {'type': 'hangar_display_dat', 'name': 'F1 (KNIGHT)'},
+            '932': {'type': 'hangar_display_dat', 'name': 'F-2A (KNIGHT)'},
+            '933': {'type': 'hangar_display_dat', 'name': 'X-02 Wyvern (KNIGHT)'},
+            '934': {'type': 'hangar_display_dat', 'name': 'ADF-01 Falken (KNIGHT)'},
+            '935': {'type': 'hangar_display_dat', 'name': 'ADFX-01 Morgan (KNIGHT)'},
+            '941': {'type': 'hangar_display_dat', 'name': 'F-15C Eagle (PIXY)'},
+            '946': {'type': 'hangar_display_dat', 'name': 'F-16C Fighting Falcon (PJ)'},
             #
-            # Confirmed via CLI casting to share DatAircraftHangar's own
+            # Confirmed via CLI casting to share DatHangarDisplay's own
             # wrapper shape (see docs/ACM_FORMAT_NOTES.md's "Hangar aircraft
             # mesh packages" section) - a single child that is itself the
             # 10-slot hangar mesh/texture package (ACZ_HANGAR_PACKAGE_ASSET_LIST).
-            '1160': {'type': 'aircraft_hangar_dat', 'name': 'MPBM hangar assets'},
-            '1170': {'type': 'aircraft_hangar_dat', 'name': 'TLS unit hangar assets (ADFX-01)'},
-            '1171': {'type': 'aircraft_hangar_dat', 'name': 'TLS unit hangar assets (ADF-01)'},
+            '1160': {'type': 'hangar_display_dat', 'name': 'MPBM hangar assets'},
+            '1170': {'type': 'hangar_display_dat', 'name': 'TLS unit hangar assets (ADFX-01)'},
+            '1171': {'type': 'hangar_display_dat', 'name': 'TLS unit hangar assets (ADF-01)'},
             '1448': {'type': '', 'name': 'Hangar aircraft prices and satellite-plot chart parameters'},
             #
             # Per-mission briefing digitized terrain assets.
@@ -803,7 +803,7 @@ class ACZProject(Project):
         # docs/OPEN_DISCREPANCIES.md for the slot left unchanged because
         # d0g's doc actively conflicts with something we'd already confirmed
         # (slot 3 - deliberately NOT touched here). Only registered for
-        # DatAircraft, not DatAircraftHangar - the hangar-quality variant's
+        # DatAircraft, not DatHangarDisplay - the hangar-quality variant's
         # internal layout is confirmed different (see
         # docs/DAT_STRUCTURE_FINDINGS.md's Hangar aircraft section).
         self.ACZ_AIRCRAFT_DAT_ASSET_LIST = {
@@ -902,29 +902,31 @@ class ACZProject(Project):
             '7': {'type': '', 'name': 'Unknown file (related to slot 6)'},
         }
 
-        # DatAircraftHangar's own single child (index '0') is itself a
+        # DatHangarDisplay's own single child (index '0') is itself a
         # plain .dat wrapper around the real hangar mesh/texture package -
         # confirmed via CLI casting on Draken (720) plus the MPBM/TLS
         # assets (1160/1170/1171), see docs/ACM_FORMAT_NOTES.md. Applies to
-        # every aircraft_hangar_dat slot (~250 of them, one per livery).
-        self.ACZ_AIRCRAFT_HANGAR_ASSET_LIST = {
+        # every hangar_display_dat slot (~250 aircraft liveries, plus MPBM
+        # and the TLS special weapon mount equipped by ADFX-01/ADF-01).
+        self.ACZ_HANGAR_DISPLAY_ASSET_LIST = {
             '0': {'type': 'hangar_package_dat', 'name': 'Hangar mesh/texture package'},
         }
 
         # Slot-by-slot contents of a hangar_package_dat (the single child of
-        # every DatAircraftHangar). Confirmed via CLI casting across many
-        # real samples (Draken, Gripen, Typhoon, Tornado GR4, F-4E, F-15C,
-        # MPBM, TLS ADFX-01, TLS ADF-01 - see docs/ACM_FORMAT_NOTES.md):
-        # slots 0/2/3 are always ACM, 6-8 are always GIM. Slots 1/4/9 are
-        # always a small placeholder/unknown Asset in every sample. Slot 5
-        # is left untyped deliberately - it's a real ACM (a fuel tank
-        # model, confirmed size-matched against Draken's own flight-model
-        # fuel tank) only for Draken among every sample checked; every
-        # other aircraft so far, including other "standard" ones, has just
-        # a 16-byte placeholder there. Not simply a standard-vs-MPBM/TLS
-        # split as first assumed - looks tied to which specific real-world
-        # aircraft actually carries an external drop tank, not a broad
-        # category. Relying on autodetection lets every case resolve
+        # every DatHangarDisplay). Confirmed via CLI casting across many
+        # real samples - all 36 distinct STANDARD-tier flyable aircraft,
+        # plus MPBM and the TLS special weapon mount (ADFX-01/ADF-01's own
+        # equipment, not an alternate render of those aircraft) - see
+        # docs/ACM_FORMAT_NOTES.md. Slots 0/2/3 are always ACM, 6-8 are
+        # always GIM. Slots 1/4/9 are always a small placeholder/unknown
+        # Asset in every sample. Slot 5 is left untyped deliberately - it's
+        # a real ACM (a fuel tank model, confirmed size-matched against
+        # Draken's own flight-model fuel tank) only on Draken, out of every
+        # one of the 36 aircraft checked; everything else - including
+        # MPBM/TLS - has just a 16-byte placeholder there. Looks tied to
+        # which specific real-world aircraft actually carries an external
+        # drop tank (the J35 Draken is well known for one), not a broad
+        # category split. Relying on autodetection lets every case resolve
         # correctly regardless.
         self.ACZ_HANGAR_PACKAGE_ASSET_LIST = {
             '0': {'type': 'acm', 'name': 'Main hangar-display model'},
@@ -969,7 +971,7 @@ class ACZProject(Project):
             DatAmbientTextures: self.ACZ_AMBIENT_TEXTURES_ASSET_LIST,
             DatAircraft: self.ACZ_AIRCRAFT_DAT_ASSET_LIST,
             DatAircraftParts: self.ACZ_AIRCRAFT_PARTS_ASSET_LIST,
-            DatAircraftHangar: self.ACZ_AIRCRAFT_HANGAR_ASSET_LIST,
+            DatHangarDisplay: self.ACZ_HANGAR_DISPLAY_ASSET_LIST,
             DatHangarPackage: self.ACZ_HANGAR_PACKAGE_ASSET_LIST,
             DatSpwPackage: self.ACZ_SPW_PACKAGE_ASSET_LIST,
             DatSpwLodSet: self.ACZ_SPW_LOD_SET_ASSET_LIST,
@@ -1339,8 +1341,8 @@ class Container(Asset): # Abstract
                     new_child = DatFreeFlight(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father, ace_style=ace_style)
                 elif asset_type == 'aircraft_dat':
                     new_child = DatAircraft(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-                elif asset_type == 'aircraft_hangar_dat':
-                    new_child = DatAircraftHangar(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
+                elif asset_type == 'hangar_display_dat':
+                    new_child = DatHangarDisplay(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'hangar_package_dat':
                     new_child = DatHangarPackage(name=new_name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
                 elif asset_type == 'aircraft_parts_dat':
@@ -1658,17 +1660,24 @@ class DatAircraft(DatFile):
     def __repr__(self):
         return f'AIRCRAFT_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
-class DatAircraftHangar(DatFile):
-    'A higher-detail aircraft model used for hangar display.'
+class DatHangarDisplay(DatFile):
+    '''A higher-detail 3D object shown on a hangar-style display screen.
+    Mostly a per-aircraft high-detail model (~250 slots, one per livery -
+    see ACZ_DAT_ASSET_LIST), but the same package shape and dispatch type
+    is also reused for at least two confirmed non-aircraft objects: MPBM
+    (slot 1160, unidentified) and the TLS special weapon mount equipped by
+    ADFX-01/ADF-01 (slots 1170/1171 - these are the weapon's own assets,
+    not an alternate render of the aircraft itself). See
+    docs/ACM_FORMAT_NOTES.md's "Hangar aircraft mesh packages" section.'''
     def __init__(self, name:str, size:int, offset:int, data_ref:DataReference, index:int, father):
         super().__init__(name=name, size=size, offset=offset, data_ref=data_ref, index=index, father=father)
-        self.dat_type:str = 'aircraft_hangar'
+        self.dat_type:str = 'hangar_display'
 
     def __repr__(self):
-        return f'AIRCRAFT_HANGAR_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
+        return f'HANGAR_DISPLAY_DAT | ({self.index_father})_{self.name} - dat_type={self.dat_type} - size={self.size} - offset={self.offset_father}'
 
 class DatHangarPackage(DatFile):
-    '''The single child of a DatAircraftHangar (see ACZ_AIRCRAFT_HANGAR_ASSET_LIST) -
+    '''The single child of a DatHangarDisplay (see ACZ_HANGAR_DISPLAY_ASSET_LIST) -
     a plain NOF-based container holding the actual hangar-display mesh/texture
     set: 3-4 ACM models, 3 GIM textures, and a few small placeholder/unknown
     slots. See ACZ_HANGAR_PACKAGE_ASSET_LIST and docs/ACM_FORMAT_NOTES.md.'''
@@ -1894,7 +1903,7 @@ CASTABLE_TYPES = (
     ('DatMission', DatMission),
     ('DatFreeFlight', DatFreeFlight),
     ('DatAircraft', DatAircraft),
-    ('DatAircraftHangar', DatAircraftHangar),
+    ('DatHangarDisplay', DatHangarDisplay),
     ('DatAircraftParts', DatAircraftParts),
     ('DatAmbientTextures', DatAmbientTextures),
     ('DatHangar', DatHangar),

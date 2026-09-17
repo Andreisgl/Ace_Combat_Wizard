@@ -84,6 +84,9 @@
 1. Documentation
     1. **README.md needs CLI usage instructions** - `cli.py` (invoked via `python gui_main.py --cli ...`) isn't documented anywhere yet: the `ls`/`hex`/`cast`/`export` commands, the `PATH` addressing scheme (slash-separated `children` dict indices, e.g. `3/19/9`), and the chainable `--cast PATH:TYPE` flag all need a real walkthrough with examples so it's usable without re-deriving it from `cli.py`'s own `--help` output.
 
+1. Future AC5 analysis
+    1. **Drop tanks are more common in AC5 than in ACZ.** In ACZ's own hangar-display packages (`hangar_display_dat`/`ACZ_HANGAR_PACKAGE_ASSET_LIST` slot `5`), only the J35J Draken among all 36 playable aircraft has a real fuel-tank mesh there - see `docs/ACM_FORMAT_NOTES.md`'s "Hangar-display mesh packages" section. The user's recollection is that AC5 features drop tanks on more aircraft. Worth re-checking this same slot/shape against AC5's own `DATA.PAC` once that game is analyzed, rather than assuming ACZ's "1 out of 36" rarity carries over.
+
 1. Miscellaneous
     1. The icon for this program could really be Wizard Squadron's roundel lol
         
