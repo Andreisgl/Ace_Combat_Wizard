@@ -57,6 +57,7 @@
     1. Data types:
         1. Images
         1. 3D models
+            1. `.ACM` mesh format: header (80 bytes) and node/part table (64-byte records) structure confirmed across trees/stage props/aircraft/SpW/low-poly-LOD/briefing samples - see `docs/ACM_FORMAT_NOTES.md`. A minimal 752-byte sample has been fully byte-accounted for, including a first look at the geometry section's internal packet structure (tagged sub-blocks, one of which lines up with 3 vertices' worth of floats) and the 32-byte footer (a bounding-volume descriptor). **Still blocking a visualizer:** this packet structure hasn't been confirmed against a larger, multi-node file, and most of the packet tags' payloads aren't decoded yet.
         1. Text
         1. Audio
             1. Study integrating MFAudio's GUI inside the Wizard's GUI

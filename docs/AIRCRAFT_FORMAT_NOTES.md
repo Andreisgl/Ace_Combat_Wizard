@@ -14,7 +14,7 @@ ACZ's format is **related but not byte-identical**: different magic (`P3Dp` vs `
 |---|---|---|---|
 | `GIM` | `47 49 4D 00` | `GIM\0` | Texture (already known, confirmed by the real decoder in `visualizers/gim_image.py`) |
 | `P3D` | `50 33 44 70` | `P3Dp` | Hardpoint/attachment table (this session) - **not** the 3-byte guess used previously |
-| `ACM` | `41 43 4D 00` | `ACM\0` | Mesh chunk (this session) - **not** the 3-byte guess used previously; confirmed general-purpose (stage props *and* aircraft parts) |
+| `ACM` | `41 43 4D 00` | `ACM\0` | Mesh chunk (this session) - **not** the 3-byte guess used previously; confirmed general-purpose (stage props *and* aircraft parts) - see [ACM_FORMAT_NOTES.md](ACM_FORMAT_NOTES.md) for a deeper structural breakdown across categories |
 | `AHM` | `41 48 4D 00` | `AHM\0` | New, previously unseen - purpose unconfirmed |
 
 ## Slot `01`: the part-geometry container
